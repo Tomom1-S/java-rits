@@ -7,6 +7,8 @@ import org.apache.commons.lang3.ArrayUtils;
 public class ImplementedLookup implements ExtendedLookup {
 	private String[] names;
 	private Object[] values;
+	
+	// 柴田さん：ここでは継承するだけ
 
 	@Override
 	public Object find(String name) {
