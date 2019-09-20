@@ -14,7 +14,8 @@ public class ImprovedFibonacci {
 				mark = " *";
 			else
 				mark = "";
-			System.out.println(i + ": " + hi + mark);
+			System.out.println((i - MAX_INDEX +1) + ": " + hi + mark);
+			// 柴田さん：表示されるインデックスは昇順にした方がよい
 			hi = lo + hi;
 			lo = hi - lo;
 		}
