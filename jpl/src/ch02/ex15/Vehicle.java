@@ -22,6 +22,7 @@ public class Vehicle {
 	}
 
 	// 柴田さん：value に制限を設ける、など setSpeed に機能を追加してもよい
+	// 負の値が与えられたときの処理を追加してもよい
 	public void changeSpeed(double value) {
 		this.speed = value;
 	}

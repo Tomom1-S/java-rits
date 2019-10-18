@@ -7,4 +7,6 @@ public class Vehicle {
 	public String owner;
 	
 	public static long nextId;
+
+	// ID に関するメソッドを追加する
 }

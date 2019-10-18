@@ -26,6 +26,9 @@ public class Vehicle {
 
 	@Override
 	public String toString() {
+		// 柴田さん：String.format で書いてもよい
+		// ↓の方が速く、効率がいいかも。コードの読みやすさは人に依る
+		// 理由：String.format だと実行時まで変数の型が分からないが、↓の書き方だとコンパイル時に型が確定するため
 		return "id=" + this.id + ", speed=" + this.speed + ", direction=" + this.direction + ", owner=" + this.owner;
 	}
 
