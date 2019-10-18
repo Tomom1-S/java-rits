@@ -10,6 +10,9 @@ public class Vehicle {
 	public String owner;
 	
 	public static long nextId = 0;
+	// 柴田さん：ID として乱数を使いたい場合は、UUID （p.580?）を使うとよい
+	// 単純に random にすると衝突する可能性がある
+	// ID を通し番号にすると、生産数や登録者数などがバレてしまう
 
 	public Vehicle() {
 		this.id = nextId++;
