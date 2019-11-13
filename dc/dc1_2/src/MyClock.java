@@ -1,27 +1,31 @@
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
+import java.lang.reflect.Field;
 import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 class MyFrame extends Frame implements ActionListener, Runnable {
     private static final int width = 300;
     private static final int height = 300;
     private static boolean isRunning = true;
 
-    Button button;
-    PopupMenu menu;
-    Thread thread;
-
     private static Font[] fonts = GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts();
+    private static String fontName = fonts[3].getFontName();
+    private static int defaultFontSize = 30;
+    private static int fontSize = 40;
+    private static Color fontColor = Color.black;
+    private static Color backColor = Color.yellow;
+
+    Button button;
+    Thread thread;
 
     public MyFrame() {
         setTitle("What time is it now?");
         setSize(width, height);
+        setBackground(backColor);
 
         setLayout(new FlowLayout());
         button = new Button("Settings");
@@ -54,16 +58,53 @@ class MyFrame extends Frame implements ActionListener, Runnable {
         Image back = createImage(width, height);
         Graphics buffer = back.getGraphics();
 
-        Font font = new Font(fonts[0].getFontName(), Font.BOLD, 30);
+        Font font = new Font(fontName, Font.BOLD, fontSize);
 
         LocalTime now = LocalTime.now();
         buffer.setFont(font);
+        buffer.setColor(getFontColor());
         buffer.drawString(
                 String.format("%02d:%02d:%02d", now.getHour(), now.getMinute(), now.getSecond()),
                 100, 130);
         graphics.drawImage(back, 0, 0, this);
 
         // TODO: 常にウィンドウの中央に表示
+    }
+
+    public String getFontName() {
+        return fontName;
+    }
+    public String setFontName(String fontName) {
+        String old = getFontName();
+        this.fontName = fontName;
+        return old;
+    }
+
+    public int getFontSize() {
+        return fontSize;
+    }
+    public int setFontSize(int fontSize) {
+        int old = getFontSize();
+        this.fontSize = fontSize;
+        return old;
+    }
+
+    public Color getFontColor() {
+        return fontColor;
+    }
+    public Color setFontColor(Color color) {
+        Color old = getFontColor();
+        this.fontColor = color;
+        return old;
+    }
+
+    public Color getBackColor() {
+        return backColor;
+    }
+    public Color setBackColor(Color color) {
+        Color old = getBackColor();
+        this.backColor = color;
+        return old;
     }
 }
 
@@ -73,7 +114,10 @@ class MyWindowAdapter extends WindowAdapter {
     }
 }
 
-class MyDialog extends Dialog implements ActionListener {
+class MyDialog extends Dialog {
+    MyFrame parent;
+    private static Font[] fonts = GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts();
+
     private static final int width = 250;
     private static final int height = 180;
     private static final int locX = 100;
@@ -95,15 +139,23 @@ class MyDialog extends Dialog implements ActionListener {
     }
 
     private static final List<Item> items = Arrays.asList(
-            new Item("Fonts", Arrays.asList("sup1", "sup2", "sup3")),
+            new Item("Fonts",
+                    Arrays.asList(
+                            fonts[0].getFontName(),
+                            fonts[1].getFontName(),
+                            fonts[2].getFontName(),
+                            fonts[3].getFontName()
+                    )),
+            // TODO: デフォルト値も入れておきたい
             new Item("Font size", Arrays.asList("20", "40", "50")),
-            new Item("Font color", Arrays.asList("red", "green", "blue")),
-            new Item("Background color", Arrays.asList("red", "green", "blue"))
+            new Item("Font color", Arrays.asList("red", "green", "blue", "black", "white")),
+            new Item("Background color", Arrays.asList("red", "green", "blue", "black", "white"))
     );
 
-    MyDialog(Frame parent) {
+    MyDialog(MyFrame parent) {
         super(parent, true);
-
+        this.parent = parent;
+//        items.get(items.indexOf("Font size")).options.add(Objects.toString(parent.defaultFontSize));
         init();
     }
 
@@ -118,8 +170,6 @@ class MyDialog extends Dialog implements ActionListener {
     }
 
     private void initItems() {
-        int itemNum = items.size();
-
         setLayout(new FlowLayout());
         items.forEach(s -> {
             Label label = new Label(s.name);
@@ -128,17 +178,40 @@ class MyDialog extends Dialog implements ActionListener {
             s.options.forEach(o -> {
                 c.add(o);
             });
+            c.addItemListener(e -> {
+                Color color;
+                switch (s.name) {
+                    case "Fonts":
+                        this.parent.setFontName(e.getItem().toString());
+                        break;
+                    case "Font size":
+                        this.parent.setFontSize(Integer.parseInt(e.getItem().toString()));
+                        break;
+                    case "Font color":
+                        try {
+                            Field field = Class.forName("java.awt.Color").getField(e.getItem().toString());
+                            color = (Color)field.get(null);
+                        } catch (Exception ex) {
+                            color = this.parent.getFontColor();
+                        }
+                        this.parent.setFontColor(color);
+                        break;
+                    case "Background color":
+                        try {
+                            Field field = Class.forName("java.awt.Color").getField(e.getItem().toString());
+                            color = (Color)field.get(null);
+                        } catch (Exception ex) {
+                            color = this.parent.getBackColor();
+                        }
+                        // TODO: 動的に変更を反映させたい
+                        this.parent.setBackColor(color);
+                        break;
+                    default:
+                        break;
+                }
+            });
             add(c);
         });
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        for (int i = 0; i < items.size(); i++) {
-//            if (e.getSource() == buttons[i]) {
-//                myPopupMenus[i].show(this, buttons[i].getX(), buttons[i].getY());
-//            }
-        }
     }
 
     class DialogWindowListener extends WindowAdapter {
