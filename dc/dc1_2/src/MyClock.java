@@ -5,19 +5,17 @@ import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 class MyFrame extends Frame implements ActionListener, Runnable {
-    private static final int width = 300;
-    private static final int height = 300;
+    private static int width = 300;
+    private static int height = 300;
     private static boolean isRunning = true;
 
     private static Font[] fonts = GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts();
     private static String fontName = fonts[3].getFontName();
-    private static int defaultFontSize = 30;
-    private static int fontSize = 40;
+    private static int fontSize = height / 5;
     private static Color fontColor = Color.black;
-    private static Color backColor = Color.yellow;
+    private static Color backColor = Color.white;
 
     Button button;
     Thread thread;
@@ -32,6 +30,7 @@ class MyFrame extends Frame implements ActionListener, Runnable {
         button.addActionListener(this);
         add(button);
 
+        addComponentListener(new MyComponentListener(this));
         addWindowListener(new MyWindowAdapter());
     }
 
@@ -58,22 +57,50 @@ class MyFrame extends Frame implements ActionListener, Runnable {
         Image back = createImage(width, height);
         Graphics buffer = back.getGraphics();
 
-        Font font = new Font(fontName, Font.BOLD, fontSize);
-
+        setLayout(new BorderLayout());
         LocalTime now = LocalTime.now();
-        buffer.setFont(font);
+        buffer.setFont(new Font(fontName, Font.BOLD, fontSize));
         buffer.setColor(getFontColor());
-        buffer.drawString(
-                String.format("%02d:%02d:%02d", now.getHour(), now.getMinute(), now.getSecond()),
-                100, 130);
-        graphics.drawImage(back, 0, 0, this);
+        drawCenteredString(buffer, String.format("%02d:%02d:%02d", now.getHour(), now.getMinute(), now.getSecond()),
+                width / 2, height / 2);
 
-        // TODO: 常にウィンドウの中央に表示
+        graphics.setColor(getBackColor());
+        graphics.fillRect(0, 0, width, height);
+        graphics.drawImage(back, 0, 0, this);
+    }
+
+    public void drawCenteredString(Graphics g, String text, int x, int y) {
+        FontMetrics metrics = g.getFontMetrics();
+        Rectangle rectText = metrics.getStringBounds(text, g).getBounds();
+        x = x - rectText.width / 2;
+        y = y - rectText.height / 2 + metrics.getMaxAscent();
+        g.drawString(text, x, y);
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int setWidth(int width) {
+        int old = getWidth();
+        this.width = width;
+        return old;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public int setHeight(int height) {
+        int old = getHeight();
+        this.height = height;
+        return old;
     }
 
     public String getFontName() {
         return fontName;
     }
+
     public String setFontName(String fontName) {
         String old = getFontName();
         this.fontName = fontName;
@@ -83,6 +110,7 @@ class MyFrame extends Frame implements ActionListener, Runnable {
     public int getFontSize() {
         return fontSize;
     }
+
     public int setFontSize(int fontSize) {
         int old = getFontSize();
         this.fontSize = fontSize;
@@ -92,6 +120,7 @@ class MyFrame extends Frame implements ActionListener, Runnable {
     public Color getFontColor() {
         return fontColor;
     }
+
     public Color setFontColor(Color color) {
         Color old = getFontColor();
         this.fontColor = color;
@@ -101,10 +130,47 @@ class MyFrame extends Frame implements ActionListener, Runnable {
     public Color getBackColor() {
         return backColor;
     }
+
     public Color setBackColor(Color color) {
         Color old = getBackColor();
         this.backColor = color;
         return old;
+    }
+}
+
+class MyComponentListener implements ComponentListener {
+    MyFrame parent;
+
+    MyComponentListener(MyFrame parent) {
+        super();
+        this.parent = parent;
+    }
+
+    @Override
+    public void componentResized(ComponentEvent e) {
+        Component c = e.getComponent();
+        Dimension size = c.getSize();
+        parent.setWidth(size.width);
+        parent.setHeight(size.height);
+        parent.setFontSize(calculateFontSize(size));
+        c.repaint();
+    }
+
+    private int calculateFontSize(Dimension size) {
+        int shortSide = size.width < size.height ? size.width : size.height;
+        return shortSide / 5;
+    }
+
+    @Override
+    public void componentMoved(ComponentEvent e) {
+    }
+
+    @Override
+    public void componentShown(ComponentEvent e) {
+    }
+
+    @Override
+    public void componentHidden(ComponentEvent e) {
     }
 }
 
@@ -141,21 +207,23 @@ class MyDialog extends Dialog {
     private static final List<Item> items = Arrays.asList(
             new Item("Fonts",
                     Arrays.asList(
-                            fonts[0].getFontName(),
-                            fonts[1].getFontName(),
-                            fonts[2].getFontName(),
-                            fonts[3].getFontName()
+                            fonts[3].getFontName(),
+                            fonts[12].getFontName(),
+                            fonts[30].getFontName(),
+                            fonts[43].getFontName(),
+                            fonts[65].getFontName(),
+                            fonts[130].getFontName(),
+                            fonts[450].getFontName()
                     )),
             // TODO: デフォルト値も入れておきたい
-            new Item("Font size", Arrays.asList("20", "40", "50")),
-            new Item("Font color", Arrays.asList("red", "green", "blue", "black", "white")),
-            new Item("Background color", Arrays.asList("red", "green", "blue", "black", "white"))
+            new Item("Font size", Arrays.asList("60", "20", "40", "80", "100")),
+            new Item("Font color", Arrays.asList("black", "white", "red", "green", "blue")),
+            new Item("Background color", Arrays.asList("white", "black", "red", "green", "blue"))
     );
 
     MyDialog(MyFrame parent) {
         super(parent, true);
         this.parent = parent;
-//        items.get(items.indexOf("Font size")).options.add(Objects.toString(parent.defaultFontSize));
         init();
     }
 
@@ -170,10 +238,10 @@ class MyDialog extends Dialog {
     }
 
     private void initItems() {
-        setLayout(new FlowLayout());
+        GridLayout layout = new GridLayout(items.size(), 2);
+        setLayout(layout);
+
         items.forEach(s -> {
-            Label label = new Label(s.name);
-            add(label);
             Choice c = new Choice();
             s.options.forEach(o -> {
                 c.add(o);
@@ -182,34 +250,41 @@ class MyDialog extends Dialog {
                 Color color;
                 switch (s.name) {
                     case "Fonts":
-                        this.parent.setFontName(e.getItem().toString());
+                        parent.setFontName(e.getItem().toString());
                         break;
                     case "Font size":
-                        this.parent.setFontSize(Integer.parseInt(e.getItem().toString()));
+                        int fontSize = Integer.parseInt(e.getItem().toString());
+                        parent.setFontSize(fontSize);
+                        parent.setHeight(fontSize * 5);
+                        parent.setWidth(fontSize * 5);
+                        parent.setSize(fontSize * 5, fontSize * 5);
                         break;
                     case "Font color":
                         try {
                             Field field = Class.forName("java.awt.Color").getField(e.getItem().toString());
-                            color = (Color)field.get(null);
+                            color = (Color) field.get(null);
                         } catch (Exception ex) {
-                            color = this.parent.getFontColor();
+                            color = parent.getFontColor();
                         }
-                        this.parent.setFontColor(color);
+                        parent.setFontColor(color);
                         break;
                     case "Background color":
                         try {
                             Field field = Class.forName("java.awt.Color").getField(e.getItem().toString());
-                            color = (Color)field.get(null);
+                            color = (Color) field.get(null);
                         } catch (Exception ex) {
                             color = this.parent.getBackColor();
                         }
-                        // TODO: 動的に変更を反映させたい
-                        this.parent.setBackColor(color);
+                        parent.setBackColor(color);
+                        parent.setBackground(color);
                         break;
                     default:
                         break;
                 }
             });
+
+            Label label = new Label(s.name);
+            add(label);
             add(c);
         });
     }
