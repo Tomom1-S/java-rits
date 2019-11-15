@@ -61,6 +61,7 @@ public class ColorAttr extends Attr {
 
         // 柴田さん：キャストに失敗する場合はどうする？
         // キャストの前に if (!object instanceof ColorAttr) { return false } が必要
+        // まず自分と同じインスタンスなのかを確認
         ColorAttr colorAttr = (ColorAttr)object;
         if (colorAttr.getColor() != null) {
             return this.getName() == colorAttr.getName()
