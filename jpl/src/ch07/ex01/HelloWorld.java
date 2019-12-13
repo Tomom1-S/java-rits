@@ -1,3 +1,4 @@
+// 柴田さん：ソースコード全部をUNICODEで書く
 package ch07.ex01;
 
 public class HelloWorld {
