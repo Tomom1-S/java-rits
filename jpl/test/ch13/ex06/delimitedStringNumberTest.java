@@ -10,11 +10,11 @@ public class delimitedStringNumberTest {
     private final int digit = 5;
 
     @Test
-    public void digit桁区切りでカンマを入れる() {
+    public void digit桁区切りで区切り文字を入れる() {
         String string = "1234567890";
         delimitedStringNumber dsn = new delimitedStringNumber();
 
-        assertThat(dsn.addComma(string, digit), is("12345,67890"));
+        assertThat(dsn.addComma(string, '.', digit), is("12345.67890"));
     }
 
     @Test
@@ -22,7 +22,7 @@ public class delimitedStringNumberTest {
         String string = "12345";
         delimitedStringNumber dsn = new delimitedStringNumber();
 
-        assertThat(dsn.addComma(string, digit), is("12345"));
+        assertThat(dsn.addComma(string, '.', digit), is("12345"));
     }
 
     @Test
@@ -31,7 +31,7 @@ public class delimitedStringNumberTest {
         delimitedStringNumber dsn = new delimitedStringNumber();
 
         try {
-            dsn.addComma(string, digit);
+            dsn.addComma(string, '.', digit);
         } catch (Exception actual) {
             assertThat(actual.getMessage(), equalTo("Only numbers can be accepted!"));
         }
@@ -43,7 +43,7 @@ public class delimitedStringNumberTest {
         delimitedStringNumber dsn = new delimitedStringNumber();
 
         try {
-            dsn.addComma(string, -3);
+            dsn.addComma(string, '.', -3);
         } catch (Exception actual) {
             assertThat(actual.getMessage(), equalTo("Digit should be positive!"));
         }
