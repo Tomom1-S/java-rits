@@ -3,6 +3,8 @@ package view;
 import java.awt.*;
 
 public final class FrameSetting {
+    String frameTitle = "Interpret プログラム";
+
     Color bgColor = Color.gray;
 
     String typeLabel = "型";

@@ -21,7 +21,7 @@ public class MyFrame extends JFrame implements ActionListener {
     }
 
     private void init() {
-        setTitle("Interpret プログラム");
+        setTitle(setting.frameTitle);
         initBounds();
         initCloseOperation();
 
@@ -66,6 +66,9 @@ public class MyFrame extends JFrame implements ActionListener {
         initButtons(layout, constraints);
     }
 
+    /**
+     * ボタンを設定
+     */
     private void initButtons(GridBagLayout layout, GridBagConstraints constraints) {
         button = new JButton(setting.buttonLabel);
         button.addActionListener(this);
