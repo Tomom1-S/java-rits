@@ -11,7 +11,7 @@ public class MyFrame extends JFrame {
     }
 
     private void init() {
-        setTitle("Swingの実験");
+        setTitle("Interpret プログラム");
         initBounds();
         initCloseOperation();
 
