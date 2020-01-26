@@ -6,6 +6,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.lang.reflect.InvocationTargetException;
 
 public class MyFrame extends JFrame implements ActionListener {
     FrameSetting setting = new FrameSetting();
@@ -147,9 +148,17 @@ public class MyFrame extends JFrame implements ActionListener {
             ObjectHandler oh = new ObjectHandler();
             String text;
             try {
-                text = oh.createObject(typeText.getText());
+                oh.createObject(typeText.getText());
             } catch (ClassNotFoundException ex) {
                 text = ex.getMessage();
+                ex.printStackTrace();
+            } catch (InstantiationException ex) {
+                ex.printStackTrace();
+            } catch (InvocationTargetException ex) {
+                ex.printStackTrace();
+            } catch (NoSuchMethodException ex) {
+                ex.printStackTrace();
+            } catch (IllegalAccessException ex) {
                 ex.printStackTrace();
             }
 
