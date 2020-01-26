@@ -14,6 +14,23 @@ public class testClass {
         nextId++;
     }
 
+    public int addNumbers(int val1, int val2) {
+        return val1 + val2;
+    }
+
+    // TODO: wrapper -> primitive の対応ができたら消す
+    public int addNumbers(Integer val1, Integer val2) {
+        return val1 + val2;
+    }
+
+    public int addNumbers(int val1, int val2, int val3) {
+        return val1 + val2 + val3;
+    }
+
+    public String getName() {
+        return name;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
