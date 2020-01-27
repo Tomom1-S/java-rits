@@ -9,27 +9,37 @@ public class ObjectHandler {
     Object obj;
 
     // TODO: 例外
-    public Object callMethod(String name)
-            throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        Method method = cls.getDeclaredMethod(name);;
-        return method.invoke(obj);
+    public Object callMethod(String name) throws NoSuchMethodException {
+        Method method = cls.getDeclaredMethod(name);
+        try {
+            return method.invoke(obj);
+        } catch (ReflectiveOperationException e) {
+            throw new RuntimeException(e.getCause());
+        }
     }
 
     // TODO: 例外
     // TODO: Integer を int に渡せるように（wrapper -> primitive）
     // TODO: オーバーロードされている場合（引数の個数が未知）
-    public Object callMethod(String name, ArrayList args)
-            throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    public Object callMethod(String name, ArrayList args) throws NoSuchMethodException {
         Method method;
         Object result = new Object();
         switch (args.size()) {
             case 1:
                 method = cls.getDeclaredMethod(name, args.get(0).getClass());
-                result = method.invoke(obj, args.get(0));
+                try {
+                    result = method.invoke(obj, args.get(0));
+                } catch (ReflectiveOperationException e) {
+                    throw new RuntimeException(e.getCause());
+                }
                 break;
             case 2:
                 method = cls.getDeclaredMethod(name, args.get(0).getClass(), args.get(1).getClass());
-                result = method.invoke(obj, args.get(0), args.get(1));
+                try {
+                    result = method.invoke(obj, args.get(0), args.get(1));
+                } catch (ReflectiveOperationException e) {
+                    throw new RuntimeException(e.getCause());
+                }
                 break;
             default:
                 break;

@@ -27,6 +27,21 @@ public class testClass {
         return val1 + val2 + val3;
     }
 
+    // TODO: wrapper -> primitive の対応ができたら消す
+    public int addPositiveNumbers(Integer val1, Integer val2) {
+        if(val1 < 0 || val2 < 0) {
+            throw new IllegalArgumentException("Arguments should be positive.");
+        }
+        return val1 + val2;
+    }
+
+    public int addPositiveNumbers(int val1, int val2) {
+        if(val1 < 0 || val2 < 0) {
+            throw new IllegalArgumentException("Arguments should be positive.");
+        }
+        return val1 + val2;
+    }
+
     public String getName() {
         return name;
     }

@@ -13,6 +13,8 @@ import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class ObjectHandlerTest {
@@ -127,6 +129,21 @@ class ObjectHandlerTest {
         }});
         final int expected = 3;
         assertThat(actual, is(expected));
+    }
+
+    @Test
+    public void callMethodの異常系()
+            throws ClassNotFoundException, IllegalAccessException,
+            NoSuchMethodException, InstantiationException, InvocationTargetException {
+        oh.createObject("myClasses.testClass");
+
+        Exception e = assertThrows(RuntimeException.class,
+                () -> oh.callMethod("addPositiveNumbers", new ArrayList<Integer>() {{
+            add(-1);
+            add(2);
+        }}));
+        final String expectMsg = "java.lang.IllegalArgumentException: Arguments should be positive.";
+        assertThat(e.getMessage(), is(expectMsg));
     }
 
     @Test
