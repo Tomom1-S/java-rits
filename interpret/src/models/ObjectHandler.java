@@ -7,8 +7,7 @@ import java.util.List;
 public class ObjectHandler {
     Class cls;
     Object obj;
-
-    // TODO: 例外
+    
     public Object callMethod(String name) throws NoSuchMethodException {
         Method method = cls.getDeclaredMethod(name);
         try {
@@ -18,7 +17,6 @@ public class ObjectHandler {
         }
     }
 
-    // TODO: 例外
     // TODO: Integer を int に渡せるように（wrapper -> primitive）
     // TODO: オーバーロードされている場合（引数の個数が未知）
     public Object callMethod(String name, ArrayList args) throws NoSuchMethodException {
