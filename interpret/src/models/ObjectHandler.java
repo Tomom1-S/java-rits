@@ -7,7 +7,42 @@ import java.util.List;
 public class ObjectHandler {
     Class cls;
     Object obj;
-    
+
+    public Object callConstructor()
+            throws NoSuchMethodException, IllegalAccessException, InvocationTargetException,
+            InstantiationException {
+        obj = cls.getConstructor().newInstance();
+        return obj;
+    }
+
+    // TODO: Integer を int に渡せるように（wrapper -> primitive）
+    // TODO: オーバーロードされている場合（引数の個数が未知）
+    public Object callConstructor(ArrayList args) throws NoSuchMethodException {
+        Constructor constructor;
+        Object result = new Object();
+        switch (args.size()) {
+            case 1:
+                constructor = cls.getDeclaredConstructor(args.get(0).getClass());
+                try {
+                    result = constructor.newInstance(args.get(0));
+                } catch (ReflectiveOperationException e) {
+                    throw new RuntimeException(e.getCause());
+                }
+                break;
+            case 2:
+                constructor = cls.getDeclaredConstructor(args.get(0).getClass(), args.get(1).getClass());
+                try {
+                    result = constructor.newInstance(args.get(0), args.get(1));
+                } catch (ReflectiveOperationException e) {
+                    throw new RuntimeException(e.getCause());
+                }
+                break;
+            default:
+                break;
+        }
+        return obj = result;
+    }
+
     public Object callMethod(String name) throws NoSuchMethodException {
         Method method = cls.getDeclaredMethod(name);
         try {
@@ -72,8 +107,19 @@ public class ObjectHandler {
             throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException,
             InvocationTargetException, InstantiationException {
         cls = Class.forName(type);
-        obj = cls.getConstructor().newInstance();
+        obj = callConstructor();
         return obj;
+    }
+
+    public List<Constructor> getConstructors() {
+        List<Constructor> constructorList = new ArrayList<>();
+
+        Constructor[] constructors = cls.getDeclaredConstructors();
+        for (Constructor constructor : constructors) {
+            constructorList.add(constructor);
+        }
+
+        return constructorList;
     }
 
     public List<Field> getFields() {

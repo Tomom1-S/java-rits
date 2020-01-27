@@ -1,6 +1,6 @@
 package myClasses;
 
-public class testClass {
+public class TestClass {
     public int id;
     public String name;
 
@@ -9,9 +9,16 @@ public class testClass {
     public final int PUB_INT = 42;
     private final int PVT_INT = 42;
 
-    public testClass() {
-        id = 0;
+    public TestClass() {
+        id = nextId;
         nextId++;
+        this.name = "Default";
+    }
+
+    public TestClass(String name) {
+        id = nextId;
+        nextId++;
+        this.name = name;
     }
 
     public int addNumbers(int val1, int val2) {
