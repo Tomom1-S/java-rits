@@ -5,10 +5,7 @@ import org.junit.jupiter.api.*;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.lang.reflect.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -120,6 +117,22 @@ class ObjectHandlerTest {
     }
 
     @Test
+    public void getMethodParameterTypesの正常系()
+            throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException,
+            InstantiationException, IllegalAccessException {
+        oh.createObject("myClasses.TestClass");
+        Method method = oh.cls.getDeclaredMethod("addNumbers", java.lang.Integer.class, java.lang.Integer.class);
+
+        List<Type> actual = oh.getMethodParameterTypes(method);
+        List<Type> expected = new ArrayList<>() {{
+            add(java.lang.Integer.class);
+            add(java.lang.Integer.class);
+        }};
+
+        assertThat(actual, is(expected));
+    }
+
+    @Test
     public void callMethodの正常系()
             throws ClassNotFoundException, IllegalAccessException,
             NoSuchMethodException, InstantiationException, InvocationTargetException {
@@ -189,6 +202,19 @@ class ObjectHandlerTest {
         final String actual = byteArrayOutputStream.toString();
         final String expected = "public myClasses.TestClass()" + ls +
                 "public myClasses.TestClass(java.lang.String)" + ls;
+        assertThat(actual, is(expected));
+    }
+
+    @Test
+    public void getConstructorParameterTypesの正常系() throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+        oh.createObject("myClasses.TestClass");
+        Constructor constructor = oh.cls.getDeclaredConstructor(java.lang.String.class);
+
+        List<Type> actual = oh.getConstructorParameterTypes(constructor);
+        List<Type> expected = new ArrayList<>() {{
+            add(java.lang.String.class);
+        }};
+
         assertThat(actual, is(expected));
     }
 

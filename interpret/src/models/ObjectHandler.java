@@ -111,6 +111,17 @@ public class ObjectHandler {
         return obj;
     }
 
+    public List<Type> getConstructorParameterTypes(Constructor constructor) {
+        List<Type> typeList = new ArrayList<>();
+
+        Type[] types = constructor.getGenericParameterTypes();
+        for (Type type : types) {
+            typeList.add(type);
+        }
+
+        return typeList;
+    }
+
     public List<Constructor> getConstructors() {
         List<Constructor> constructorList = new ArrayList<>();
 
@@ -131,6 +142,17 @@ public class ObjectHandler {
         }
 
         return fieldList;
+    }
+
+    public List<Type> getMethodParameterTypes(Method method) {
+        List<Type> typeList = new ArrayList<>();
+
+        Type[] types = method.getGenericParameterTypes();
+        for (Type type : types) {
+            typeList.add(type);
+        }
+
+        return typeList;
     }
 
     public List<Method> getMethods() {
