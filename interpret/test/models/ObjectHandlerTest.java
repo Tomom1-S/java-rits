@@ -25,7 +25,7 @@ class ObjectHandlerTest {
     private final int ORDER_CREATE_OBJECT = 1;
     private final int ORDER_CHANGE_FIELD = 2;
 
-    private final ArrayList<String> ARGS_NAME = new ArrayList<String>() {{
+    private final ArrayList<String> ARGS_NAME = new ArrayList<>() {{
         add("Foo Bar");
     }};
 
