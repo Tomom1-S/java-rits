@@ -1,5 +1,6 @@
 package models;
 
+import myClasses.TestClass;
 import org.junit.jupiter.api.*;
 
 import java.io.BufferedOutputStream;
@@ -86,7 +87,7 @@ class ObjectHandlerTest {
 //        oh.changeField("PUB_INT", 100);
 //        oh.changeField("PVT_INT", 200);
 
-        final String actual = oh.obj.toString();
+        final String actual = oh.getThisObject().toString();
         final String expected = "id: " + (ORDER_CHANGE_FIELD - 1)
                 + ", name: John Smith, nextId: 5, PUB_INT: 42, PVT_INT: 42";
         assertThat(actual, is(expected));
@@ -121,7 +122,7 @@ class ObjectHandlerTest {
             throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException,
             InstantiationException, IllegalAccessException {
         oh.createObject("myClasses.TestClass");
-        Method method = oh.cls.getDeclaredMethod("addNumbers", java.lang.Integer.class, java.lang.Integer.class);
+        Method method = oh.getThisClass().getDeclaredMethod("addNumbers", java.lang.Integer.class, java.lang.Integer.class);
 
         List<Type> actual = oh.getMethodParameterTypes(method);
         List<Type> expected = new ArrayList<>() {{
@@ -208,7 +209,7 @@ class ObjectHandlerTest {
     @Test
     public void getConstructorParameterTypesの正常系() throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         oh.createObject("myClasses.TestClass");
-        Constructor constructor = oh.cls.getDeclaredConstructor(java.lang.String.class);
+        Constructor constructor = oh.getThisClass().getDeclaredConstructor(java.lang.String.class);
 
         List<Type> actual = oh.getConstructorParameterTypes(constructor);
         List<Type> expected = new ArrayList<>() {{
@@ -258,14 +259,84 @@ class ObjectHandlerTest {
     }
 
     @Test
+    public void createArrayの正常系()
+            throws ClassNotFoundException, IllegalAccessException,
+            NoSuchMethodException, InstantiationException, InvocationTargetException {
+        oh.createObject("myClasses.TestClass");
+
+        final TestClass[] actual = (TestClass[]) oh.createArray(TestClass.class, 5);
+        final TestClass[] expected = (TestClass[]) Array.newInstance(TestClass.class, 5);
+        assertThat(actual, is(expected));
+    }
+
+    @Test
+    public void createArrayの異常系()
+            throws ClassNotFoundException, IllegalAccessException,
+            NoSuchMethodException, InstantiationException, InvocationTargetException {
+        oh.createObject("myClasses.TestClass");
+
+        Exception e = assertThrows(IllegalArgumentException.class,
+                () -> oh.createArray(TestClass.class, -42));
+        final String expectMsg = "size should be positive.";
+        assertThat(e.getMessage(), is(expectMsg));
+    }
+
+    @Test
+    public void setArrayElementの正常系() throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+        oh.createObject("myClasses.TestClass");
+        TestClass[] arr = (TestClass[]) oh.createArray(TestClass.class, 5);
+        oh.setArrayElement(2, new TestClass("John Smith"));
+
+        final String actual = ((TestClass) oh.getArrayElement(2)).name;
+        final String expected = "John Smith";
+        assertThat(actual, is(expected));
+    }
+
+    @Test
+    public void setArrayElementの異常系()
+            throws ClassNotFoundException, IllegalAccessException,
+            NoSuchMethodException, InstantiationException, InvocationTargetException {
+        oh.createObject("myClasses.TestClass");
+
+        Exception e = assertThrows(ArrayIndexOutOfBoundsException.class,
+                () -> oh.setArrayElement(-42, "foo"));
+        final String expectMsg = "Array index out of range: -42";
+        assertThat(e.getMessage(), is(expectMsg));
+    }
+
+    @Test
+    public void getArrayElementの異常系_インデックスが負()
+            throws ClassNotFoundException, IllegalAccessException,
+            NoSuchMethodException, InstantiationException, InvocationTargetException {
+        oh.createObject("myClasses.TestClass");
+
+        Exception e = assertThrows(ArrayIndexOutOfBoundsException.class,
+                () -> oh.getArrayElement(-42));
+        final String expectMsg = "Array index out of range: -42";
+        assertThat(e.getMessage(), is(expectMsg));
+    }
+
+    @Test
+    public void getArrayElementの異常系_インデックスがサイズより大きい()
+            throws ClassNotFoundException, IllegalAccessException,
+            NoSuchMethodException, InstantiationException, InvocationTargetException {
+        oh.createObject("myClasses.TestClass");
+
+        oh.createArray(TestClass.class, 5);
+        Exception e = assertThrows(ArrayIndexOutOfBoundsException.class,
+                () -> oh.getArrayElement(42));
+        final String expectMsg = "Array index out of range: 42";
+        assertThat(e.getMessage(), is(expectMsg));
+    }
+
+    @Test
     public void メソッドの〇〇系()
             throws ClassNotFoundException, NoSuchFieldException, IllegalAccessException,
             NoSuchMethodException, InstantiationException, InvocationTargetException {
-        final ObjectHandler oh = new ObjectHandler();
         oh.createObject("myClasses.TestClass");
         oh.changeField("nextId", 5);
 
-        final String actual = oh.obj.toString();
+        final String actual = oh.getThisObject().toString();
         final String expected = "id: 0, name: Default, nextId: 5, PUB_INT: 42, PVT_INT: 42";
         assertThat(actual, is(expected));
     }

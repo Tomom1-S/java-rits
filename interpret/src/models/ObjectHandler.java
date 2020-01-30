@@ -4,9 +4,10 @@ import java.lang.reflect.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ObjectHandler {
-    Class cls;
-    Object obj;
+public class ObjectHandler<T> {
+    private Class cls;
+    private Object obj;
+    private T[] array;
 
     public Object callConstructor()
             throws NoSuchMethodException, IllegalAccessException, InvocationTargetException,
@@ -103,6 +104,15 @@ public class ObjectHandler {
         field.set(obj, value);
     }
 
+    // TODO 多次元配列を作成する
+    public T[] createArray(final Class<T> type, final int size) {
+        if (!isPositive(size)) {
+            throw new IllegalArgumentException("size should be positive.");
+        }
+        array = (T[]) Array.newInstance(type, size);
+        return array;
+    }
+
     public Object createObject(String type)
             throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException,
             InvocationTargetException, InstantiationException {
@@ -131,6 +141,13 @@ public class ObjectHandler {
         }
 
         return constructorList;
+    }
+
+    public T getArrayElement(int index) {
+        if (!isValidIndex(index)) {
+            throw new ArrayIndexOutOfBoundsException(index);
+        }
+        return array[index];
     }
 
     public List<Field> getFields() {
@@ -164,5 +181,43 @@ public class ObjectHandler {
         }
 
         return methodList;
+    }
+
+    public T[] getThisArray() {
+        return this.array;
+    }
+
+    public Class getThisClass() {
+        return this.cls;
+    }
+
+    public Object getThisObject() {
+        return this.obj;
+    }
+
+    private boolean isPositive(final int value) {
+        if (value > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private boolean isValidIndex(final int index) {
+        if (index >= 0 && index < array.length) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public T setArrayElement(int index, T value) {
+        if (!isValidIndex(index)) {
+            throw new ArrayIndexOutOfBoundsException(index);
+        }
+
+        T oldValue = array[index];
+        array[index] = value;
+        return oldValue;
     }
 }
