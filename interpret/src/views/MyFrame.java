@@ -87,22 +87,34 @@ public class MyFrame extends JFrame implements ActionListener {
      * ボタンを設定
      */
     private void initButtons(GridBagLayout layout, GridBagConstraints constraints) {
+        initGrid();
+
         btnCreateObject = new JButton(FrameSetting.ButtonLabel.CREATE_OBJECT);
         btnCreateObject.addActionListener(this);
-        constraints.gridx = 4;    //位置x
-        constraints.gridy = 0;    //位置y
-        constraints.gridwidth = 1;    //コンポーネントの表示領域のセル数 横
-        constraints.gridheight = 1;    //コンポーネントの表示領域のセル数 縦
-        layout.setConstraints(btnCreateObject, constraints);
-        add(btnCreateObject);
+        putComponent(btnCreateObject,
+                FrameSetting.Grid.X_BUTTON, gridY++, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
+
+        btnCallConstructor = new JButton(FrameSetting.ButtonLabel.CALL_CONSTRUCTOR);
+        btnCallConstructor.addActionListener(this);
+        putComponent(btnCallConstructor,
+                FrameSetting.Grid.X_BUTTON, gridY++, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
+
+        btnChangeField = new JButton(FrameSetting.ButtonLabel.CHANGE_FIELD);
+        btnChangeField.addActionListener(this);
+        putComponent(btnChangeField,
+                FrameSetting.Grid.X_BUTTON, gridY++, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
+
+        btnCallMethod = new JButton(FrameSetting.ButtonLabel.CALL_METHOD);
+        btnCallMethod.addActionListener(this);
+        putComponent(btnCallMethod,
+                FrameSetting.Grid.X_BUTTON, gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
     }
 
     /**
      * テキストフィールドを設定
      */
     private void initTextFields(GridBagLayout layout, GridBagConstraints constraints) {
-        constraints.gridwidth = 1;    //コンポーネントの表示領域のセル数 横
-        constraints.gridheight = 1;    //コンポーネントの表示領域のセル数 縦
+        initGrid();
 
         // Create object
         putComponent(new JLabel(FrameSetting.TextLabel.TYPE),
@@ -151,6 +163,14 @@ public class MyFrame extends JFrame implements ActionListener {
                 FrameSetting.RESULT_FIELD_ROWS, FrameSetting.RESULT_FIELD_COLUMNS);
         resultText.setEditable(false);  // 結果表示用のフィールドなので編集不可
         putComponent(resultText, gridX++, gridY, FrameSetting.Grid.WIDTH * 5, FrameSetting.Grid.HEIGHT);
+    }
+
+    /**
+     * GridBagConstraints の設定に使う値を初期化
+     */
+    private void initGrid() {
+        gridX = FrameSetting.Grid.X_DEFAULT;
+        gridY = FrameSetting.Grid.Y_DEFAULT;
     }
 
     /**

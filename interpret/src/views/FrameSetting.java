@@ -15,6 +15,7 @@ public final class FrameSetting {
 
     class Grid {
         static final int X_DEFAULT = 0;
+        static final int X_BUTTON = 4;
         static final int Y_DEFAULT = 0;
         static final int WIDTH = 1;
         static final int HEIGHT = 1;
@@ -22,6 +23,10 @@ public final class FrameSetting {
 
     class ButtonLabel {
         static final String CREATE_OBJECT = "Create object";
+        static final String SEARCH_CLASS = "Search class";
+        static final String CALL_CONSTRUCTOR = "Call constructor";
+        static final String CHANGE_FIELD = "Change field";
+        static final String CALL_METHOD = "Call method";
     }
 
     class TextLabel {
