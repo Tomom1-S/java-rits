@@ -9,12 +9,28 @@ import java.awt.event.ActionListener;
 import java.lang.reflect.InvocationTargetException;
 
 public class MyFrame extends JFrame implements ActionListener {
-    FrameSetting setting = new FrameSetting();
+    GridBagLayout layout = new GridBagLayout();
+    int gridX = FrameSetting.Grid.X_DEFAULT;
+    int gridY = FrameSetting.Grid.Y_DEFAULT;
 
     JTextField typeText;
-    JTextField nameText;
+    JTextField fieldNameText;   // TODO 選択式にする
+    JTextField fieldText;
+    JTextField methodNameText;   // TODO 選択式にする
+    JTextField methodParamText;
+    JTextField searchTypeText;  // TODO 不要になる？
+    JTextField constructorNameText;   // TODO 選択式にする
+    JTextField constructorParamText;
     JTextArea resultText;
-    JButton button;
+
+    JButton btnCreateObject;
+    JButton btnSearchClass;
+    JButton btnCallConstructor;
+    JButton btnChangeField;
+    JButton btnCallMethod;
+    JButton btnCreateArray;
+    JButton btnGetArrayElement;
+    JButton btnSetArrayElement;
 
     public static void main(String[] args) {
         MyFrame me = new MyFrame();
@@ -23,7 +39,7 @@ public class MyFrame extends JFrame implements ActionListener {
     }
 
     private void init() {
-        setTitle(setting.frameTitle);
+        setTitle(FrameSetting.FRAME_TITLE);
         initBounds();
         initCloseOperation();
 
@@ -57,10 +73,9 @@ public class MyFrame extends JFrame implements ActionListener {
      * ウィンドウの見た目を設定
      */
     private void initAppearance(Container c) {
-        Color color = setting.bgColor;
+        Color color = FrameSetting.BG_COLOR;
         c.setBackground(color);
 
-        GridBagLayout layout = new GridBagLayout();
         GridBagConstraints constraints = new GridBagConstraints();
         setLayout(layout);
 
@@ -72,63 +87,83 @@ public class MyFrame extends JFrame implements ActionListener {
      * ボタンを設定
      */
     private void initButtons(GridBagLayout layout, GridBagConstraints constraints) {
-        button = new JButton(setting.buttonLabel);
-        button.addActionListener(this);
-
-        constraints.gridx = 1;	//位置x
-        constraints.gridy = 4;	//位置y
-        constraints.gridwidth = 1;	//コンポーネントの表示領域のセル数 横
-        constraints.gridheight = 1;	//コンポーネントの表示領域のセル数 縦
-        layout.setConstraints(button, constraints);
-        add(button);
+        btnCreateObject = new JButton(FrameSetting.ButtonLabel.CREATE_OBJECT);
+        btnCreateObject.addActionListener(this);
+        constraints.gridx = 4;    //位置x
+        constraints.gridy = 0;    //位置y
+        constraints.gridwidth = 1;    //コンポーネントの表示領域のセル数 横
+        constraints.gridheight = 1;    //コンポーネントの表示領域のセル数 縦
+        layout.setConstraints(btnCreateObject, constraints);
+        add(btnCreateObject);
     }
 
     /**
      * テキストフィールドを設定
      */
     private void initTextFields(GridBagLayout layout, GridBagConstraints constraints) {
-        JLabel typeLabel = new JLabel(setting.typeLabel);
-        typeText = new JTextField(setting.textFieldLength);
-        JLabel nameLabel = new JLabel(setting.variableNameLabel);
-        nameText = new JTextField(setting.textFieldLength);
-        resultText = new JTextArea(setting.defaultResult);
+        constraints.gridwidth = 1;    //コンポーネントの表示領域のセル数 横
+        constraints.gridheight = 1;    //コンポーネントの表示領域のセル数 縦
+
+        // Create object
+        putComponent(new JLabel(FrameSetting.TextLabel.TYPE),
+                gridX++, gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
+        typeText = new JTextField(FrameSetting.TEXT_FIELD_LENGTH);
+        putComponent(typeText, gridX, gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
+
+        // Call constructor
+        gridX = FrameSetting.Grid.X_DEFAULT;
+        gridY++;
+        putComponent(new JLabel(FrameSetting.TextLabel.CONSTRUCTOR),
+                gridX++, gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
+        constructorNameText = new JTextField(FrameSetting.TEXT_FIELD_LENGTH);
+        putComponent(constructorNameText, gridX++, gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
+        putComponent(new JLabel(FrameSetting.TextLabel.PARAMETER),
+                gridX++, gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
+        constructorParamText = new JTextField(FrameSetting.TEXT_FIELD_LENGTH);
+        putComponent(constructorParamText, gridX++, gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
+
+        // Change field
+        gridX = FrameSetting.Grid.X_DEFAULT;
+        gridY++;
+        putComponent(new JLabel(FrameSetting.TextLabel.FIELD),
+                gridX++, gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
+        fieldNameText = new JTextField(FrameSetting.TEXT_FIELD_LENGTH);
+        putComponent(fieldNameText, gridX++, gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
+        fieldText = new JTextField(FrameSetting.TEXT_FIELD_LENGTH);
+        putComponent(fieldText, ++gridX, gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
+
+        // Call method
+        gridX = FrameSetting.Grid.X_DEFAULT;
+        gridY++;
+        putComponent(new JLabel(FrameSetting.TextLabel.METHOD),
+                gridX++, gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
+        methodNameText = new JTextField(FrameSetting.TEXT_FIELD_LENGTH);
+        putComponent(methodNameText, gridX++, gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
+        putComponent(new JLabel(FrameSetting.TextLabel.PARAMETER),
+                gridX++, gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
+        methodParamText = new JTextField(FrameSetting.TEXT_FIELD_LENGTH);
+        putComponent(methodParamText, gridX++, gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
+
+        // Result
+        gridX = FrameSetting.Grid.X_DEFAULT;
+        gridY++;
+        resultText = new JTextArea(FrameSetting.DEFAULT_RESULT,
+                FrameSetting.RESULT_FIELD_ROWS, FrameSetting.RESULT_FIELD_COLUMNS);
         resultText.setEditable(false);  // 結果表示用のフィールドなので編集不可
+        putComponent(resultText, gridX++, gridY, FrameSetting.Grid.WIDTH * 5, FrameSetting.Grid.HEIGHT);
+    }
 
-        constraints.gridx = 0;	//位置x
-        constraints.gridy = 0;	//位置y
-        constraints.gridwidth = 1;	//コンポーネントの表示領域のセル数 横
-        constraints.gridheight = 1;	//コンポーネントの表示領域のセル数 縦
-        layout.setConstraints(typeLabel, constraints);
-        add(typeLabel);
-
-        constraints.gridx = 1;	//位置x
-        constraints.gridy = 0;	//位置y
-        constraints.gridwidth = 1;	//コンポーネントの表示領域のセル数 横
-        constraints.gridheight = 1;	//コンポーネントの表示領域のセル数 縦
-        layout.setConstraints(typeText, constraints);
-        add(typeText);
-
-
-        constraints.gridx = 0;	//位置x
-        constraints.gridy = 1;	//位置y
-        constraints.gridwidth = 1;	//コンポーネントの表示領域のセル数 横
-        constraints.gridheight = 1;	//コンポーネントの表示領域のセル数 縦
-        layout.setConstraints(nameLabel, constraints);
-        add(nameLabel);
-
-        constraints.gridx = 1;	//位置x
-        constraints.gridy = 1;	//位置y
-        constraints.gridwidth = 1;	//コンポーネントの表示領域のセル数 横
-        constraints.gridheight = 1;	//コンポーネントの表示領域のセル数 縦
-        layout.setConstraints(nameText, constraints);
-        add(nameText);
-
-        constraints.gridx = 0;	//位置x
-        constraints.gridy = 3;	//位置y
-        constraints.gridwidth = 2;	//コンポーネントの表示領域のセル数 横
-        constraints.gridheight = 1;	//コンポーネントの表示領域のセル数 縦
-        layout.setConstraints(resultText, constraints);
-        add(resultText);
+    /**
+     * コンポーネントを配置
+     */
+    private void putComponent(Component component, int x, int y, int width, int height) {
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.gridx = x;    //位置x
+        constraints.gridy = y;    //位置y
+        constraints.gridwidth = width;    //コンポーネントの表示領域のセル数 横
+        constraints.gridheight = height;    //コンポーネントの表示領域のセル数 縦
+        layout.setConstraints(component, constraints);
+        add(component);
     }
 
     /**
@@ -144,7 +179,7 @@ public class MyFrame extends JFrame implements ActionListener {
      */
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == button) {
+        if (e.getSource() == btnCreateObject) {
             ObjectHandler oh = new ObjectHandler();
             String text;
             try {
