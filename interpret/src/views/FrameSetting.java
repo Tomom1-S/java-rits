@@ -10,8 +10,8 @@ public final class FrameSetting {
     static final int TEXT_FIELD_LENGTH = 10;
 
     static final String DEFAULT_RESULT = "ここに結果が表示されます";
-    static final int RESULT_FIELD_ROWS = 5;
-    static final int RESULT_FIELD_COLUMNS = 30;
+    static final int RESULT_FIELD_ROWS = 10;
+    static final int RESULT_FIELD_COLUMNS = 35;
 
     class Grid {
         static final int X_DEFAULT = 0;
@@ -37,5 +37,15 @@ public final class FrameSetting {
         static final String METHOD = "メソッド";
         static final String ARRAY_SIZE = "配列の長さ";
         static final String ARRAY_INDEX = "配列のインデックス";
+    }
+
+    class Message {
+        static final String SUCCESS = "成功しました";
+        static final String FAILURE = "失敗しました";
+        static final String CREATE_OBJECT = "オブジェクトを生成します";
+        static final String SEARCH_CLASS = "クラスを検索します";
+        static final String CALL_CONSTRUCTOR = "コンストラクタを呼び出します";
+        static final String CHANGE_FIELD = "フィールドを変更します";
+        static final String CALL_METHOD = "メソッドを呼び出します";
     }
 }

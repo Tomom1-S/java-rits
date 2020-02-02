@@ -9,28 +9,33 @@ import java.awt.event.ActionListener;
 import java.lang.reflect.InvocationTargetException;
 
 public class MyFrame extends JFrame implements ActionListener {
-    GridBagLayout layout = new GridBagLayout();
-    int gridX = FrameSetting.Grid.X_DEFAULT;
-    int gridY = FrameSetting.Grid.Y_DEFAULT;
+    ObjectHandler oh = new ObjectHandler();
+    private String resultMsg = "";
+    private static final String LS = "\n";
 
-    JTextField typeText;
-    JTextField fieldNameText;   // TODO 選択式にする
-    JTextField fieldText;
-    JTextField methodNameText;   // TODO 選択式にする
-    JTextField methodParamText;
-    JTextField searchTypeText;  // TODO 不要になる？
-    JTextField constructorNameText;   // TODO 選択式にする
-    JTextField constructorParamText;
-    JTextArea resultText;
+    private GridBagLayout layout = new GridBagLayout();
+    private int gridX = FrameSetting.Grid.X_DEFAULT;
+    private int gridY = FrameSetting.Grid.Y_DEFAULT;
 
-    JButton btnCreateObject;
-    JButton btnSearchClass;
-    JButton btnCallConstructor;
-    JButton btnChangeField;
-    JButton btnCallMethod;
-    JButton btnCreateArray;
-    JButton btnGetArrayElement;
-    JButton btnSetArrayElement;
+    private JTextField typeText;
+    private JTextField typeSearchText;    // TODO 不要？
+    private JTextField fieldNameText;   // TODO 選択式にする
+    private JTextField fieldText;
+    private JTextField methodNameText;   // TODO 選択式にする
+    private JTextField methodParamText;
+    private JTextField searchTypeText;  // TODO 不要になる？
+    private JTextField constructorNameText;   // TODO 選択式にする
+    private JTextField constructorParamText;
+    private JTextArea resultText;
+
+    private JButton btnCreateObject;
+    private JButton btnSearchClass;
+    private JButton btnCallConstructor;
+    private JButton btnChangeField;
+    private JButton btnCallMethod;
+    private JButton btnCreateArray;
+    private JButton btnGetArrayElement;
+    private JButton btnSetArrayElement;
 
     public static void main(String[] args) {
         MyFrame me = new MyFrame();
@@ -92,22 +97,27 @@ public class MyFrame extends JFrame implements ActionListener {
         btnCreateObject = new JButton(FrameSetting.ButtonLabel.CREATE_OBJECT);
         btnCreateObject.addActionListener(this);
         putComponent(btnCreateObject,
-                FrameSetting.Grid.X_BUTTON, gridY++, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
+                FrameSetting.Grid.X_BUTTON, gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
+
+        btnSearchClass = new JButton(FrameSetting.ButtonLabel.SEARCH_CLASS);
+        btnSearchClass.addActionListener(this);
+        putComponent(btnSearchClass,
+                FrameSetting.Grid.X_BUTTON, ++gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
 
         btnCallConstructor = new JButton(FrameSetting.ButtonLabel.CALL_CONSTRUCTOR);
         btnCallConstructor.addActionListener(this);
         putComponent(btnCallConstructor,
-                FrameSetting.Grid.X_BUTTON, gridY++, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
+                FrameSetting.Grid.X_BUTTON, ++gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
 
         btnChangeField = new JButton(FrameSetting.ButtonLabel.CHANGE_FIELD);
         btnChangeField.addActionListener(this);
         putComponent(btnChangeField,
-                FrameSetting.Grid.X_BUTTON, gridY++, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
+                FrameSetting.Grid.X_BUTTON, ++gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
 
         btnCallMethod = new JButton(FrameSetting.ButtonLabel.CALL_METHOD);
         btnCallMethod.addActionListener(this);
         putComponent(btnCallMethod,
-                FrameSetting.Grid.X_BUTTON, gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
+                FrameSetting.Grid.X_BUTTON, ++gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
     }
 
     /**
@@ -118,51 +128,57 @@ public class MyFrame extends JFrame implements ActionListener {
 
         // Create object
         putComponent(new JLabel(FrameSetting.TextLabel.TYPE),
-                gridX++, gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
+                gridX, gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
         typeText = new JTextField(FrameSetting.TEXT_FIELD_LENGTH);
-        putComponent(typeText, gridX, gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
+        putComponent(typeText, ++gridX, gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
+
+        // Search type
+        gridX = FrameSetting.Grid.X_DEFAULT;
+        putComponent(new JLabel(FrameSetting.TextLabel.TYPE),
+                gridX, ++gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
+        typeSearchText = new JTextField(FrameSetting.TEXT_FIELD_LENGTH);
+        putComponent(typeSearchText, ++gridX, gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
 
         // Call constructor
         gridX = FrameSetting.Grid.X_DEFAULT;
-        gridY++;
         putComponent(new JLabel(FrameSetting.TextLabel.CONSTRUCTOR),
-                gridX++, gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
+                gridX, ++gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
         constructorNameText = new JTextField(FrameSetting.TEXT_FIELD_LENGTH);
-        putComponent(constructorNameText, gridX++, gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
+        putComponent(constructorNameText, ++gridX, gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
         putComponent(new JLabel(FrameSetting.TextLabel.PARAMETER),
-                gridX++, gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
+                ++gridX, gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
         constructorParamText = new JTextField(FrameSetting.TEXT_FIELD_LENGTH);
-        putComponent(constructorParamText, gridX++, gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
+        putComponent(constructorParamText, ++gridX, gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
 
         // Change field
         gridX = FrameSetting.Grid.X_DEFAULT;
-        gridY++;
         putComponent(new JLabel(FrameSetting.TextLabel.FIELD),
-                gridX++, gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
+                gridX, ++gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
         fieldNameText = new JTextField(FrameSetting.TEXT_FIELD_LENGTH);
-        putComponent(fieldNameText, gridX++, gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
+        putComponent(fieldNameText, ++gridX, gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
         fieldText = new JTextField(FrameSetting.TEXT_FIELD_LENGTH);
-        putComponent(fieldText, ++gridX, gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
+        gridX = gridX + 2;
+        putComponent(fieldText, gridX, gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
 
         // Call method
         gridX = FrameSetting.Grid.X_DEFAULT;
-        gridY++;
         putComponent(new JLabel(FrameSetting.TextLabel.METHOD),
-                gridX++, gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
+                gridX, ++gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
         methodNameText = new JTextField(FrameSetting.TEXT_FIELD_LENGTH);
-        putComponent(methodNameText, gridX++, gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
+        putComponent(methodNameText, ++gridX, gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
         putComponent(new JLabel(FrameSetting.TextLabel.PARAMETER),
-                gridX++, gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
+                ++gridX, gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
         methodParamText = new JTextField(FrameSetting.TEXT_FIELD_LENGTH);
-        putComponent(methodParamText, gridX++, gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
+        putComponent(methodParamText, ++gridX, gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
 
         // Result
         gridX = FrameSetting.Grid.X_DEFAULT;
-        gridY++;
         resultText = new JTextArea(FrameSetting.DEFAULT_RESULT,
                 FrameSetting.RESULT_FIELD_ROWS, FrameSetting.RESULT_FIELD_COLUMNS);
         resultText.setEditable(false);  // 結果表示用のフィールドなので編集不可
-        putComponent(resultText, gridX++, gridY, FrameSetting.Grid.WIDTH * 5, FrameSetting.Grid.HEIGHT);
+        JScrollPane jp = new JScrollPane(resultText, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);;
+        putComponent(jp, gridX, ++gridY, FrameSetting.Grid.WIDTH * 6, FrameSetting.Grid.HEIGHT);
     }
 
     /**
@@ -200,26 +216,70 @@ public class MyFrame extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnCreateObject) {
-            ObjectHandler oh = new ObjectHandler();
-            String text;
-            try {
-                oh.createObject(typeText.getText());
-            } catch (ClassNotFoundException ex) {
-                text = ex.getMessage();
-                ex.printStackTrace();
-            } catch (InstantiationException ex) {
-                ex.printStackTrace();
-            } catch (InvocationTargetException ex) {
-                ex.printStackTrace();
-            } catch (NoSuchMethodException ex) {
-                ex.printStackTrace();
-            } catch (IllegalAccessException ex) {
-                ex.printStackTrace();
-            }
-
-//             fields = oh.getFields();
-//
-//            resultText.setText(fields.toString());
+            createObject();
+        } else if (e.getSource() == btnSearchClass) {
+            searchClass();
+        } else if (e.getSource() == btnCallConstructor) {
+            callConstructor();
+        } else if (e.getSource() == btnChangeField) {
+            changeMethod();
+        } else if (e.getSource() == btnCallMethod) {
+            callMethod();
         }
+    }
+
+    private void createObject() {
+        resultMsg += FrameSetting.Message.CREATE_OBJECT + LS;
+        try {
+            oh.createObject(typeText.getText());
+            resultMsg += FrameSetting.Message.SUCCESS + LS;
+        } catch (Exception ex) {
+            resultMsg += ex + LS;
+            ex.printStackTrace();
+        }
+        resultText.setText(resultMsg);
+    }
+
+    private void searchClass() {
+        resultMsg += FrameSetting.Message.SEARCH_CLASS + LS;
+//            oh.createObject(typeText.getText());
+        resultMsg += FrameSetting.Message.SUCCESS + LS;
+        resultText.setText(resultMsg);
+    }
+
+    private void callConstructor() {
+        resultMsg += FrameSetting.Message.CALL_CONSTRUCTOR + LS;
+        try {
+            oh.callConstructor();
+            resultMsg += FrameSetting.Message.SUCCESS + LS;
+        } catch (Exception ex) {
+            resultMsg += ex + LS;
+            ex.printStackTrace();
+        }
+        resultText.setText(resultMsg);
+    }
+
+    private void changeMethod() {
+        resultMsg += FrameSetting.Message.CHANGE_FIELD + LS;
+        try {
+            oh.changeField(fieldNameText.getText(), fieldText.getText());
+            resultMsg += FrameSetting.Message.SUCCESS + LS;
+        } catch (Exception ex) {
+            resultMsg += ex + LS;
+            ex.printStackTrace();
+        }
+        resultText.setText(resultMsg);
+    }
+
+    private void callMethod() {
+        resultMsg += FrameSetting.Message.CALL_METHOD + LS;
+        try {
+            Object result = oh.callMethod(methodNameText.getText());
+            resultMsg += "Result: " + result.toString() + LS;
+        } catch (Exception ex) {
+            resultMsg += ex + LS;
+            ex.printStackTrace();
+        }
+        resultText.setText(resultMsg);
     }
 }
