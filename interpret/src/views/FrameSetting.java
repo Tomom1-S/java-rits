@@ -7,7 +7,9 @@ public final class FrameSetting {
 
     static final Color BG_COLOR = Color.gray;
 
-    static final int TEXT_FIELD_LENGTH = 10;
+    static final int TEXT_FIELD_LENGTH = 20;
+    static final int COMBO_BOX_WIDTH = 300;
+    static final int COMBO_BOX_FONT_SIZE = 12;
 
     static final String DEFAULT_RESULT = "ここに結果が表示されます";
     static final int RESULT_FIELD_ROWS = 10;
@@ -15,7 +17,6 @@ public final class FrameSetting {
 
     class Grid {
         static final int X_DEFAULT = 0;
-        static final int X_BUTTON = 4;
         static final int Y_DEFAULT = 0;
         static final int WIDTH = 1;
         static final int HEIGHT = 1;

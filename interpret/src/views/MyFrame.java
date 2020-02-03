@@ -6,7 +6,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.lang.reflect.InvocationTargetException;
+import java.util.Iterator;
+import java.util.List;
 
 public class MyFrame extends JFrame implements ActionListener {
     ObjectHandler oh = new ObjectHandler();
@@ -17,19 +18,31 @@ public class MyFrame extends JFrame implements ActionListener {
     private int gridX = FrameSetting.Grid.X_DEFAULT;
     private int gridY = FrameSetting.Grid.Y_DEFAULT;
 
+    private static class ComponentPosition {
+        private static Point constructorName = new Point();
+        private static Point fieldName = new Point();
+        private static Point methodName = new Point();
+        private static int btnGridX = 0;
+
+        public static void updateBtnGridX(int x) {
+            btnGridX = (btnGridX > x + 1) ? btnGridX : x + 1;
+        }
+    }
+
     private JTextField typeText;
-    private JTextField typeSearchText;    // TODO 不要？
     private JTextField fieldNameText;   // TODO 選択式にする
     private JTextField fieldText;
     private JTextField methodNameText;   // TODO 選択式にする
     private JTextField methodParamText;
-    private JTextField searchTypeText;  // TODO 不要になる？
     private JTextField constructorNameText;   // TODO 選択式にする
     private JTextField constructorParamText;
     private JTextArea resultText;
 
+    private JComboBox constructorChoice;
+    private JComboBox fieldChoice;
+    private JComboBox methodChoice;
+
     private JButton btnCreateObject;
-    private JButton btnSearchClass;
     private JButton btnCallConstructor;
     private JButton btnChangeField;
     private JButton btnCallMethod;
@@ -65,7 +78,7 @@ public class MyFrame extends JFrame implements ActionListener {
      */
     private void initBounds() {
         Dimension d = Toolkit.getDefaultToolkit().getScreenSize(); //画面全体のサイズ
-        int nx = d.width / 2;
+        int nx = (int) (d.width * 0.8);
         int ny = d.height / 2;
         int x = (d.width - nx) / 2;
         int y = (d.height - ny) / 2;
@@ -97,27 +110,22 @@ public class MyFrame extends JFrame implements ActionListener {
         btnCreateObject = new JButton(FrameSetting.ButtonLabel.CREATE_OBJECT);
         btnCreateObject.addActionListener(this);
         putComponent(btnCreateObject,
-                FrameSetting.Grid.X_BUTTON, gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
-
-        btnSearchClass = new JButton(FrameSetting.ButtonLabel.SEARCH_CLASS);
-        btnSearchClass.addActionListener(this);
-        putComponent(btnSearchClass,
-                FrameSetting.Grid.X_BUTTON, ++gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
+                ComponentPosition.btnGridX, gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
 
         btnCallConstructor = new JButton(FrameSetting.ButtonLabel.CALL_CONSTRUCTOR);
         btnCallConstructor.addActionListener(this);
         putComponent(btnCallConstructor,
-                FrameSetting.Grid.X_BUTTON, ++gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
+                ComponentPosition.btnGridX, ++gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
 
         btnChangeField = new JButton(FrameSetting.ButtonLabel.CHANGE_FIELD);
         btnChangeField.addActionListener(this);
         putComponent(btnChangeField,
-                FrameSetting.Grid.X_BUTTON, ++gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
+                ComponentPosition.btnGridX, ++gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
 
         btnCallMethod = new JButton(FrameSetting.ButtonLabel.CALL_METHOD);
         btnCallMethod.addActionListener(this);
         putComponent(btnCallMethod,
-                FrameSetting.Grid.X_BUTTON, ++gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
+                ComponentPosition.btnGridX, ++gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
     }
 
     /**
@@ -130,46 +138,49 @@ public class MyFrame extends JFrame implements ActionListener {
         putComponent(new JLabel(FrameSetting.TextLabel.TYPE),
                 gridX, gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
         typeText = new JTextField(FrameSetting.TEXT_FIELD_LENGTH);
-        putComponent(typeText, ++gridX, gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
-
-        // Search type
-        gridX = FrameSetting.Grid.X_DEFAULT;
-        putComponent(new JLabel(FrameSetting.TextLabel.TYPE),
-                gridX, ++gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
-        typeSearchText = new JTextField(FrameSetting.TEXT_FIELD_LENGTH);
-        putComponent(typeSearchText, ++gridX, gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
+        putComponent(typeText, ++gridX, gridY, FrameSetting.Grid.WIDTH * 2, FrameSetting.Grid.HEIGHT);
+        ComponentPosition.updateBtnGridX(gridX);
+        gridX++;    // 幅が2倍だから
 
         // Call constructor
         gridX = FrameSetting.Grid.X_DEFAULT;
         putComponent(new JLabel(FrameSetting.TextLabel.CONSTRUCTOR),
                 gridX, ++gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
         constructorNameText = new JTextField(FrameSetting.TEXT_FIELD_LENGTH);
-        putComponent(constructorNameText, ++gridX, gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
+        putComponent(constructorNameText, ++gridX, gridY, FrameSetting.Grid.WIDTH * 2, FrameSetting.Grid.HEIGHT);
+        ComponentPosition.constructorName = new Point(gridX, gridY);
+        gridX++;    // 幅が2倍だから
         putComponent(new JLabel(FrameSetting.TextLabel.PARAMETER),
                 ++gridX, gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
         constructorParamText = new JTextField(FrameSetting.TEXT_FIELD_LENGTH);
         putComponent(constructorParamText, ++gridX, gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
+        ComponentPosition.updateBtnGridX(gridX);
 
         // Change field
         gridX = FrameSetting.Grid.X_DEFAULT;
         putComponent(new JLabel(FrameSetting.TextLabel.FIELD),
                 gridX, ++gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
         fieldNameText = new JTextField(FrameSetting.TEXT_FIELD_LENGTH);
-        putComponent(fieldNameText, ++gridX, gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
+        putComponent(fieldNameText, ++gridX, gridY, FrameSetting.Grid.WIDTH * 2, FrameSetting.Grid.HEIGHT);
+        ComponentPosition.fieldName = new Point(gridX, gridY);
+        gridX += 2;    // 幅が2倍だから
         fieldText = new JTextField(FrameSetting.TEXT_FIELD_LENGTH);
-        gridX = gridX + 2;
-        putComponent(fieldText, gridX, gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
+        putComponent(fieldText, ++gridX, gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
+        ComponentPosition.updateBtnGridX(gridX);
 
         // Call method
         gridX = FrameSetting.Grid.X_DEFAULT;
         putComponent(new JLabel(FrameSetting.TextLabel.METHOD),
                 gridX, ++gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
         methodNameText = new JTextField(FrameSetting.TEXT_FIELD_LENGTH);
-        putComponent(methodNameText, ++gridX, gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
+        putComponent(methodNameText, ++gridX, gridY, FrameSetting.Grid.WIDTH * 2, FrameSetting.Grid.HEIGHT);
+        ComponentPosition.methodName = new Point(gridX, gridY);
+        gridX++;    // 幅が2倍だから
         putComponent(new JLabel(FrameSetting.TextLabel.PARAMETER),
                 ++gridX, gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
         methodParamText = new JTextField(FrameSetting.TEXT_FIELD_LENGTH);
         putComponent(methodParamText, ++gridX, gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
+        ComponentPosition.updateBtnGridX(gridX);
 
         // Result
         gridX = FrameSetting.Grid.X_DEFAULT;
@@ -177,7 +188,7 @@ public class MyFrame extends JFrame implements ActionListener {
                 FrameSetting.RESULT_FIELD_ROWS, FrameSetting.RESULT_FIELD_COLUMNS);
         resultText.setEditable(false);  // 結果表示用のフィールドなので編集不可
         JScrollPane jp = new JScrollPane(resultText, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
-                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);;
+                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         putComponent(jp, gridX, ++gridY, FrameSetting.Grid.WIDTH * 6, FrameSetting.Grid.HEIGHT);
     }
 
@@ -202,6 +213,64 @@ public class MyFrame extends JFrame implements ActionListener {
         add(component);
     }
 
+    private void putComponent(Component component, Point pt, int width, int height) {
+        putComponent(component, pt.x, pt.y, width, height);
+    }
+
+    /**
+     * コンボボックスを設定
+     */
+    private void setComboBoxes() {
+        // Constructors
+        constructorChoice = new JComboBox();
+        constructorChoice.setPreferredSize(
+                new Dimension(FrameSetting.COMBO_BOX_WIDTH, constructorChoice.getPreferredSize().height));
+        putComboBoxItems(constructorChoice, oh.getConstructors());
+        putComponent(constructorChoice, ComponentPosition.constructorName,
+                FrameSetting.Grid.WIDTH * 2, FrameSetting.Grid.HEIGHT);
+        constructorChoice.setFont(new Font("", Font.PLAIN, FrameSetting.COMBO_BOX_FONT_SIZE));
+        replaceComponent(constructorNameText, constructorChoice);
+
+        // Fields
+        fieldChoice = new JComboBox();
+        fieldChoice.setPreferredSize(
+                new Dimension(FrameSetting.COMBO_BOX_WIDTH, constructorChoice.getPreferredSize().height));
+        putComboBoxItems(fieldChoice, oh.getFields());
+        putComponent(fieldChoice, ComponentPosition.fieldName,
+                FrameSetting.Grid.WIDTH * 2, FrameSetting.Grid.HEIGHT);
+        fieldChoice.setFont(new Font("", Font.PLAIN, FrameSetting.COMBO_BOX_FONT_SIZE));
+        replaceComponent(fieldNameText, fieldChoice);
+
+        // Methods
+        methodChoice = new JComboBox();
+        methodChoice.setPreferredSize(
+                new Dimension(FrameSetting.COMBO_BOX_WIDTH, constructorChoice.getPreferredSize().height));
+        putComboBoxItems(methodChoice, oh.getMethods());
+        putComponent(methodChoice, ComponentPosition.methodName,
+                FrameSetting.Grid.WIDTH * 2, FrameSetting.Grid.HEIGHT);
+        methodChoice.setFont(new Font("", Font.PLAIN, FrameSetting.COMBO_BOX_FONT_SIZE));
+        replaceComponent(methodNameText, methodChoice);
+    }
+
+    /**
+     * コンボボックスの項目を設定
+     */
+    private <T> void putComboBoxItems(JComboBox comboBox, List<T> list) {
+        for (Iterator<T> i = list.iterator(); i.hasNext(); ) {
+            T t = i.next();
+            comboBox.addItem(t);
+        }
+    }
+
+    /**
+     * コンポーネントを置き換え
+     */
+    private void replaceComponent(Component oldComp, Component newComp) {
+        oldComp.setVisible(false);
+        newComp.setVisible(true);
+        newComp.revalidate();
+    }
+
     /**
      * ウィンドウ終了時の動作を初期化
      */
@@ -217,12 +286,11 @@ public class MyFrame extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnCreateObject) {
             createObject();
-        } else if (e.getSource() == btnSearchClass) {
-            searchClass();
+            setComboBoxes();
         } else if (e.getSource() == btnCallConstructor) {
             callConstructor();
         } else if (e.getSource() == btnChangeField) {
-            changeMethod();
+            changeField();
         } else if (e.getSource() == btnCallMethod) {
             callMethod();
         }
@@ -242,7 +310,6 @@ public class MyFrame extends JFrame implements ActionListener {
 
     private void searchClass() {
         resultMsg += FrameSetting.Message.SEARCH_CLASS + LS;
-//            oh.createObject(typeText.getText());
         resultMsg += FrameSetting.Message.SUCCESS + LS;
         resultText.setText(resultMsg);
     }
@@ -259,10 +326,13 @@ public class MyFrame extends JFrame implements ActionListener {
         resultText.setText(resultMsg);
     }
 
-    private void changeMethod() {
+    private void changeField() {
         resultMsg += FrameSetting.Message.CHANGE_FIELD + LS;
+
+        final String selected = String.valueOf(fieldChoice.getSelectedItem());
+        final String fieldName = selected.substring(selected.lastIndexOf('.') + 1);
         try {
-            oh.changeField(fieldNameText.getText(), fieldText.getText());
+            oh.changeField(fieldName, fieldText.getText());
             resultMsg += FrameSetting.Message.SUCCESS + LS;
         } catch (Exception ex) {
             resultMsg += ex + LS;
