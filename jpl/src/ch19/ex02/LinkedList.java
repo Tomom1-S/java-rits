@@ -1,4 +1,4 @@
-package ch19.ex01;
+package ch19.ex02;
 
 /**
  * LinkedList class for exercise 2.16
