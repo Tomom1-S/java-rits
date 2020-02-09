@@ -4,6 +4,11 @@
  */
 package ch14.ex10;
 
+import java.util.ArrayDeque;
+import java.util.Queue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 /**
  * Simple Thread Pool class.
  *
@@ -24,6 +29,9 @@ package ch14.ex10;
  *  @author Yoshiki Shibata
  */
 public class ThreadPool {
+    Queue queue;
+    ExecutorService executor;
+
     /**
      * Constructs ThreadPool.
      *
@@ -34,7 +42,16 @@ public class ThreadPool {
      *         is less than 1
      */
     public ThreadPool(int queueSize, int numberOfThreads) {
-        throw new AssertionError("Not Implemented Yet");
+        if (queueSize < 1 || numberOfThreads < 1) {
+            throw new IllegalArgumentException("queueSize and numberOfThreads should be positive.");
+        }
+
+        queue = new ArrayDeque(queueSize);
+        executor = Executors.newFixedThreadPool(numberOfThreads);
+
+        for (int i = 0; i < numberOfThreads; i++) {
+            executor.submit(new Thread());
+        }
     }
 
     /**
