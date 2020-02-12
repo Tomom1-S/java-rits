@@ -6,7 +6,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Iterator;
 import java.util.List;
 
 public class MyFrame extends JFrame implements ActionListener {
@@ -30,11 +29,11 @@ public class MyFrame extends JFrame implements ActionListener {
     }
 
     private JTextField typeText;
-    private JTextField fieldNameText;   // TODO 選択式にする
+    private JTextField fieldNameText;   // JComboBox 表示前の仮置き
     private JTextField fieldText;
-    private JTextField methodNameText;   // TODO 選択式にする
+    private JTextField methodNameText;   // JComboBox 表示前の仮置き
     private JTextField methodParamText;
-    private JTextField constructorNameText;   // TODO 選択式にする
+    private JTextField constructorNameText;   // JComboBox 表示前の仮置き
     private JTextField constructorParamText;
     private JTextArea resultText;
 
@@ -61,14 +60,8 @@ public class MyFrame extends JFrame implements ActionListener {
         initBounds();
         initCloseOperation();
 
-        //        initMenuBar();		// メニューバーの初期化
-
         Container c = getContentPane();
         initAppearance(c);
-
-//        initToolBar(c);		// ツールバーの初期化
-//        initPane(c);		// ペインの初期化
-//        initStatusBar(c);		// ステータスバーの初期化
 
         setResizable(true);
     }
@@ -97,14 +90,14 @@ public class MyFrame extends JFrame implements ActionListener {
         GridBagConstraints constraints = new GridBagConstraints();
         setLayout(layout);
 
-        initTextFields(layout, constraints);
-        initButtons(layout, constraints);
+        initTextFields();
+        initButtons();
     }
 
     /**
      * ボタンを設定
      */
-    private void initButtons(GridBagLayout layout, GridBagConstraints constraints) {
+    private void initButtons() {
         initGrid();
 
         btnCreateObject = new JButton(FrameSetting.ButtonLabel.CREATE_OBJECT);
@@ -131,7 +124,7 @@ public class MyFrame extends JFrame implements ActionListener {
     /**
      * テキストフィールドを設定
      */
-    private void initTextFields(GridBagLayout layout, GridBagConstraints constraints) {
+    private void initTextFields() {
         initGrid();
 
         // Create object
@@ -256,10 +249,9 @@ public class MyFrame extends JFrame implements ActionListener {
      * コンボボックスの項目を設定
      */
     private <T> void putComboBoxItems(JComboBox comboBox, List<T> list) {
-        for (Iterator<T> i = list.iterator(); i.hasNext(); ) {
-            T t = i.next();
-            comboBox.addItem(t);
-        }
+        list.forEach(i -> {
+            comboBox.addItem(i);
+        });
     }
 
     /**
@@ -330,9 +322,9 @@ public class MyFrame extends JFrame implements ActionListener {
         resultMsg += FrameSetting.Message.CHANGE_FIELD + LS;
 
         final String selected = String.valueOf(fieldChoice.getSelectedItem());
-        final String fieldName = selected.substring(selected.lastIndexOf('.') + 1);
+        final String name = selected.substring(selected.lastIndexOf('.') + 1);
         try {
-            oh.changeField(fieldName, fieldText.getText());
+            oh.changeField(name, fieldText.getText());
             resultMsg += FrameSetting.Message.SUCCESS + LS;
         } catch (Exception ex) {
             resultMsg += ex + LS;
@@ -343,13 +335,38 @@ public class MyFrame extends JFrame implements ActionListener {
 
     private void callMethod() {
         resultMsg += FrameSetting.Message.CALL_METHOD + LS;
-        try {
-            Object result = oh.callMethod(methodNameText.getText());
-            resultMsg += "Result: " + result.toString() + LS;
-        } catch (Exception ex) {
-            resultMsg += ex + LS;
-            ex.printStackTrace();
+
+        final String selected = String.valueOf(methodChoice.getSelectedItem());
+        final String tmp = selected.substring(0, selected.indexOf('('));
+        final String method = tmp.substring(tmp.lastIndexOf('.') + 1);
+        final String[] paramsType = selected.substring(selected.indexOf('(') + 1, selected.indexOf(')')).split(",");
+
+        Object result;
+        if (paramsType[0].isEmpty()) {
+            System.out.println("empty param");
+            try {
+                result = oh.callMethod(method);
+                resultMsg += "Result: " + result.toString() + LS;
+            } catch (Exception ex) {
+                resultMsg += ex + LS;
+                ex.printStackTrace();
+            }
+        } else {
+            // TODO パラメータの値を正しい方に変換してメソッド呼び出し
+//            try {
+//                result = oh.callMethod(method, Arrays.asList(paramsType));
+//                resultMsg += "Result: " + result.toString() + LS;
+//            } catch (Exception ex) {
+//                resultMsg += ex + LS;
+//                ex.printStackTrace();
+//            }
         }
+
         resultText.setText(resultMsg);
     }
+
+    /**
+     * コンストラクタ / メソッドの名前を抽出（callX用）
+     */
+//    private
 }

@@ -282,7 +282,9 @@ class ObjectHandlerTest {
     }
 
     @Test
-    public void setArrayElementの正常系() throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+    public void setArrayElementの正常系()
+            throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException,
+            InstantiationException, IllegalAccessException {
         oh.createObject("myClasses.TestClass");
         TestClass[] arr = (TestClass[]) oh.createArray(TestClass.class, 5);
         oh.setArrayElement(2, new TestClass("John Smith"));
