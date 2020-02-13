@@ -26,9 +26,7 @@ class ObjectHandlerTest {
     private final int ORDER_CREATE_OBJECT = 1;
     private final int ORDER_CHANGE_FIELD = 2;
 
-    private final ArrayList<String> ARGS_NAME = new ArrayList<>() {{
-        add("Foo Bar");
-    }};
+    private final String ARGS_NAME = "Foo Bar";
 
     @BeforeEach
     public void setUp() {
@@ -76,6 +74,39 @@ class ObjectHandlerTest {
         assertThat(actual, is(expected));
     }
 
+    @Test
+    public void getFieldの正常系()
+            throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException,
+            InstantiationException, IllegalAccessException, NoSuchFieldException {
+        oh.createObject("myClasses.TestClass");
+
+        final String actual = (String) oh.getField("name");
+        final String expected = "Default";
+        assertThat(actual, is(expected));
+    }
+
+    @Test
+    public void getFieldの正常系_private()
+            throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException,
+            InstantiationException, IllegalAccessException, NoSuchFieldException {
+        oh.createObject("myClasses.TestClass");
+
+        final int actual = (int) oh.getField("PVT_INT");
+        final int expected = 42;
+        assertThat(actual, is(expected));
+    }
+
+    @Test
+    public void getFieldの正常系_static()
+            throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException,
+            InstantiationException, IllegalAccessException, NoSuchFieldException {
+        oh.createObject("myClasses.TestClass");
+
+        final int actual = (int) oh.getField("nextId");
+        final int expected = 11;
+        assertThat(actual, is(expected));
+    }
+
     @Order(ORDER_CHANGE_FIELD)
     @Test
     public void changeFieldの正常系()
@@ -84,8 +115,8 @@ class ObjectHandlerTest {
         oh.createObject("myClasses.TestClass");
         oh.changeField("name", "John Smith");
         oh.changeField("nextId", 5);
-//        oh.changeField("PUB_INT", 100);
-//        oh.changeField("PVT_INT", 200);
+        oh.changeField("PUB_INT", 100);
+        oh.changeField("PVT_INT", 200);
 
         final String actual = oh.getThisObject().toString();
         final String expected = "id: " + (ORDER_CHANGE_FIELD - 1)
@@ -151,10 +182,7 @@ class ObjectHandlerTest {
             NoSuchMethodException, InstantiationException, InvocationTargetException {
         oh.createObject("myClasses.TestClass");
 
-        final int actual = (int) oh.callMethod("addNumbers", new ArrayList<Integer>() {{
-            add(1);
-            add(2);
-        }});
+        final int actual = (int) oh.callMethod("addNumbers", new Object[] {1, 2});
         final int expected = 3;
         assertThat(actual, is(expected));
     }
@@ -166,26 +194,10 @@ class ObjectHandlerTest {
         oh.createObject("myClasses.TestClass");
 
         Exception e = assertThrows(RuntimeException.class,
-                () -> oh.callMethod("addPositiveNumbers", new ArrayList<Integer>() {{
-                    add(-1);
-                    add(2);
-                }}));
+                () -> oh.callMethod("addPositiveNumbers", new Object[] {-1, 2}));
         final String expectMsg = "java.lang.IllegalArgumentException: Arguments should be positive.";
         assertThat(e.getMessage(), is(expectMsg));
     }
-
-    // TODO やったほうがいい？
-//    @Test
-//    public void callMethodの異常系_パラメータの個数()
-//            throws ClassNotFoundException, IllegalAccessException,
-//            NoSuchMethodException, InstantiationException, InvocationTargetException {
-//        oh.createObject("myClasses.TestClass");
-//
-//        Exception e = assertThrows(RuntimeException.class,
-//                () -> oh.callMethod("addPositiveNumbers", new ArrayList<Integer>()));
-//        final String expectMsg = "java.lang.IllegalArgumentException: Arguments should be positive.";
-//        assertThat(e.getMessage(), is(expectMsg));
-//    }
 
     @Test
     public void getConstructorsの正常系()
@@ -250,10 +262,7 @@ class ObjectHandlerTest {
         oh.createObject("myClasses.TestClass");
 
         Exception e = assertThrows(NoSuchMethodException.class,
-                () -> oh.callConstructor(new ArrayList<>() {{
-                    add(42);
-                    add("Foo Bar");
-                }}));
+                () -> oh.callConstructor(42, "Foo Bar"));
         final String expectMsg = "myClasses.TestClass.<init>(java.lang.Integer, java.lang.String)";
         assertThat(e.getMessage(), is(expectMsg));
     }

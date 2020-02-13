@@ -46,7 +46,9 @@ public final class FrameSetting {
         static final String CREATE_OBJECT = "オブジェクトを生成します";
         static final String SEARCH_CLASS = "クラスを検索します";
         static final String CALL_CONSTRUCTOR = "コンストラクタを呼び出します";
+        static final String GET_FIELD = "フィールドの値を取得します";
         static final String CHANGE_FIELD = "フィールドを変更します";
         static final String CALL_METHOD = "メソッドを呼び出します";
+        static final String ERROR_INVALID_ARGS_NUMBER = "引数の数が合致しません";
     }
 }

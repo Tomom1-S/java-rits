@@ -17,31 +17,20 @@ public class ObjectHandler<T> {
     }
 
     // TODO: Integer を int に渡せるように（wrapper -> primitive）
-    // TODO: オーバーロードされている場合（引数の個数が未知）
-    public Object callConstructor(ArrayList args) throws NoSuchMethodException {
-        Constructor constructor;
-        Object result = new Object();
-        switch (args.size()) {
-            case 1:
-                constructor = cls.getDeclaredConstructor(args.get(0).getClass());
-                try {
-                    result = constructor.newInstance(args.get(0));
-                } catch (ReflectiveOperationException e) {
-                    throw new RuntimeException(e.getCause());
-                }
-                break;
-            case 2:
-                constructor = cls.getDeclaredConstructor(args.get(0).getClass(), args.get(1).getClass());
-                try {
-                    result = constructor.newInstance(args.get(0), args.get(1));
-                } catch (ReflectiveOperationException e) {
-                    throw new RuntimeException(e.getCause());
-                }
-                break;
-            default:
-                break;
+    public Object callConstructor(Object... args) throws NoSuchMethodException {
+        final int numOfParams = args.length;
+
+        Class<?>[] params = new Class[numOfParams];
+        for (int i = 0; i < numOfParams; i++) {
+            params[i] = args[i].getClass();
         }
-        return obj = result;
+
+        Constructor constructor = cls.getDeclaredConstructor(params);
+        try {
+            return obj = constructor.newInstance(args);
+        } catch (ReflectiveOperationException e) {
+            throw new RuntimeException(e.getCause());
+        }
     }
 
     public Object callMethod(String name) throws NoSuchMethodException {
@@ -54,53 +43,37 @@ public class ObjectHandler<T> {
     }
 
     // TODO: Integer を int に渡せるように（wrapper -> primitive）
-    // TODO: オーバーロードされている場合（引数の個数が未知）
-    public Object callMethod(String name, ArrayList args) throws NoSuchMethodException {
-        Method method;
-        Object result = new Object();
-        switch (args.size()) {
-            case 1:
-                method = cls.getDeclaredMethod(name, args.get(0).getClass());
-                try {
-                    result = method.invoke(obj, args.get(0));
-                } catch (ReflectiveOperationException e) {
-                    throw new RuntimeException(e.getCause());
-                }
-                break;
-            case 2:
-                method = cls.getDeclaredMethod(name, args.get(0).getClass(), args.get(1).getClass());
-                try {
-                    result = method.invoke(obj, args.get(0), args.get(1));
-                } catch (ReflectiveOperationException e) {
-                    throw new RuntimeException(e.getCause());
-                }
-                break;
-            default:
-                break;
+    public Object callMethod(String name, Object... args) throws NoSuchMethodException {
+        final int numOfParams = args.length;
+
+        Class<?>[] params = new Class[numOfParams];
+        for (int i = 0; i < numOfParams; i++) {
+            params[i] = args[i].getClass();
         }
-        return result;
+
+        Method method = cls.getDeclaredMethod(name, params);
+        try {
+            return method.invoke(obj, args);
+        } catch (ReflectiveOperationException e) {
+            throw new RuntimeException(e.getCause());
+        }
     }
 
     public void changeField(String name, Object value) throws NoSuchFieldException, IllegalAccessException {
         Field field = cls.getDeclaredField(name);
 
-        // TODO: `private final` のインスタンスフィールドの書き換えもできること
-//        if (Modifier.isFinal(field.getModifiers())) {
-//            field.setAccessible(true);
-//            Field modifiersField = Field.class.getDeclaredField("modifiers");
-//            modifiersField.setAccessible(true);
-//            modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
-//            System.out.println("Try to final field");
-//
-//            field.set(obj, value);
-//
-//            return;
-//        }
-
-        // フィールドにアクセスできないときアクセス制御する
         if (Modifier.isPrivate(field.getModifiers())) {
             field.setAccessible(true);
         }
+
+        if (Modifier.isFinal(field.getModifiers())) {
+            System.out.println("final: " + field.getModifiers());
+            field.setAccessible(true);
+            Field modifiersField = Field.class.getDeclaredField("modifiers");
+            modifiersField.setAccessible(true);
+            modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
+        }
+
         field.set(obj, value);
     }
 
@@ -148,6 +121,12 @@ public class ObjectHandler<T> {
             throw new ArrayIndexOutOfBoundsException(index);
         }
         return array[index];
+    }
+
+    public Object getField(String name) throws NoSuchFieldException, IllegalAccessException {
+        Field field = cls.getDeclaredField(name);
+        field.setAccessible(true);
+        return field.get(obj);
     }
 
     public List<Field> getFields() {

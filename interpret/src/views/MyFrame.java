@@ -282,6 +282,14 @@ public class MyFrame extends JFrame implements ActionListener {
         } else if (e.getSource() == btnCallConstructor) {
             callConstructor();
         } else if (e.getSource() == btnChangeField) {
+            final String value = fieldText.getText();
+
+            // 値が入力されていなければ、get する
+            if (value == null || value.isEmpty()) {
+                getField();
+                return;
+            }
+
             changeField();
         } else if (e.getSource() == btnCallMethod) {
             callMethod();
@@ -318,6 +326,23 @@ public class MyFrame extends JFrame implements ActionListener {
         resultText.setText(resultMsg);
     }
 
+    private void getField() {
+        resultMsg += FrameSetting.Message.GET_FIELD + LS;
+
+        final String selected = String.valueOf(fieldChoice.getSelectedItem());
+        final String name = selected.substring(selected.lastIndexOf('.') + 1);
+        try {
+            final Object result = oh.getField(name);
+            resultMsg += FrameSetting.Message.SUCCESS + LS;
+            fieldText.setText(result.toString());
+        } catch (Exception ex) {
+            resultMsg += ex + LS;
+            ex.printStackTrace();
+        }
+        resultText.setText(resultMsg);
+    }
+
+
     private void changeField() {
         resultMsg += FrameSetting.Message.CHANGE_FIELD + LS;
 
@@ -337,36 +362,75 @@ public class MyFrame extends JFrame implements ActionListener {
         resultMsg += FrameSetting.Message.CALL_METHOD + LS;
 
         final String selected = String.valueOf(methodChoice.getSelectedItem());
-        final String tmp = selected.substring(0, selected.indexOf('('));
-        final String method = tmp.substring(tmp.lastIndexOf('.') + 1);
-        final String[] paramsType = selected.substring(selected.indexOf('(') + 1, selected.indexOf(')')).split(",");
+        final String method = extractMethodName(selected);
+        final String[] paramsType = extractParamsName(selected);
 
-        Object result;
+        // 引数がないとき
         if (paramsType[0].isEmpty()) {
-            System.out.println("empty param");
             try {
-                result = oh.callMethod(method);
+                Object result = oh.callMethod(method);
                 resultMsg += "Result: " + result.toString() + LS;
             } catch (Exception ex) {
                 resultMsg += ex + LS;
                 ex.printStackTrace();
             }
-        } else {
-            // TODO パラメータの値を正しい方に変換してメソッド呼び出し
+            resultText.setText(resultMsg);
+            return;
+        }
+
+        // TODO パラメータの値を正しい型に変換してメソッド呼び出し
+        Object result;
+        final int numOfParams = paramsType.length;
+        String[] valueText = splitComma(methodParamText.getText());
+
+        // 引数の数が一致していなければメッセージを表示
+        if (valueText.length != numOfParams) {
+            resultMsg += FrameSetting.Message.ERROR_INVALID_ARGS_NUMBER + LS;
+            resultText.setText(resultMsg);
+            return;
+        }
+
+        Object[] params = new Object[numOfParams];
+//        for (int i = 0; i < numOfParams; i++) {
 //            try {
-//                result = oh.callMethod(method, Arrays.asList(paramsType));
-//                resultMsg += "Result: " + result.toString() + LS;
+//                Class paramClass = Class.forName(paramsType[i]);
+//                Object newObj = paramClass.getDeclaredConstructor().newInstance();
+//                params[i] = ;
 //            } catch (Exception ex) {
 //                resultMsg += ex + LS;
 //                ex.printStackTrace();
 //            }
-        }
+//        }
 
+        try {
+            result = oh.callMethod(method, params);
+            resultMsg += "Result: " + result.toString() + LS;
+        } catch (Exception ex) {
+            resultMsg += ex + LS;
+            ex.printStackTrace();
+        }
         resultText.setText(resultMsg);
     }
 
-    /**
-     * コンストラクタ / メソッドの名前を抽出（callX用）
-     */
-//    private
+    private String extractMethodName(final String item) {
+        final String tmp = item.substring(0, item.indexOf('('));
+        return tmp.substring(tmp.lastIndexOf('.') + 1);
+    }
+
+    private String[] extractParamsName(final String item) {
+        return item.substring(item.indexOf('(') + 1, item.indexOf(')')).split(",");
+    }
+
+    // カンマで文字列を分割（""の間のカンマは無視）
+    private String[] splitComma(final String str) {
+        return str.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
+    }
+
+//    private <T> T stringToClass(final String type, final String value)
+//            throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException,
+//            InvocationTargetException, InstantiationException {
+//        Class paramClass = Class.forName(type);
+//        T newObj = (T) paramClass.getDeclaredConstructor().newInstance();
+//        newObj = ;
+//    }
 }
