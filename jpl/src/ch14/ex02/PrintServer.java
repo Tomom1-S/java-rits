@@ -19,6 +19,8 @@ public class PrintServer implements Runnable {
     public void run() {
         if (thread != Thread.currentThread()) {
             return;
+            // 柴田さん：run が RunTimeExceotion をスローする
+            // テストするときは別のスレッドを立ち上げて直接 run を呼ぶ
         }
 
         for (; ; ) {

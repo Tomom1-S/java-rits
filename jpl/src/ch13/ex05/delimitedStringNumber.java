@@ -13,6 +13,7 @@ public class delimitedStringNumber {
         int offset = length % DIGIT;
 
         while (offset < length) {
+            // 柴田さん：3桁以下のときにそのままの文字列を返す処理は外に出すとよい
             if (offset == 0) {
                 offset += 3;
             }
