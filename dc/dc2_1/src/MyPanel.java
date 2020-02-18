@@ -2,11 +2,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.time.LocalTime;
 
-public class MyPanel extends JPanel implements ActionListener {
+public class MyPanel extends JPanel implements ActionListener, ComponentListener {
     final Timer timer;
-    final Font font = new Font("Serif", Font.PLAIN, Settings.fontSize);
+    Font font = new Font("Serif", Font.PLAIN, Settings.fontSize);
 
     public MyPanel() {
         setPreferredSize(Settings.size);
@@ -21,17 +23,36 @@ public class MyPanel extends JPanel implements ActionListener {
         g.setColor(Color.BLACK);
         LocalTime now = LocalTime.now();
         final String text = String.format("%02d:%02d:%02d", now.getHour(), now.getMinute(), now.getSecond());
-        drawCenteredString(g, text, font);
+        drawCenteredString(g, text);
     }
 
-    private void drawCenteredString(Graphics g, String text, Font font) {
+    private void drawCenteredString(final Graphics g, final String text) {
         g.setFont(font);
         final FontMetrics metrics = g.getFontMetrics();
         final Dimension textSize = new Dimension(metrics.stringWidth(text), metrics.getHeight());
+
+        font = new Font(font.getName(), font.getStyle(), calculateFontSize(textSize));
+        g.setFont(font);
+        final FontMetrics newMetrics = g.getFontMetrics();
         g.drawString(text,
-                (getWidth() - textSize.width) / 2,
-                (getHeight() + metrics.getDescent()) / 2
+                (getWidth() - newMetrics.stringWidth(text)) / 2,
+                (getHeight() + newMetrics.getDescent()) / 2
         );
+    }
+
+    private int calculateFontSize(Dimension textSize) {
+        if (getHeight() < 1 || textSize.height < 1) {
+            return 1;
+        }
+
+        final double winRatio = getWidth() / getHeight();
+        final double textRatio = textSize.width / textSize.height;
+
+        if (winRatio < textRatio) {
+            return (int) (getWidth() * Settings.fontOccupancy / textRatio);
+        } else {
+            return (int) (getHeight() * Settings.fontOccupancy);
+        }
     }
 
     @Override
@@ -39,5 +60,22 @@ public class MyPanel extends JPanel implements ActionListener {
         if (e.getSource() == timer) {
             repaint();
         }
+    }
+
+    @Override
+    public void componentResized(ComponentEvent e) {
+        repaint();
+    }
+
+    @Override
+    public void componentMoved(ComponentEvent e) {
+    }
+
+    @Override
+    public void componentShown(ComponentEvent e) {
+    }
+
+    @Override
+    public void componentHidden(ComponentEvent e) {
     }
 }
