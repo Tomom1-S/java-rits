@@ -6,4 +6,6 @@ public class Settings {
     public static Point location = new Point(100, 100);
 
     public static final int fontSize = 50;
+
+    public static final int interval = 1000;   // 描画の更新間隔[ms]
 }

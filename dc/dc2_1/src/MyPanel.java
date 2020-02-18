@@ -1,13 +1,19 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.time.LocalTime;
 
-public class MyPanel extends JPanel {
+public class MyPanel extends JPanel implements ActionListener {
+    final Timer timer;
+
     final Dimension winSize = Settings.size;
     final Font font = new Font("Serif", Font.PLAIN, Settings.fontSize);
 
     public MyPanel() {
         setPreferredSize(Settings.size);
+        timer = new Timer(Settings.interval, this);
+        timer.start();
     }
 
     public void paintComponent(Graphics g) {
@@ -25,8 +31,15 @@ public class MyPanel extends JPanel {
         final FontMetrics metrics = g.getFontMetrics();
         final Dimension textSize = new Dimension(metrics.stringWidth(text), metrics.getHeight());
         g.drawString(text,
-                (winSize.width - textSize.width) / 2,
-                (winSize.height + metrics.getDescent()) / 2
+                (getWidth() - textSize.width) / 2,
+                (getHeight() + metrics.getDescent()) / 2
         );
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == timer) {
+            repaint();
+        }
     }
 }
