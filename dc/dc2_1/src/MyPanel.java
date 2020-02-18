@@ -6,8 +6,6 @@ import java.time.LocalTime;
 
 public class MyPanel extends JPanel implements ActionListener {
     final Timer timer;
-
-    final Dimension winSize = Settings.size;
     final Font font = new Font("Serif", Font.PLAIN, Settings.fontSize);
 
     public MyPanel() {
