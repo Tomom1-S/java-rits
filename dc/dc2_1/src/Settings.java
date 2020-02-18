@@ -8,5 +8,5 @@ public class Settings {
     public static final int fontSize = 50;
     public static final double fontOccupancy = 0.7; // フォントの占める割合
 
-    public static final int interval = 1000;   // 描画の更新間隔[ms]
+    public static final int interval = 500;   // 描画の更新間隔[ms]
 }
