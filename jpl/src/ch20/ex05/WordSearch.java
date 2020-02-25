@@ -1,7 +1,6 @@
 package ch20.ex05;
 
 import java.io.*;
-import java.util.stream.Stream;
 
 public class WordSearch {
     public static void main(String[] args) throws IOException {
