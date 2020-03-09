@@ -21,7 +21,6 @@ public class FileSearchTest {
 
     private final File dir = new File("test" + fs + "ch20" + fs + "ex11", "src");
     private final File failure = new File("test" + fs + "ch20" + fs + "ex11", "failure");
-    private final File file = new File("test" + fs + "ch20" + fs + "ex11", "src");
     private final String suffix = "txt";
 
     @Before
