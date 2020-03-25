@@ -9,7 +9,7 @@ public class LineReader extends FilterReader {
      * @param in a Reader object providing the underlying stream.
      * @throws NullPointerException if <code>in</code> is <code>null</code>
      */
-    protected LineReader(Reader in) {
+    public LineReader(Reader in) {
         super(in);
     }
 
@@ -18,23 +18,17 @@ public class LineReader extends FilterReader {
         return (c == '\n' ? -2 : c);
     }
 
-    public static void main(String[] args) throws IOException {
-        if (args.length < 1) {
-            throw new IllegalArgumentException("1 argument is needed!");
-        }
+    public String readLine() throws IOException {
+        final StringBuffer buffer = new StringBuffer();
 
-        StringReader src = new StringReader(args[0]);
-        LineReader f = new LineReader(src);
-
-        OutputStream out = System.out;
         int c;
-        while ((c = f.read()) != -1) {
-            if (c < -1) {
-                out.write('\n');
-                out.flush();
+        while ((c = read()) != -1) {
+            if (c < 0) {
+                break;
             }
-            out.write(c);
+            buffer.append((char) c);
         }
-        out.flush();
+
+        return buffer.toString();
     }
 }

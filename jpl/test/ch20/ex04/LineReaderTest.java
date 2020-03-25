@@ -7,6 +7,7 @@ import org.junit.Test;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.io.StringReader;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
@@ -28,28 +29,26 @@ public class LineReaderTest {
     }
 
     @Test
-    public void キーと同じ長さの文字列を変換() {
-        try {
-            LineReader.main(new String[]{"foo\nbar\nbaz"});
-        } catch (IOException e) {
-            e.printStackTrace();
+    public void readLineメソッドで1行ずつ読み込む() throws IOException {
+        StringReader src = new StringReader("foo\nbar\nbaz");
+        LineReader reader = new LineReader(src);
+
+        final String[] expected = new String[] {"foo", "bar", "baz"};
+        for (String ex : expected) {
+            final String actual = reader.readLine();
+            assertThat(actual, is(ex));
         }
-
-        // 標準出力の内容を取得
-        System.out.flush();
-        final String expected = "foo" + ls + "bar" + ls + "baz";
-
-        assertThat(outContent.toString(), is(expected));
     }
 
     @Test
-    public void 引数が足りないと例外() {
-        try {
-            LineReader.main(new String[]{});
-        } catch (IllegalArgumentException expected) {
-            assertThat(expected.getMessage(), is("1 argument is needed!"));
-        } catch (IOException e) {
-            e.printStackTrace();
+    public void 空行が含まれる文字列をreadLineメソッドで1行ずつ読み込む() throws IOException {
+        StringReader src = new StringReader("foo\nbar\n\nbaz");
+        LineReader reader = new LineReader(src);
+
+        final String[] expected = new String[] {"foo", "bar", "", "baz"};
+        for (String ex : expected) {
+            final String actual = reader.readLine();
+            assertThat(actual, is(ex));
         }
     }
 
