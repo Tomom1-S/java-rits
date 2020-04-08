@@ -36,14 +36,14 @@ public class TestClass {
 
     // TODO: wrapper -> primitive の対応ができたら消す
     public int addPositiveNumbers(Integer val1, Integer val2) {
-        if(val1 < 0 || val2 < 0) {
+        if (val1 < 0 || val2 < 0) {
             throw new IllegalArgumentException("Arguments should be positive.");
         }
         return val1 + val2;
     }
 
     public int addPositiveNumbers(int val1, int val2) {
-        if(val1 < 0 || val2 < 0) {
+        if (val1 < 0 || val2 < 0) {
             throw new IllegalArgumentException("Arguments should be positive.");
         }
         return val1 + val2;
@@ -51,6 +51,15 @@ public class TestClass {
 
     public String getName() {
         return name;
+    }
+
+    private int multiplyNumbers(int val1, int val2) {
+        return val1 * val2;
+    }
+
+    // TODO: wrapper -> primitive の対応ができたら消す
+    private int multiplyNumbers(Integer val1, Integer val2) {
+        return val1 * val2;
     }
 
     public void setName(String name) {
