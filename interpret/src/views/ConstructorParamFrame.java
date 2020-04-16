@@ -8,13 +8,13 @@ import java.awt.event.ActionListener;
 import java.lang.reflect.Parameter;
 import java.util.List;
 
-public class ParamFrame extends JFrame implements ActionListener {
+public class ConstructorParamFrame<E> extends JFrame implements ActionListener {
     private final MainFrame parent;
     private final String name;
     private final Parameter[] params;
     private final int paramNum;
-    private List<String> values;
-    private final List<String> defaultValues;
+    private List<E> values;
+    private final List<E> defaultValues;
 
     private BorderLayout layout = new BorderLayout();
 
@@ -24,7 +24,7 @@ public class ParamFrame extends JFrame implements ActionListener {
     private JButton btnClear;
     private JButton btnCancel;
 
-    public ParamFrame(MainFrame parent, String name, Parameter[] params, List<String> values) {
+    public ConstructorParamFrame(MainFrame parent, String name, Parameter[] params, List<E> values) {
         this.parent = parent;
         this.name = name;
         this.params = params;
@@ -45,7 +45,7 @@ public class ParamFrame extends JFrame implements ActionListener {
             dispose();
         } else if (e.getSource() == btnOk) {
             for (int i = 0; i < paramNum; i++) {
-                values.set(i, (String) tableModel.getValueAt(i, FrameSetting.ParamTable.VALUE_COLUMN));
+                values.set(i, (E) tableModel.getValueAt(i, FrameSetting.ParamTable.VALUE_COLUMN));
             }
             parent.setValues(values);
             dispose();
@@ -125,7 +125,7 @@ public class ParamFrame extends JFrame implements ActionListener {
      */
     private void initValues() {
         int i = 0;
-        for (String value : defaultValues) {
+        for (E value : defaultValues) {
             tableModel.setValueAt(value, i++, FrameSetting.ParamTable.VALUE_COLUMN);
         }
     }

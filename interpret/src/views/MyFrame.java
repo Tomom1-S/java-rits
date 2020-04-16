@@ -41,6 +41,7 @@ public class MyFrame extends JFrame implements ActionListener {
     private JComboBox fieldChoice;
     private JComboBox methodChoice;
 
+    private JButton btnSearchClass;
     private JButton btnCreateObject;
     private JButton btnCallConstructor;
     private JButton btnChangeField;
@@ -55,7 +56,7 @@ public class MyFrame extends JFrame implements ActionListener {
         me.setVisible(true);
     }
 
-    private void init() {
+    void init() {
         setTitle(FrameSetting.FRAME_TITLE);
         initBounds();
         initCloseOperation();
@@ -87,7 +88,6 @@ public class MyFrame extends JFrame implements ActionListener {
         Color color = FrameSetting.BG_COLOR;
         c.setBackground(color);
 
-        GridBagConstraints constraints = new GridBagConstraints();
         setLayout(layout);
 
         initTextFields();
@@ -104,6 +104,10 @@ public class MyFrame extends JFrame implements ActionListener {
         btnCreateObject.addActionListener(this);
         putComponent(btnCreateObject,
                 ComponentPosition.btnGridX, gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
+        btnSearchClass = new JButton(FrameSetting.ButtonLabel.SEARCH_CLASS);
+        btnSearchClass.addActionListener(this);
+        putComponent(btnSearchClass,
+                ComponentPosition.btnGridX + 1, gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
 
         btnCallConstructor = new JButton(FrameSetting.ButtonLabel.CALL_CONSTRUCTOR);
         btnCallConstructor.addActionListener(this);
@@ -279,6 +283,8 @@ public class MyFrame extends JFrame implements ActionListener {
         if (e.getSource() == btnCreateObject) {
             createObject();
             setComboBoxes();
+        } else if (e.getSource() == btnSearchClass) {
+            callConstructor();
         } else if (e.getSource() == btnCallConstructor) {
             callConstructor();
         } else if (e.getSource() == btnChangeField) {
@@ -310,7 +316,13 @@ public class MyFrame extends JFrame implements ActionListener {
 
     private void searchClass() {
         resultMsg += FrameSetting.Message.SEARCH_CLASS + LS;
-        resultMsg += FrameSetting.Message.SUCCESS + LS;
+        try {
+            oh.getConstructors();
+            resultMsg += FrameSetting.Message.SUCCESS + LS;
+        } catch (Exception ex) {
+            resultMsg += ex + LS;
+            ex.printStackTrace();
+        }
         resultText.setText(resultMsg);
     }
 

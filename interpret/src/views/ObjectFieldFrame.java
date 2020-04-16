@@ -5,17 +5,15 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.lang.reflect.Parameter;
-import java.util.List;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
 
-public class ObjectParamFrame extends JFrame implements ActionListener {
+public class ObjectFieldFrame<E> extends JFrame implements ActionListener {
     private final ObjectFrame parent;
-    private final boolean isField;
     private final String name;
-    private final Parameter[] params;
-    private final int paramNum;
-    private List<String> values;
-    private final List<String> defaultValues;
+    private final Field field;
+    private E value;
+    private final E defaultValue;
 
     private BorderLayout layout = new BorderLayout();
 
@@ -25,14 +23,12 @@ public class ObjectParamFrame extends JFrame implements ActionListener {
     private JButton btnClear;
     private JButton btnCancel;
 
-    public ObjectParamFrame(ObjectFrame parent, boolean isField, String name, Parameter[] params, List<String> values) {
+    public ObjectFieldFrame(ObjectFrame parent, String name, Field field, E value) {
         this.parent = parent;
-        this.isField = isField;
         this.name = name;
-        this.params = params;
-        this.paramNum = params.length;
-        this.values = values;
-        this.defaultValues = values;
+        this.field = field;
+        this.value = value;
+        this.defaultValue = this.value;
 
         init();
         initBounds();
@@ -41,21 +37,22 @@ public class ObjectParamFrame extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnClear) {
-            values = defaultValues;
+            value = defaultValue;
             initValues();
+            parent.setFieldValue(value);
         } else if (e.getSource() == btnCancel) {
+            parent.setFieldValue(null);
             dispose();
         } else if (e.getSource() == btnOk) {
-            for (int i = 0; i < paramNum; i++) {
-                values.set(i, (String) tableModel.getValueAt(i, FrameSetting.ParamTable.VALUE_COLUMN));
-            }
-            parent.setValues(values, isField);
+            Object foo = tableModel.getValueAt(0, FrameSetting.ParamTable.VALUE_COLUMN);
+            value = (E) tableModel.getValueAt(0, FrameSetting.ParamTable.VALUE_COLUMN);
+            parent.setFieldValue(value);
             dispose();
         }
     }
 
     void init() {
-        setTitle(FrameSetting.FRAME_PARAMS + ": " + name);
+        setTitle(FrameSetting.FRAME_FIELD + ": " + name);
         initBounds();
 
         Container c = getContentPane();
@@ -112,13 +109,7 @@ public class ObjectParamFrame extends JFrame implements ActionListener {
      * セルの中身を設定
      */
     private Object[][] initData() {
-        Object[][] data = new Object[paramNum][FrameSetting.ParamTable.COLUMNS];
-        int i = 0;
-        for (Parameter param : params) {
-            data[i][0] = param.getName();
-            data[i][1] = param.getType();
-            data[i][2] = values.get(i++);
-        }
+        Object[][] data = new Object[][]{{name, field.getType(), value}};
         return data;
     }
 
@@ -126,10 +117,7 @@ public class ObjectParamFrame extends JFrame implements ActionListener {
      * Value を初期化
      */
     private void initValues() {
-        int i = 0;
-        for (String value : defaultValues) {
-            tableModel.setValueAt(value, i++, FrameSetting.ParamTable.VALUE_COLUMN);
-        }
+        tableModel.setValueAt(value, 0, FrameSetting.ParamTable.VALUE_COLUMN);
     }
 
     /**
