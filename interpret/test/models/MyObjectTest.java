@@ -75,7 +75,8 @@ class MyObjectTest {
     @Test
     @Order(ORDER_CHANGE_FIELD_FOR_INTEGER)
     void changeFieldForInteger()
-            throws NoSuchFieldException, IllegalAccessException, ClassNotFoundException {
+            throws NoSuchFieldException, IllegalAccessException, ClassNotFoundException,
+            NoSuchMethodException, InstantiationException, InvocationTargetException {
         final MyObject obj = new MyObject(Class.forName("java.lang.Integer"), DEFAULT_INT);
 
         obj.changeField("value", 100);
@@ -91,7 +92,8 @@ class MyObjectTest {
     @Test
     @Order(ORDER_CHANGE_FIELD_FOR_TEST)
     void changeFieldForTestClass()
-            throws NoSuchFieldException, IllegalAccessException, ClassNotFoundException {
+            throws NoSuchFieldException, IllegalAccessException, ClassNotFoundException,
+            NoSuchMethodException, InstantiationException, InvocationTargetException {
         final MyObject obj = new MyObject(Class.forName("myClasses.TestClass"), new TestClass());
 
         obj.changeField("name", "John Smith");
