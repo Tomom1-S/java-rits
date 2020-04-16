@@ -239,6 +239,13 @@ public class MainFrame<E> extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnSearchClass) {
+            final String value = typeText.getText();
+            if (isStringNull(value)) {
+                resultMsg += FrameSetting.Message.ERROR_EMPTY_VALUE + LS;
+                resultText.setText(resultMsg);
+                return;
+            }
+
             constructors.clear();
             searchClass();
             showCallConstructor();

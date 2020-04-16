@@ -44,7 +44,6 @@ public class ObjectFieldFrame<E> extends JFrame implements ActionListener {
             parent.setFieldValue(null);
             dispose();
         } else if (e.getSource() == btnOk) {
-            Object foo = tableModel.getValueAt(0, FrameSetting.ParamTable.VALUE_COLUMN);
             value = (E) tableModel.getValueAt(0, FrameSetting.ParamTable.VALUE_COLUMN);
             parent.setFieldValue(value);
             dispose();

@@ -1,5 +1,7 @@
 package models;
 
+import views.ObjectFieldFrame;
+
 import java.lang.reflect.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +29,8 @@ public class MyObject<T> {
     // TODO: Integer を int に渡せるように（wrapper -> primitive）
     public Object callMethod(Method m, Object... args) throws NoSuchMethodException, ClassNotFoundException {
         Parameter[] params = m.getParameters();
-        List<Object> values = new ArrayList<>() {};
+        List<Object> values = new ArrayList<>() {
+        };
         int i = 0;
         for (Parameter p : params) {
             Class<?> cls = ReflectionUtils.getType(p.getType().getName());
@@ -42,7 +45,9 @@ public class MyObject<T> {
         }
     }
 
-    public <E> void changeField(String name, E value) throws NoSuchFieldException, IllegalAccessException, ClassNotFoundException {
+    public <E> void changeField(String name, E value)
+            throws NoSuchFieldException, IllegalAccessException, ClassNotFoundException,
+            NoSuchMethodException, InvocationTargetException, InstantiationException {
         Field field = cls.getDeclaredField(name);
 
         if (Modifier.isPrivate(field.getModifiers())) {
@@ -57,7 +62,8 @@ public class MyObject<T> {
         }
 
         Class<?> fieldCls = ReflectionUtils.getType(field.getType().getName());
-        field.set(obj, fieldCls.cast(value));
+//        field.set(obj, fieldCls.cast(value));
+        field.set(obj, fieldCls.getConstructor(value.getClass()).newInstance(value));
     }
 
     public Object getField(String name) throws NoSuchFieldException, IllegalAccessException {
