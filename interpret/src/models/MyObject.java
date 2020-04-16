@@ -1,17 +1,17 @@
 package models;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
+import java.lang.reflect.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MyObject<T> {
     private Class cls;
+    private String name;
     private T obj;
 
     public MyObject(Class cls, T obj) {
         this.cls = cls;
+        this.name = cls.getName();
         this.obj = obj;
     }
 
@@ -25,23 +25,24 @@ public class MyObject<T> {
     }
 
     // TODO: Integer を int に渡せるように（wrapper -> primitive）
-    public Object callMethod(String name, Object... args) throws NoSuchMethodException {
-        final int numOfParams = args.length;
-
-        Class<?>[] params = new Class[numOfParams];
-        for (int i = 0; i < numOfParams; i++) {
-            params[i] = args[i].getClass();
+    public Object callMethod(Method m, Object... args) throws NoSuchMethodException, ClassNotFoundException {
+        Parameter[] params = m.getParameters();
+        List<Object> values = new ArrayList<>() {};
+        int i = 0;
+        for (Parameter p : params) {
+            Class<?> cls = ReflectionUtils.getType(p.getType().getName());
+            Object obj = args[i++];
+            values.add(cls.cast(obj));
         }
 
-        Method method = cls.getDeclaredMethod(name, params);
         try {
-            return method.invoke(obj, args);
+            return m.invoke(obj, values.toArray());
         } catch (ReflectiveOperationException e) {
             throw new RuntimeException(e.getCause());
         }
     }
 
-    public void changeField(String name, Object value) throws NoSuchFieldException, IllegalAccessException {
+    public <E> void changeField(String name, E value) throws NoSuchFieldException, IllegalAccessException, ClassNotFoundException {
         Field field = cls.getDeclaredField(name);
 
         if (Modifier.isPrivate(field.getModifiers())) {
@@ -49,14 +50,14 @@ public class MyObject<T> {
         }
 
         if (Modifier.isFinal(field.getModifiers())) {
-            System.out.println("final: " + field.getModifiers());
             field.setAccessible(true);
             Field modifiersField = Field.class.getDeclaredField("modifiers");
             modifiersField.setAccessible(true);
             modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
         }
 
-        field.set(obj, value);
+        Class<?> fieldCls = ReflectionUtils.getType(field.getType().getName());
+        field.set(obj, fieldCls.cast(value));
     }
 
     public Object getField(String name) throws NoSuchFieldException, IllegalAccessException {
@@ -74,6 +75,21 @@ public class MyObject<T> {
         }
 
         return fieldList;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public List<Parameter> getMethodParameters(Method method) {
+        List<Parameter> paramList = new ArrayList<>();
+
+        Parameter[] params = method.getParameters();
+        for (Parameter param : params) {
+            paramList.add(param);
+        }
+
+        return paramList;
     }
 
     public List<Method> getMethods() {
