@@ -6,10 +6,11 @@ import org.junit.jupiter.api.*;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
+import java.lang.reflect.*;
+import java.util.ArrayList;
 import java.util.List;
 
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -21,8 +22,11 @@ class MyObjectTest {
     private final String ls = System.lineSeparator();
 
     private static final int DEFAULT_INT = 42;
-    private final MyObject intObj = new MyObject(Class.forName("java.lang.Integer"), DEFAULT_INT);
-    private final MyObject testObj = new MyObject(Class.forName("myClasses.TestClass"), new TestClass());
+    private final Class intCls = Class.forName("java.lang.Integer");
+    private final Class strCls = Class.forName("java.lang.String");
+    private final Class testCls = Class.forName("myClasses.TestClass");
+    private final MyObject intObj = new MyObject(intCls, DEFAULT_INT);
+    private final MyObject testObj = new MyObject(testCls, new TestClass());
 
     private static final int ORDER_GET_FIELD_FOR_INTEGER = 0;
     private static final int ORDER_GET_FIELD_FOR_TEST = 1;
@@ -51,15 +55,17 @@ class MyObjectTest {
     }
 
     @Test
-    void CallMethodForTestClass()
-            throws NoSuchMethodException, NoSuchFieldException, IllegalAccessException {
-        testObj.callMethod("setName", ARGS_NAME);
+    void callMethodForTestClass()
+            throws NoSuchMethodException, NoSuchFieldException, IllegalAccessException, ClassNotFoundException {
+        Method method = testCls.getMethod("setName", strCls);
+        testObj.callMethod(method, ARGS_NAME);
         final String actualName = (String) testObj.getField("name");
         final String expectedName = "Foo Bar";
         assertThat(actualName, is(expectedName));
 
         // multiple args
-        final int actualSum = (int) testObj.callMethod("addNumbers", 1, 2);
+        method = testCls.getMethod("addNumbers", int.class, int.class);
+        final int actualSum = (int) testObj.callMethod(method, 1, 2);
         final int expectedSum = 3;
         assertThat(actualSum, is(expectedSum));
 
@@ -180,6 +186,40 @@ class MyObjectTest {
     }
 
     @Test
+    public void getMethodParametersForInteger() throws NoSuchMethodException {
+        List<Parameter> params = intObj.getMethodParameters(
+                intCls.getDeclaredMethod(
+                        "getInteger", java.lang.String.class, java.lang.Integer.class
+                ));
+        List<String> actualName = new ArrayList<>();
+        for (Parameter p : params) {
+            actualName.add(p.getName());
+        }
+        List<String> expectedName = new ArrayList<>() {{
+            add("arg0");
+            add("arg1");
+        }};
+        assertThat(actualName, is(expectedName));
+    }
+
+    @Test
+    public void getMethodParametersForTestClass() throws NoSuchMethodException {
+        List<Parameter> params = testObj.getMethodParameters(
+                testCls.getDeclaredMethod(
+                        "addNumbers", int.class, int.class
+                ));
+        List<String> actualName = new ArrayList<>();
+        for (Parameter p : params) {
+            actualName.add(p.getName());
+        }
+        List<String> expectedName = new ArrayList<>() {{
+            add("val1");
+            add("val2");
+        }};
+        assertThat(actualName, is(expectedName));
+    }
+
+    @Test
     void getMethodsForInteger() {
         List<Method> methods = intObj.getMethods();
         methods.forEach(m -> {
@@ -257,17 +297,21 @@ class MyObjectTest {
 
         System.out.flush();
         final String actual = byteArrayOutputStream.toString();
-        final String expected = "public java.lang.String myClasses.TestClass.toString()" + ls
-                + "public java.lang.String myClasses.TestClass.getName()" + ls
-                + "public void myClasses.TestClass.setName(java.lang.String)" + ls
-                + "public int myClasses.TestClass.addNumbers(java.lang.Integer,java.lang.Integer)" + ls
-                + "public int myClasses.TestClass.addNumbers(int,int)" + ls
-                + "public int myClasses.TestClass.addNumbers(int,int,int)" + ls
-                + "public int myClasses.TestClass.addPositiveNumbers(java.lang.Integer,java.lang.Integer)" + ls
-                + "public int myClasses.TestClass.addPositiveNumbers(int,int)" + ls
-                + "private int myClasses.TestClass.multiplyNumbers(int,int)" + ls
-                + "private int myClasses.TestClass.multiplyNumbers(java.lang.Integer,java.lang.Integer)" + ls;
-        assertThat(actual, is(expected));
+        final List<String> expectedList = new ArrayList<>() {{
+            add("public java.lang.String myClasses.TestClass.toString()");
+            add("public java.lang.String myClasses.TestClass.getName()");
+            add("public void myClasses.TestClass.setName(java.lang.String)");
+            add("public int myClasses.TestClass.addNumbers(java.lang.Integer,java.lang.Integer)");
+            add("public int myClasses.TestClass.addNumbers(int,int)");
+            add("public int myClasses.TestClass.addNumbers(int,int,int)");
+            add("public int myClasses.TestClass.addPositiveNumbers(java.lang.Integer,java.lang.Integer)");
+            add("public int myClasses.TestClass.addPositiveNumbers(int,int)");
+            add("private int myClasses.TestClass.multiplyNumbers(int,int)");
+            add("private int myClasses.TestClass.multiplyNumbers(java.lang.Integer,java.lang.Integer)");
+        }};
+        for (String expected : expectedList) {
+            assertThat(actual, containsString(expected));
+        }
     }
 
 }
