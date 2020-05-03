@@ -78,7 +78,7 @@ public final class Settings {
     }
 
     static final int FONT_SIZE = 50;
-    static final double FONT_OCCUPANCY = 0.7; // フォントの占める割合
+    static final double FONT_OCCUPANCY = 0.6; // フォントの占める割合
 
     static final int INTERVAL = 500;   // 描画の更新間隔[ms]
 }

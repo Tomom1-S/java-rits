@@ -7,12 +7,13 @@ import java.util.Arrays;
 import java.util.List;
 
 public class MyMenu extends JDialog implements ActionListener {
-    private JComponent parent;
+    private MyPanel parent;
 
     private GridBagLayout layout = new GridBagLayout();
     private int gridX = Settings.Menu.Grid.DEFAULT_POSITION;
     private int gridY = Settings.Menu.Grid.DEFAULT_POSITION;
 
+    private static final ArrayList<String> FONT_NAMES = new ArrayList<>();
     private static final ArrayList<String> COLOR_NAMES = new ArrayList<>();
 
     private static class Label {
@@ -41,12 +42,9 @@ public class MyMenu extends JDialog implements ActionListener {
         private static Color BG_COLOR;
     }
 
-    MyMenu(JComponent parent) {
+    MyMenu(MyPanel parent) {
         this.parent = parent;
 
-        Settings.Menu.COLORS.forEach(c -> {
-            COLOR_NAMES.add(Settings.Menu.getColorName(c));
-        });
         init();
     }
 
@@ -58,7 +56,7 @@ public class MyMenu extends JDialog implements ActionListener {
         initAppearance(c);
         setResizable(false);
 
-        initLastValue();
+//        initLastValue();
     }
 
     /**
@@ -67,7 +65,8 @@ public class MyMenu extends JDialog implements ActionListener {
     private void initAppearance(Container c) {
         setLayout(layout);
 
-        initCombobox();
+        initComboBoxItems();
+        initInputFields();
         initButtons();
     }
 
@@ -85,9 +84,23 @@ public class MyMenu extends JDialog implements ActionListener {
     }
 
     /**
+     * JComboBox の項目を設定
+     */
+    private void initComboBoxItems() {
+        List<Font> fontList = Arrays.asList(GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts());
+        fontList.forEach(f -> {
+            FONT_NAMES.add(f.getFontName());
+        });
+        putComboBoxItems(InputFields.font, FONT_NAMES);
+        Settings.Menu.COLORS.forEach(c -> {
+            COLOR_NAMES.add(Settings.Menu.getColorName(c));
+        });
+    }
+
+    /**
      * ウィンドウの見た目を設定
      */
-    private void initCombobox() {
+    private void initInputFields() {
         gridX = Settings.Menu.Grid.DEFAULT_POSITION;
         gridY = Settings.Menu.Grid.DEFAULT_POSITION;
 
@@ -96,12 +109,6 @@ public class MyMenu extends JDialog implements ActionListener {
                 Settings.Menu.Grid.DEFAULT_WIDTH, Settings.Menu.Grid.DEFAULT_HEIGHT, GridBagConstraints.EAST);
         putComponent(InputFields.font, ++gridX, gridY,
                 Settings.Menu.Grid.DEFAULT_WIDTH, Settings.Menu.Grid.DEFAULT_HEIGHT, GridBagConstraints.WEST);
-        List<Font> fontList = Arrays.asList(GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts());
-        ArrayList<String> fonts = new ArrayList<>(fontList.size());
-        fontList.forEach(f -> {
-            fonts.add(f.getFontName());
-        });
-        putComboBoxItems(InputFields.font, fonts);
 
         // Font size
         gridX = Settings.Menu.Grid.DEFAULT_POSITION;
@@ -131,10 +138,16 @@ public class MyMenu extends JDialog implements ActionListener {
      * ウィンドウを開いた時点の値を保存
      */
     void initLastValue() {
-        Font font = parent.getFont();
+        Font font = parent.getClockFont();
         LastValue.FONT = font.getFontName();
         LastValue.FONT_SIZE = font.getSize();
-//        LastValue.FONT_COLOR = font.ge
+        LastValue.FONT_COLOR = parent.getFontColor();
+        LastValue.BG_COLOR = parent.getBgColor();
+
+        InputFields.font.setSelectedItem(LastValue.FONT);
+        InputFields.fontSize.setText(String.valueOf(LastValue.FONT_SIZE));
+        InputFields.fontColor.setSelectedItem(Settings.Menu.getColorName(LastValue.FONT_COLOR));
+        InputFields.bgColor.setSelectedItem(Settings.Menu.getColorName(LastValue.BG_COLOR));
     }
 
     /**
@@ -160,13 +173,37 @@ public class MyMenu extends JDialog implements ActionListener {
         });
     }
 
+    /**
+     * String を int に変換
+     */
+    private int convertStringToInt(String str, int defaultVal) {
+        try {
+            return Integer.parseInt(str);
+        } catch (NumberFormatException ex) {
+            return defaultVal;
+        }
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == Button.CANCEL) {
-            System.out.println("CANCEL!");
+            InputFields.font.setSelectedIndex(FONT_NAMES.indexOf(LastValue.FONT));
+            InputFields.fontSize.setText(String.valueOf(LastValue.FONT_SIZE));
+            InputFields.fontColor.setSelectedIndex(Settings.Menu.COLORS.indexOf(LastValue.FONT_COLOR));
+            InputFields.bgColor.setSelectedIndex(Settings.Menu.COLORS.indexOf(LastValue.BG_COLOR));
+
             dispose();
         } else if (e.getSource() == Button.OK) {
-            System.out.println("OK!");
+            int fontSize = convertStringToInt(InputFields.fontSize.getText(), LastValue.FONT_SIZE);
+            if (fontSize <= 0) {
+                fontSize = LastValue.FONT_SIZE;
+            }
+            parent.setClockFont(new Font((String) InputFields.font.getSelectedItem(), Font.PLAIN, fontSize));
+            parent.updatePanelSize(fontSize);
+            parent.setFontColor(Settings.Menu.COLORS.get(InputFields.fontColor.getSelectedIndex()));
+            parent.setBgColor(Settings.Menu.COLORS.get(InputFields.bgColor.getSelectedIndex()));
+            parent.repaint();
+
             dispose();
         }
     }

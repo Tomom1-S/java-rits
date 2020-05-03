@@ -4,13 +4,18 @@ import java.awt.event.*;
 import java.time.LocalTime;
 
 public class MyPanel extends JPanel implements ActionListener, ComponentListener, MouseListener {
+    private MyFrame parent;
+
     private final Timer timer;
+
     private Font font = new Font("Serif", Font.PLAIN, Settings.FONT_SIZE);
     private Color fontColor = Color.BLACK;
     private Color bgColor = Color.WHITE;
     MyMenu menu = new MyMenu(this);
 
-    public MyPanel() {
+    public MyPanel(MyFrame parent) {
+        this.parent = parent;
+
         timer = new Timer(Settings.INTERVAL, this);
         timer.start();
 
@@ -22,7 +27,7 @@ public class MyPanel extends JPanel implements ActionListener, ComponentListener
         g.fillRect(0, 0, getWidth() - 1, getHeight() - 1);
 
         g.setColor(fontColor);
-        LocalTime now = LocalTime.now();
+        final LocalTime now = LocalTime.now();
         final String text = String.format("%02d:%02d:%02d", now.getHour(), now.getMinute(), now.getSecond());
         drawCenteredString(g, text);
     }
@@ -56,6 +61,64 @@ public class MyPanel extends JPanel implements ActionListener, ComponentListener
         }
     }
 
+    void updatePanelSize(final int fontSize) {
+        Graphics g = getGraphics();
+        final FontMetrics metrics = g.getFontMetrics();
+        final LocalTime now = LocalTime.now();
+        final String text = String.format("%02d:%02d:%02d", now.getHour(), now.getMinute(), now.getSecond());
+        final Dimension textSize = new Dimension(metrics.stringWidth(text), metrics.getHeight());
+        Dimension winSize = calculatePanelSize(fontSize, textSize);
+        this.setSize(winSize);
+        parent.setSize(winSize);
+    }
+
+    private Dimension calculatePanelSize(final int fontSize, final Dimension textSize) {
+        if (fontSize <= 0) {
+            return new Dimension(getWidth(), getHeight());
+        }
+
+        final double winRatio = getWidth() / getHeight();
+        final double textRatio = textSize.width / textSize.height;
+
+        if (winRatio < textRatio) {
+            final double width = fontSize * textRatio / Settings.FONT_OCCUPANCY;
+            return new Dimension((int) width, (int) (width / winRatio));
+        } else {
+            final double height = fontSize / Settings.FONT_OCCUPANCY;
+            return new Dimension((int) (height * winRatio), (int) height);
+        }
+    }
+
+    public Font getClockFont() {
+        return font;
+    }
+
+    public Font setClockFont(Font newVal) {
+        Font old = font;
+        font = newVal;
+        return old;
+    }
+
+    public Color getFontColor() {
+        return fontColor;
+    }
+
+    public Color setFontColor(Color newVal) {
+        Color old = fontColor;
+        fontColor = newVal;
+        return old;
+    }
+
+    public Color getBgColor() {
+        return bgColor;
+    }
+
+    public Color setBgColor(Color newVal) {
+        Color old = bgColor;
+        bgColor = newVal;
+        return old;
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == timer) {
@@ -83,6 +146,7 @@ public class MyPanel extends JPanel implements ActionListener, ComponentListener
     @Override
     public void mouseClicked(MouseEvent e) {
         if (SwingUtilities.isRightMouseButton(e)) {
+            menu.initLastValue();
             menu.setLocation(e.getPoint());
             menu.setVisible(true);
         }
