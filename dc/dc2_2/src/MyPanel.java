@@ -13,7 +13,7 @@ public class MyPanel extends JPanel implements ActionListener, ComponentListener
     private Color bgColor = Color.WHITE;
     MyMenu menu = new MyMenu(this);
 
-    public MyPanel(MyFrame parent) {
+    public MyPanel(final MyFrame parent) {
         this.parent = parent;
 
         timer = new Timer(Settings.INTERVAL, this);
@@ -22,7 +22,7 @@ public class MyPanel extends JPanel implements ActionListener, ComponentListener
         addMouseListener(this);
     }
 
-    public void paintComponent(Graphics g) {
+    public void paintComponent(final Graphics g) {
         g.setColor(bgColor);
         g.fillRect(0, 0, getWidth() - 1, getHeight() - 1);
 
@@ -46,7 +46,7 @@ public class MyPanel extends JPanel implements ActionListener, ComponentListener
         );
     }
 
-    private int calculateFontSize(Dimension textSize) {
+    private int calculateFontSize(final Dimension textSize) {
         if (getHeight() < 1 || textSize.height < 1) {
             return 1;
         }
@@ -62,12 +62,12 @@ public class MyPanel extends JPanel implements ActionListener, ComponentListener
     }
 
     void updatePanelSize(final int fontSize) {
-        Graphics g = getGraphics();
+        final Graphics g = getGraphics();
         final FontMetrics metrics = g.getFontMetrics();
         final LocalTime now = LocalTime.now();
         final String text = String.format("%02d:%02d:%02d", now.getHour(), now.getMinute(), now.getSecond());
         final Dimension textSize = new Dimension(metrics.stringWidth(text), metrics.getHeight());
-        Dimension winSize = calculatePanelSize(fontSize, textSize);
+        final Dimension winSize = calculatePanelSize(fontSize, textSize);
         this.setSize(winSize);
         parent.setSize(winSize);
     }
@@ -93,7 +93,7 @@ public class MyPanel extends JPanel implements ActionListener, ComponentListener
         return font;
     }
 
-    public Font setClockFont(Font newVal) {
+    public Font setClockFont(final Font newVal) {
         Font old = font;
         font = newVal;
         return old;
@@ -103,7 +103,7 @@ public class MyPanel extends JPanel implements ActionListener, ComponentListener
         return fontColor;
     }
 
-    public Color setFontColor(Color newVal) {
+    public Color setFontColor(final Color newVal) {
         Color old = fontColor;
         fontColor = newVal;
         return old;
@@ -113,38 +113,38 @@ public class MyPanel extends JPanel implements ActionListener, ComponentListener
         return bgColor;
     }
 
-    public Color setBgColor(Color newVal) {
+    public Color setBgColor(final Color newVal) {
         Color old = bgColor;
         bgColor = newVal;
         return old;
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(final ActionEvent e) {
         if (e.getSource() == timer) {
             repaint();
         }
     }
 
     @Override
-    public void componentResized(ComponentEvent e) {
+    public void componentResized(final ComponentEvent e) {
         repaint();
     }
 
     @Override
-    public void componentMoved(ComponentEvent e) {
+    public void componentMoved(final ComponentEvent e) {
     }
 
     @Override
-    public void componentShown(ComponentEvent e) {
+    public void componentShown(final ComponentEvent e) {
     }
 
     @Override
-    public void componentHidden(ComponentEvent e) {
+    public void componentHidden(final ComponentEvent e) {
     }
 
     @Override
-    public void mouseClicked(MouseEvent e) {
+    public void mouseClicked(final MouseEvent e) {
         if (SwingUtilities.isRightMouseButton(e)) {
             menu.initLastValue();
             menu.setLocation(e.getPoint());
@@ -153,22 +153,22 @@ public class MyPanel extends JPanel implements ActionListener, ComponentListener
     }
 
     @Override
-    public void mousePressed(MouseEvent e) {
+    public void mousePressed(final MouseEvent e) {
 
     }
 
     @Override
-    public void mouseReleased(MouseEvent e) {
+    public void mouseReleased(final MouseEvent e) {
 
     }
 
     @Override
-    public void mouseEntered(MouseEvent e) {
+    public void mouseEntered(final MouseEvent e) {
 
     }
 
     @Override
-    public void mouseExited(MouseEvent e) {
+    public void mouseExited(final MouseEvent e) {
 
     }
 }

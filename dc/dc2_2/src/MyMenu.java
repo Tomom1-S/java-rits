@@ -42,7 +42,7 @@ public class MyMenu extends JDialog implements ActionListener {
         private static Color BG_COLOR;
     }
 
-    MyMenu(MyPanel parent) {
+    MyMenu(final MyPanel parent) {
         this.parent = parent;
 
         init();
@@ -52,17 +52,15 @@ public class MyMenu extends JDialog implements ActionListener {
         setTitle(Settings.Menu.TITLE);
         setSize(Settings.Menu.SIZE);
 
-        Container c = getContentPane();
+        final Container c = getContentPane();
         initAppearance(c);
         setResizable(false);
-
-//        initLastValue();
     }
 
     /**
      * ウィンドウの見た目を設定
      */
-    private void initAppearance(Container c) {
+    private void initAppearance(final Container c) {
         setLayout(layout);
 
         initComboBoxItems();
@@ -87,7 +85,7 @@ public class MyMenu extends JDialog implements ActionListener {
      * JComboBox の項目を設定
      */
     private void initComboBoxItems() {
-        List<Font> fontList = Arrays.asList(GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts());
+        final List<Font> fontList = Arrays.asList(GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts());
         fontList.forEach(f -> {
             FONT_NAMES.add(f.getFontName());
         });
@@ -138,7 +136,7 @@ public class MyMenu extends JDialog implements ActionListener {
      * ウィンドウを開いた時点の値を保存
      */
     void initLastValue() {
-        Font font = parent.getClockFont();
+        final Font font = parent.getClockFont();
         LastValue.FONT = font.getFontName();
         LastValue.FONT_SIZE = font.getSize();
         LastValue.FONT_COLOR = parent.getFontColor();
@@ -153,8 +151,9 @@ public class MyMenu extends JDialog implements ActionListener {
     /**
      * コンポーネントを配置
      */
-    private void putComponent(Component component, int x, int y, int width, int height, int alignment) {
-        GridBagConstraints constraints = new GridBagConstraints();
+    private void putComponent(final Component component, final int x, final int y,
+                              final int width, final int height, final int alignment) {
+        final GridBagConstraints constraints = new GridBagConstraints();
         constraints.gridx = x;    //位置x
         constraints.gridy = y;    //位置y
         constraints.gridwidth = width;    //コンポーネントの表示領域のセル数 横
@@ -167,7 +166,7 @@ public class MyMenu extends JDialog implements ActionListener {
     /**
      * コンボボックスの項目を設定
      */
-    private <T> void putComboBoxItems(JComboBox comboBox, List<T> list) {
+    private <T> void putComboBoxItems(final JComboBox comboBox, final List<T> list) {
         list.forEach(i -> {
             comboBox.addItem(i);
         });
@@ -176,7 +175,7 @@ public class MyMenu extends JDialog implements ActionListener {
     /**
      * String を int に変換
      */
-    private int convertStringToInt(String str, int defaultVal) {
+    private int convertStringToInt(final String str, final int defaultVal) {
         try {
             return Integer.parseInt(str);
         } catch (NumberFormatException ex) {
@@ -185,7 +184,7 @@ public class MyMenu extends JDialog implements ActionListener {
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(final ActionEvent e) {
         if (e.getSource() == Button.CANCEL) {
             InputFields.font.setSelectedIndex(FONT_NAMES.indexOf(LastValue.FONT));
             InputFields.fontSize.setText(String.valueOf(LastValue.FONT_SIZE));
