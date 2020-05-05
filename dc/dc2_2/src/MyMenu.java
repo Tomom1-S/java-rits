@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.plaf.basic.BasicComboBoxRenderer;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -90,9 +91,25 @@ public class MyMenu extends JDialog implements ActionListener {
             FONT_NAMES.add(f.getFontName());
         });
         putComboBoxItems(InputFields.font, FONT_NAMES);
+
+        initComboBoxRenderer(InputFields.fontColor);
+        initComboBoxRenderer(InputFields.bgColor);
         Settings.Menu.COLORS.forEach(c -> {
+            // TODO カラーチップを表示
             COLOR_NAMES.add(Settings.Menu.getColorName(c));
         });
+        putComboBoxItems(InputFields.fontColor, COLOR_NAMES);
+        putComboBoxItems(InputFields.bgColor, COLOR_NAMES);
+    }
+
+    /**
+     * JComboBox の renderer を設定
+     */
+    private void initComboBoxRenderer(JComboBox comboBox) {
+        comboBox.setEditable(true);
+
+        MyComboBoxRenderer renderer = new MyComboBoxRenderer();
+        comboBox.setRenderer(renderer);
     }
 
     /**
@@ -121,7 +138,6 @@ public class MyMenu extends JDialog implements ActionListener {
                 Settings.Menu.Grid.DEFAULT_WIDTH, Settings.Menu.Grid.DEFAULT_HEIGHT, GridBagConstraints.EAST);
         putComponent(InputFields.fontColor, ++gridX, gridY,
                 Settings.Menu.Grid.DEFAULT_WIDTH, Settings.Menu.Grid.DEFAULT_HEIGHT, GridBagConstraints.WEST);
-        putComboBoxItems(InputFields.fontColor, COLOR_NAMES);
 
         // Background color
         gridX = Settings.Menu.Grid.DEFAULT_POSITION;
@@ -129,7 +145,6 @@ public class MyMenu extends JDialog implements ActionListener {
                 Settings.Menu.Grid.DEFAULT_WIDTH, Settings.Menu.Grid.DEFAULT_HEIGHT, GridBagConstraints.EAST);
         putComponent(InputFields.bgColor, ++gridX, gridY,
                 Settings.Menu.Grid.DEFAULT_WIDTH, Settings.Menu.Grid.DEFAULT_HEIGHT, GridBagConstraints.WEST);
-        putComboBoxItems(InputFields.bgColor, COLOR_NAMES);
     }
 
     /**

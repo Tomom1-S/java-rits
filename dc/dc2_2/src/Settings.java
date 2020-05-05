@@ -28,6 +28,8 @@ public final class Settings {
         }
 
         static final int TEXT_FIELD_WIDTH = 10;
+
+        static final Dimension COLOR_ICON_SIZE = new Dimension(10, 10);
         static final ArrayList<Color> COLORS = new ArrayList<>() {{
             add(Color.BLACK);
             add(Color.BLUE);
