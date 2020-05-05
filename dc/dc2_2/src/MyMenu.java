@@ -1,5 +1,4 @@
 import javax.swing.*;
-import javax.swing.plaf.basic.BasicComboBoxRenderer;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -95,11 +94,19 @@ public class MyMenu extends JDialog implements ActionListener {
         initComboBoxRenderer(InputFields.fontColor);
         initComboBoxRenderer(InputFields.bgColor);
         Settings.Menu.COLORS.forEach(c -> {
-            // TODO カラーチップを表示
             COLOR_NAMES.add(Settings.Menu.getColorName(c));
         });
         putComboBoxItems(InputFields.fontColor, COLOR_NAMES);
         putComboBoxItems(InputFields.bgColor, COLOR_NAMES);
+
+        InputFields.fontColor.setPreferredSize(new Dimension(
+                Settings.Menu.COLOR_FIELD_WIDTH,
+                InputFields.fontColor.getPreferredSize().height)
+        );
+        InputFields.bgColor.setPreferredSize(new Dimension(
+                Settings.Menu.COLOR_FIELD_WIDTH,
+                InputFields.bgColor.getPreferredSize().height)
+        );
     }
 
     /**
