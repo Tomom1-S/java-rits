@@ -28,7 +28,6 @@ public final class FrameSetting {
 
     class ButtonLabel {
         static final String SEARCH_CLASS = "Search class";
-        static final String CREATE_OBJECT = "Create object";
         static final String CALL_CONSTRUCTOR = "Call constructor";
         static final String CHANGE_FIELD = "Change field";
         static final String CALL_METHOD = "Call method";
@@ -40,9 +39,7 @@ public final class FrameSetting {
 
     class TextLabel {
         static final String CLASS = "クラス名";
-        static final String TYPE = "型";
         static final String CONSTRUCTOR = "コンストラクタ";
-        static final String PARAMETER = "パラメータ";
         static final String FIELD = "フィールド";
         static final String METHOD = "メソッド";
         static final String ARRAY_SIZE = "配列の長さ";
@@ -57,14 +54,7 @@ public final class FrameSetting {
 
     class Message {
         static final String SUCCESS = "成功しました";
-        static final String FAILURE = "失敗しました";
         static final String SEARCH_CLASS = "クラスを検索します";
-        static final String CREATE_OBJECT = "オブジェクトを生成します";
-        static final String CALL_CONSTRUCTOR = "コンストラクタを呼び出します";
-        static final String GET_FIELD = "フィールドの値を取得します";
-        static final String CHANGE_FIELD = "フィールドを変更します";
-        static final String CALL_METHOD = "メソッドを呼び出します";
         static final String ERROR_EMPTY_VALUE = "値を入れてください";
-        static final String ERROR_INVALID_ARGS_NUMBER = "引数の数が合致しません";
     }
 }

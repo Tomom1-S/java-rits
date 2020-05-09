@@ -6,7 +6,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 
 public class ObjectFieldFrame<E> extends JFrame implements ActionListener {
     private final ObjectFrame parent;

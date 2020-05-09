@@ -1,8 +1,7 @@
 package models;
 
-import views.ObjectFieldFrame;
-
 import java.lang.reflect.*;
+import java.sql.Ref;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,17 +16,9 @@ public class MyObject<T> {
         this.obj = obj;
     }
 
-    public Object callMethod(String name) throws NoSuchMethodException {
-        Method method = cls.getDeclaredMethod(name);
-        try {
-            return method.invoke(obj);
-        } catch (ReflectiveOperationException e) {
-            throw new RuntimeException(e.getCause());
-        }
-    }
-
-    // TODO: Integer を int に渡せるように（wrapper -> primitive）
-    public Object callMethod(Method m, Object... args) throws NoSuchMethodException, ClassNotFoundException {
+    public Object callMethod(Method m, Object... args)
+            throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException,
+            InstantiationException, IllegalAccessException {
         Parameter[] params = m.getParameters();
         List<Object> values = new ArrayList<>() {
         };
@@ -35,7 +26,7 @@ public class MyObject<T> {
         for (Parameter p : params) {
             Class<?> cls = ReflectionUtils.getType(p.getType().getName());
             Object obj = args[i++];
-            values.add(cls.cast(obj));
+            values.add(ReflectionUtils.castObject(cls, obj));
         }
 
         try {
@@ -62,8 +53,8 @@ public class MyObject<T> {
         }
 
         Class<?> fieldCls = ReflectionUtils.getType(field.getType().getName());
-//        field.set(obj, fieldCls.cast(value));
-        field.set(obj, fieldCls.getConstructor(value.getClass()).newInstance(value));
+
+        field.set(obj, ReflectionUtils.castObject(fieldCls, value));
     }
 
     public Object getField(String name) throws NoSuchFieldException, IllegalAccessException {
@@ -108,21 +99,4 @@ public class MyObject<T> {
 
         return methodList;
     }
-
-    public Class getThisClass() {
-        return this.cls;
-    }
-
-    public Object getThisObject() {
-        return this.obj;
-    }
-
-    private boolean isPositive(final int value) {
-        if (value > 0) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
 }

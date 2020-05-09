@@ -56,7 +56,8 @@ class MyObjectTest {
 
     @Test
     void callMethodForTestClass()
-            throws NoSuchMethodException, NoSuchFieldException, IllegalAccessException, ClassNotFoundException {
+            throws NoSuchMethodException, NoSuchFieldException, IllegalAccessException,
+            ClassNotFoundException, InvocationTargetException, InstantiationException {
         Method method = testCls.getMethod("setName", strCls);
         testObj.callMethod(method, ARGS_NAME);
         final String actualName = (String) testObj.getField("name");
@@ -82,11 +83,6 @@ class MyObjectTest {
         obj.changeField("value", 100);
         final int actualValue = (int) obj.getField("value");
         assertThat(actualValue, is(100));
-
-        // TODO: static の書き換え
-//        obj.changeField("MAX_VALUE", 100);
-//        final int actualPubInt = (int) obj.getField("MAX_VALUE");
-//        assertThat(actualPubInt, is(100));
     }
 
     @Test

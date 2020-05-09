@@ -9,6 +9,7 @@ import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Parameter;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -43,7 +44,9 @@ class ClassSearchTest {
     }
 
     @Test
-    public void callConstructorForInteger() throws NoSuchMethodException, ClassNotFoundException {
+    public void callConstructorForInteger()
+            throws NoSuchMethodException, ClassNotFoundException, IllegalAccessException,
+            InstantiationException, InvocationTargetException {
         Constructor constructor = intCls.getDeclaredConstructor(java.lang.String.class);
         Integer actual = (Integer) cs.callConstructor(constructor, "42", "100");
         final Integer expected = 42;
@@ -55,7 +58,9 @@ class ClassSearchTest {
     }
 
     @Test
-    public void callConstructorForTestClass() throws NoSuchMethodException, ClassNotFoundException {
+    public void callConstructorForTestClass()
+            throws NoSuchMethodException, ClassNotFoundException, IllegalAccessException,
+            InstantiationException, InvocationTargetException {
         Constructor constructor = testCls.getDeclaredConstructor(java.lang.String.class);
         TestClass actual = (TestClass) cs.callConstructor(constructor, "Foo bar");
         String expected = "Foo bar";
@@ -66,10 +71,10 @@ class ClassSearchTest {
         expected = "Default";
         assertThat(actual.name, is(expected));
 
-         constructor = testCls.getDeclaredConstructor(java.lang.String.class);
-         Object obj = "Foo bar";
-         actual = (TestClass) cs.callConstructor(constructor, obj);
-         expected = "Foo bar";
+        constructor = testCls.getDeclaredConstructor(java.lang.String.class);
+        Object obj = "Foo bar";
+        actual = (TestClass) cs.callConstructor(constructor, obj);
+        expected = "Foo bar";
         assertThat(actual.name, is(expected));
     }
 
@@ -139,7 +144,7 @@ class ClassSearchTest {
             add(java.lang.String.class);
         }};
         List<String> expectedName = new ArrayList<>() {{
-            add("arg0");
+            add("name");
         }};
         assertThat(actualType, is(expectedType));
         assertThat(actualName, is(expectedName));

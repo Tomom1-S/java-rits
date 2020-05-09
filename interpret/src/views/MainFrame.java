@@ -252,8 +252,7 @@ public class MainFrame<E> extends JFrame implements ActionListener {
         } else if (e.getSource() == btnConstructorParams) {
             showParamWindow();
         } else if (e.getSource() == btnCallConstructor) {
-            Object obj = callConstructor();
-            showObjectWindow(obj);
+            callConstructor();
         } else if (e.getSource() == constructorChoice) {
             values = new ArrayList<>();
         }
@@ -282,18 +281,19 @@ public class MainFrame<E> extends JFrame implements ActionListener {
     }
 
     // コンストラクタ呼び出し
-    private Object callConstructor() {
+    private void callConstructor() {
         final Constructor c = constructors.get(constructorChoice.getSelectedIndex());
         Object obj = new Object();
         try {
             obj = cs.callConstructor(c, values.toArray());
             resultMsg += FrameSetting.Message.SUCCESS + LS;
+            showObjectWindow(obj);
         } catch (Exception ex) {
             resultMsg += ex + LS;
             ex.printStackTrace();
         }
         resultText.setText(resultMsg);
-        return obj;
+        return;
     }
 
     // コンストラクタ呼び出しのフィールドを表示
@@ -309,7 +309,6 @@ public class MainFrame<E> extends JFrame implements ActionListener {
             constructors = cs.getConstructors(cls);
         }
         constructorChoice.removeAllItems();
-//        setComboBoxes();
         putComboBoxItems(constructorChoice, constructors);
     }
 
