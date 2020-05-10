@@ -110,4 +110,8 @@ public class MyObject<T> {
 
         return methodList;
     }
+
+    public T getObj() {
+        return obj;
+    }
 }
