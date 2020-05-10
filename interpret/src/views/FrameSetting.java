@@ -29,6 +29,8 @@ public final class FrameSetting {
     class ButtonLabel {
         static final String SEARCH_CLASS = "Search class";
         static final String CALL_CONSTRUCTOR = "Call constructor";
+        static final String OPEN_WINDOW = "Open object";
+
         static final String CHANGE_FIELD = "Change field";
         static final String CALL_METHOD = "Call method";
         static final String PARAMS = "Parameters";
@@ -40,6 +42,7 @@ public final class FrameSetting {
     class TextLabel {
         static final String CLASS = "クラス名";
         static final String CONSTRUCTOR = "コンストラクタ";
+        static final String OBJECT = "生成したオブジェクト";
         static final String FIELD = "フィールド";
         static final String METHOD = "メソッド";
         static final String ARRAY_SIZE = "配列の長さ";

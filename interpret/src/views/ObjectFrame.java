@@ -39,18 +39,18 @@ public class ObjectFrame<T, Eparam, Efield> extends JFrame implements ActionList
         }
     }
 
-    private JLabel fieldLabel = new JLabel(FrameSetting.TextLabel.FIELD);
-    private JLabel methodLabel = new JLabel(FrameSetting.TextLabel.METHOD);
+    private final JLabel fieldLabel = new JLabel(FrameSetting.TextLabel.FIELD);
+    private final JLabel methodLabel = new JLabel(FrameSetting.TextLabel.METHOD);
 
     private JTextArea resultText;
 
     private JComboBox fieldChoice = new JComboBox();
     private JComboBox methodChoice = new JComboBox();
 
-    private JButton btnFieldParams;
-    private JButton btnChangeField;
-    private JButton btnMethodParams;
-    private JButton btnCallMethod;
+    private final JButton btnFieldParams = new JButton(FrameSetting.ButtonLabel.PARAMS);;
+    private final JButton btnChangeField = new JButton(FrameSetting.ButtonLabel.CHANGE_FIELD);;
+    private final JButton btnMethodParams = new JButton(FrameSetting.ButtonLabel.PARAMS);;
+    private final JButton btnCallMethod = new JButton(FrameSetting.ButtonLabel.CALL_METHOD);;
 
     public ObjectFrame(MyObject obj) {
         this.obj = obj;
@@ -104,24 +104,20 @@ public class ObjectFrame<T, Eparam, Efield> extends JFrame implements ActionList
     private void initButtons() {
         initGrid();
 
-        btnFieldParams = new JButton(FrameSetting.ButtonLabel.PARAMS);
         btnFieldParams.addActionListener(this);
         btnFieldParams.setForeground(FrameSetting.PARAMS_BTN_COLOR);
         putComponent(btnFieldParams,
                 ComponentPosition.btnGridX + 1, gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
 
-        btnChangeField = new JButton(FrameSetting.ButtonLabel.CHANGE_FIELD);
         btnChangeField.addActionListener(this);
         putComponent(btnChangeField,
                 ComponentPosition.btnGridX + 2, gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
 
-        btnMethodParams = new JButton(FrameSetting.ButtonLabel.PARAMS);
         btnMethodParams.addActionListener(this);
         btnMethodParams.setForeground(FrameSetting.PARAMS_BTN_COLOR);
         putComponent(btnMethodParams,
                 ComponentPosition.btnGridX + 1, ++gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
 
-        btnCallMethod = new JButton(FrameSetting.ButtonLabel.CALL_METHOD);
         btnCallMethod.addActionListener(this);
         putComponent(btnCallMethod,
                 ComponentPosition.btnGridX + 2, gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
@@ -169,31 +165,30 @@ public class ObjectFrame<T, Eparam, Efield> extends JFrame implements ActionList
     /**
      * Frame に紐づいたオブジェクトを取得
      */
-    protected MyObject getMyObject() {
+    MyObject getMyObject() {
         return obj;
     }
 
     /**
      * FieldFrame で設定したフィールドの値
      */
-    protected Efield getFieldValue() {
+    Efield getFieldValue() {
         return fieldValue;
     }
 
     /**
      * FieldFrame で設定したフィールドの値
      */
-    protected List<Efield> getFieldValues() {
+    List<Efield> getFieldValues() {
         return fieldValues;
     }
 
     /**
      * FieldFrame で設定したフィールドの値
      */
-    protected List<Eparam> getMethodValues() {
+    List<Eparam> getMethodValues() {
         return methodValues;
     }
-
 
     /**
      * コンポーネントを配置
