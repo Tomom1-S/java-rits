@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MyObject<T> {
-    private Class cls;
-    private String name;
-    private T obj;
+    private final Class cls;
+    private final String name;
+    private final T obj;
     private final int id;
     private static int nextId = 0;
 
