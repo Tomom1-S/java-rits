@@ -6,7 +6,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
@@ -63,7 +62,7 @@ public class ObjectFrame<T, Eparam, Efield> extends JFrame implements ActionList
     }
 
     void init() {
-        setTitle(name);
+        setTitle(name + " #" + obj.getId());
         initBounds();
 
         Container c = getContentPane();
@@ -307,7 +306,10 @@ public class ObjectFrame<T, Eparam, Efield> extends JFrame implements ActionList
         if (fieldValue == null) {
             return;
         }
+
         final Field f = fields.get(fieldChoice.getSelectedIndex());
+        resultMsg += FrameSetting.Message.CHANGE_FIELD + ": " + f.getName() + LS;
+
         try {
             obj.changeField(f.getName(), fieldValue);
             resultMsg += FrameSetting.Message.SUCCESS + LS;
@@ -321,12 +323,15 @@ public class ObjectFrame<T, Eparam, Efield> extends JFrame implements ActionList
     // メソッドの呼び出し
     private Object callMethod() {
         final Method m = methods.get(methodChoice.getSelectedIndex());
+        resultMsg += FrameSetting.Message.CALL_METHOD + ": " + m.getName() + LS;
+
         Object result = new Object();
         try {
             result = obj.callMethod(m, methodValues.toArray());
-            resultMsg += FrameSetting.Message.SUCCESS + LS;
             if (result != null) {
                 resultMsg += m.getName() + " returns " + result.toString() + LS;
+            } else {
+                resultMsg += m.getName() + " returns nothing" + LS;
             }
         } catch (Exception ex) {
             resultMsg += ex + LS;

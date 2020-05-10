@@ -1,7 +1,6 @@
 package models;
 
 import java.lang.reflect.*;
-import java.sql.Ref;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,8 +8,11 @@ public class MyObject<T> {
     private Class cls;
     private String name;
     private T obj;
+    private final int id;
+    private static int nextId = 0;
 
     public MyObject(Class cls, T obj) {
+        this.id = nextId++;
         this.cls = cls;
         this.name = cls.getName();
         this.obj = obj;
@@ -57,6 +59,11 @@ public class MyObject<T> {
         field.set(obj, ReflectionUtils.castObject(fieldCls, value));
     }
 
+    public Class getCls() {
+        return cls;
+    }
+
+
     public Object getField(String name) throws NoSuchFieldException, IllegalAccessException {
         Field field = cls.getDeclaredField(name);
         field.setAccessible(true);
@@ -72,6 +79,10 @@ public class MyObject<T> {
         }
 
         return fieldList;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getName() {

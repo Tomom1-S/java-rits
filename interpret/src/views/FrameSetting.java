@@ -55,6 +55,10 @@ public final class FrameSetting {
     class Message {
         static final String SUCCESS = "成功しました";
         static final String SEARCH_CLASS = "クラスを検索します";
+        static final String CALL_CONSTRUCTOR = "コンストラクタを呼び出します";
+        static final String OPEN_WINDOW = "ウィンドウを開きます";
+        static final String CHANGE_FIELD = "フィールドを変更します";
+        static final String CALL_METHOD = "メソッドを呼び出します";
         static final String ERROR_EMPTY_VALUE = "値を入れてください";
     }
 }

@@ -83,7 +83,7 @@ public class MainFrame<E> extends JFrame implements ActionListener {
      */
     private void initBounds() {
         Dimension d = Toolkit.getDefaultToolkit().getScreenSize(); //画面全体のサイズ
-        int nx = (int) (d.width * 0.8);
+        int nx = (int) (d.width * 0.6);
         int ny = d.height / 2;
         int x = (d.width - nx) / 2;
         int y = (d.height - ny) / 2;
@@ -267,10 +267,9 @@ public class MainFrame<E> extends JFrame implements ActionListener {
             return;
         }
 
-        resultMsg += FrameSetting.Message.SEARCH_CLASS + LS;
+        resultMsg += FrameSetting.Message.SEARCH_CLASS + ": " + value + LS;
         try {
             cls = cs.searchClass(value);
-            resultMsg += FrameSetting.Message.SUCCESS + LS;
         } catch (Exception e) {
             resultMsg += e + LS;
             resultText.setText(resultMsg);
@@ -283,10 +282,11 @@ public class MainFrame<E> extends JFrame implements ActionListener {
     // コンストラクタ呼び出し
     private void callConstructor() {
         final Constructor c = constructors.get(constructorChoice.getSelectedIndex());
-        Object obj = new Object();
+        resultMsg += FrameSetting.Message.CALL_CONSTRUCTOR + ": " + c.getName() + LS;
+
+        Object obj;
         try {
             obj = cs.callConstructor(c, values.toArray());
-            resultMsg += FrameSetting.Message.SUCCESS + LS;
             showObjectWindow(obj);
         } catch (Exception ex) {
             resultMsg += ex + LS;
@@ -315,8 +315,12 @@ public class MainFrame<E> extends JFrame implements ActionListener {
     // コンストラクタのパラメータ設定を表示
     private void showObjectWindow(Object obj) {
         MyObject myObject = new MyObject(cls, obj);
+        resultMsg += FrameSetting.Message.OPEN_WINDOW + ": " + myObject.getCls() + " #" + myObject.getId() + LS;
+        resultText.setText(resultMsg);
+
         ObjectFrame objFrame = new ObjectFrame(myObject);
         objFrame.setVisible(true);
+
     }
 
     // コンストラクタのパラメータ設定を表示
