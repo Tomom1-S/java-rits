@@ -47,10 +47,10 @@ public class ObjectFrame<T, Eparam, Efield> extends JFrame implements ActionList
     private JComboBox fieldChoice = new JComboBox();
     private JComboBox methodChoice = new JComboBox();
 
-    private final JButton btnFieldParams = new JButton(FrameSetting.ButtonLabel.PARAMS);;
-    private final JButton btnChangeField = new JButton(FrameSetting.ButtonLabel.CHANGE_FIELD);;
-    private final JButton btnMethodParams = new JButton(FrameSetting.ButtonLabel.PARAMS);;
-    private final JButton btnCallMethod = new JButton(FrameSetting.ButtonLabel.CALL_METHOD);;
+    private final JButton btnFieldParams = new JButton(FrameSetting.ButtonLabel.PARAMS);
+    private final JButton btnChangeField = new JButton(FrameSetting.ButtonLabel.CHANGE_FIELD);
+    private final JButton btnMethodParams = new JButton(FrameSetting.ButtonLabel.PARAMS);
+    private final JButton btnCallMethod = new JButton(FrameSetting.ButtonLabel.CALL_METHOD);
 
     public ObjectFrame(MyObject obj) {
         this.obj = obj;
@@ -62,7 +62,7 @@ public class ObjectFrame<T, Eparam, Efield> extends JFrame implements ActionList
     }
 
     void init() {
-        setTitle(name + " #" + obj.getId());
+        setTitle(FrameSetting.FRAME_OBJECT + " " + name + " #" + obj.getId());
         initBounds();
 
         Container c = getContentPane();
@@ -335,5 +335,4 @@ public class ObjectFrame<T, Eparam, Efield> extends JFrame implements ActionList
         resultText.setText(resultMsg);
         return result;
     }
-
 }
