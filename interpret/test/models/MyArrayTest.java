@@ -61,6 +61,14 @@ class MyArrayTest {
         actual = (Integer) intArr.getElement(2);
         assertThat(actual, is(nullValue()));
 
+        index = 5;
+        final String str = "foo";
+        try {
+            intArr.setElement(index, str);
+        } catch (ArrayStoreException expected) {
+            assertThat(expected.getMessage(), equalTo(str.getClass().getName()));
+        }
+
         index = 100;
         try {
             intArr.setElement(index, intObj.getObj());
