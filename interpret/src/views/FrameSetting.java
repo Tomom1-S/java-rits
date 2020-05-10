@@ -29,7 +29,8 @@ public final class FrameSetting {
     class ButtonLabel {
         static final String SEARCH_CLASS = "Search class";
         static final String CALL_CONSTRUCTOR = "Call constructor";
-        static final String OPEN_WINDOW = "Open object";
+        static final String OPEN_ARRAY_WINDOW = "Open array";
+        static final String OPEN_OBJECT_WINDOW = "Open object";
 
         static final String CHANGE_FIELD = "Change field";
         static final String CALL_METHOD = "Call method";

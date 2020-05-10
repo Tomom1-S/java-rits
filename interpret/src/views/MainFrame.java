@@ -53,7 +53,8 @@ public class MainFrame<E> extends JFrame implements ActionListener {
     private final JButton btnSearchClass = new JButton(FrameSetting.ButtonLabel.SEARCH_CLASS);
     private final JButton btnConstructorParams = new JButton(FrameSetting.ButtonLabel.PARAMS);
     private final JButton btnCallConstructor = new JButton(FrameSetting.ButtonLabel.CALL_CONSTRUCTOR);
-    private final JButton btnOpenObjectFrame = new JButton(FrameSetting.ButtonLabel.OPEN_WINDOW);
+    private final JButton btnOpenArrayFrame = new JButton(FrameSetting.ButtonLabel.CALL_CONSTRUCTOR);
+    private final JButton btnOpenObjectFrame = new JButton(FrameSetting.ButtonLabel.OPEN_OBJECT_WINDOW);
     ;
 
     public static void main(String[] args) {
@@ -116,14 +117,21 @@ public class MainFrame<E> extends JFrame implements ActionListener {
                 ComponentPosition.btnGridX + 1, ++gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
         btnConstructorParams.setVisible(false);
 
+        btnConstructorParams.addActionListener(this);
+        btnConstructorParams.setForeground(FrameSetting.PARAMS_BTN_COLOR);
+        putComponent(btnConstructorParams,
+                ComponentPosition.btnGridX + 1, ++gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
+        btnConstructorParams.setVisible(false);
+
         btnCallConstructor.addActionListener(this);
         putComponent(btnCallConstructor,
                 ComponentPosition.btnGridX + 2, gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
         btnCallConstructor.setVisible(false);
 
         btnOpenObjectFrame.addActionListener(this);
+        gridY += 2;
         putComponent(btnOpenObjectFrame,
-                ComponentPosition.btnGridX + 2, ++gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
+                ComponentPosition.btnGridX + 2, gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
         btnOpenObjectFrame.setVisible(false);
     }
 
@@ -163,6 +171,13 @@ public class MainFrame<E> extends JFrame implements ActionListener {
         constructorLabel.setVisible(false);
         constructorNameText.setVisible(false);
 
+        // Result
+        gridX = FrameSetting.Grid.X_DEFAULT;
+        resultText.setEditable(false);  // 結果表示用のフィールドなので編集不可
+        JScrollPane jp = new JScrollPane(resultText, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+                JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+        putComponent(jp, gridX, ++gridY, FrameSetting.Grid.WIDTH * 6, FrameSetting.Grid.HEIGHT);
+
         // Open object's windows
         gridX = FrameSetting.Grid.X_DEFAULT;
         putComponent(objectLabel, gridX, ++gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
@@ -171,13 +186,6 @@ public class MainFrame<E> extends JFrame implements ActionListener {
         ComponentPosition.updateBtnGridX(gridX);
         objectLabel.setVisible(false);
         objectNameText.setVisible(false);
-
-        // Result
-        gridX = FrameSetting.Grid.X_DEFAULT;
-        resultText.setEditable(false);  // 結果表示用のフィールドなので編集不可
-        JScrollPane jp = new JScrollPane(resultText, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
-                JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-        putComponent(jp, gridX, ++gridY, FrameSetting.Grid.WIDTH * 6, FrameSetting.Grid.HEIGHT);
     }
 
     /**
