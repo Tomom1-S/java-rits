@@ -12,6 +12,10 @@ public class SumUp implements Runnable {
     }
 
     public synchronized void add() {
+        if (sum >= 100) {
+            return;
+        }
+
         int oldSum = sum;
         sum += addition;
         System.out.println(Thread.currentThread().getName() + ": " + oldSum + " + " + addition + " = " + sum);
@@ -19,13 +23,8 @@ public class SumUp implements Runnable {
 
     @Override
     public void run() {
-        try {
-            while (sum < 100) {
-                add();
-                Thread.sleep(delay);
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        while (sum < 100) {
+            add();
         }
 
     }
