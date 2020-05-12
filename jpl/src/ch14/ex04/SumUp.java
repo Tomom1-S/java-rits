@@ -28,7 +28,7 @@ public class SumUp implements Runnable {
     }
 
     public static void main(String[] args) {
-        final Runnable sumUp = new ch14.ex03.SumUp(5);
+        final Runnable sumUp = new SumUp(5);
         new Thread(sumUp).start();
         new Thread(sumUp).start();
         new Thread(sumUp).start();
