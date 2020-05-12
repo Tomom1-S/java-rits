@@ -11,6 +11,10 @@ public class PrintServer implements Runnable {
         thread.start();
     }
 
+    public Thread getThread() {
+        return thread;
+    }
+
     public void print(PrintJob job) {
         requests.add(job);
     }
@@ -18,7 +22,7 @@ public class PrintServer implements Runnable {
     @Override
     public void run() {
         if (thread != Thread.currentThread()) {
-            return;
+            throw new java.lang.RuntimeException("This thread cannot execute run()");
         }
 
         for (; ; ) {
