@@ -3,12 +3,10 @@ package ch14.ex04;
 public class SumUp implements Runnable {
     private static int sum;
     private static int addition;
-    private int delay;
 
-    public SumUp(int addition, int delay) {
+    public SumUp(int addition) {
         sum = 0;
         this.addition = addition;
-        this.delay = delay;
     }
 
     public synchronized static void add() {
@@ -16,7 +14,7 @@ public class SumUp implements Runnable {
             return;
         }
 
-        int oldSum = sum;
+        final int oldSum = sum;
         sum += addition;
         System.out.println(Thread.currentThread().getName() + ": " + oldSum + " + " + addition + " = " + sum);
     }
@@ -30,7 +28,7 @@ public class SumUp implements Runnable {
     }
 
     public static void main(String[] args) {
-        Runnable sumUp = new ch14.ex03.SumUp(5, 1000);
+        final Runnable sumUp = new ch14.ex03.SumUp(5);
         new Thread(sumUp).start();
         new Thread(sumUp).start();
         new Thread(sumUp).start();
