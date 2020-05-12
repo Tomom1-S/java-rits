@@ -20,7 +20,7 @@ public class SumUp implements Runnable {
     @Override
     public void run() {
         try {
-            for (;;) {
+            while (sum < 100) {
                 add();
                 Thread.sleep(delay);
             }
