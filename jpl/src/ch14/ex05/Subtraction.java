@@ -11,7 +11,7 @@ public class Subtraction implements Runnable {
     }
 
     public void subtract() {
-        synchronized (lock) {
+        synchronized (Subtraction.class) {
             if (diff <= -100 || diff >= 100) {
                 return;
             }
@@ -24,6 +24,7 @@ public class Subtraction implements Runnable {
 
     @Override
     public void run() {
+        // diff の同期を取る
         while (diff > -100 && diff < 100) {
             subtract();
         }
