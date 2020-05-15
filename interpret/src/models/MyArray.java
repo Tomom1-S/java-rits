@@ -1,12 +1,38 @@
 package models;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.lang.reflect.Array;
 
-public class MyArray<E> {
-    List<E> array;
+public class MyArray<T> {
+    T[] array;
+    private final Class cls;
+    private final String name;
+    private final int id;
+    private static int nextId = 0;
 
-    public MyArray() {
-        array = new ArrayList<>();
+    public MyArray(final Class<T> type, final int size) {
+        this.id = nextId++;
+        this.cls = type;
+        this.name = cls.getName();
+        array = (T[]) Array.newInstance(type, size);
+    }
+
+    public T getElement(int index) {
+        return array[index];
+    }
+
+    public Class getCls() {
+        return cls;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setElement(int index, T element) {
+        array[index] = element;
     }
 }

@@ -1,33 +1,26 @@
 package models;
 
-import views.ObjectFieldFrame;
-
 import java.lang.reflect.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MyObject<T> {
-    private Class cls;
-    private String name;
-    private T obj;
+    private final Class cls;
+    private final String name;
+    private final T obj;
+    private final int id;
+    private static int nextId = 0;
 
     public MyObject(Class cls, T obj) {
+        this.id = nextId++;
         this.cls = cls;
         this.name = cls.getName();
         this.obj = obj;
     }
 
-    public Object callMethod(String name) throws NoSuchMethodException {
-        Method method = cls.getDeclaredMethod(name);
-        try {
-            return method.invoke(obj);
-        } catch (ReflectiveOperationException e) {
-            throw new RuntimeException(e.getCause());
-        }
-    }
-
-    // TODO: Integer を int に渡せるように（wrapper -> primitive）
-    public Object callMethod(Method m, Object... args) throws NoSuchMethodException, ClassNotFoundException {
+    public Object callMethod(Method m, Object... args)
+            throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException,
+            InstantiationException, IllegalAccessException {
         Parameter[] params = m.getParameters();
         List<Object> values = new ArrayList<>() {
         };
@@ -35,7 +28,7 @@ public class MyObject<T> {
         for (Parameter p : params) {
             Class<?> cls = ReflectionUtils.getType(p.getType().getName());
             Object obj = args[i++];
-            values.add(cls.cast(obj));
+            values.add(ReflectionUtils.castObject(cls, obj));
         }
 
         try {
@@ -62,9 +55,14 @@ public class MyObject<T> {
         }
 
         Class<?> fieldCls = ReflectionUtils.getType(field.getType().getName());
-//        field.set(obj, fieldCls.cast(value));
-        field.set(obj, fieldCls.getConstructor(value.getClass()).newInstance(value));
+
+        field.set(obj, ReflectionUtils.castObject(fieldCls, value));
     }
+
+    public Class getCls() {
+        return cls;
+    }
+
 
     public Object getField(String name) throws NoSuchFieldException, IllegalAccessException {
         Field field = cls.getDeclaredField(name);
@@ -81,6 +79,10 @@ public class MyObject<T> {
         }
 
         return fieldList;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getName() {
@@ -109,20 +111,7 @@ public class MyObject<T> {
         return methodList;
     }
 
-    public Class getThisClass() {
-        return this.cls;
+    public T getObj() {
+        return obj;
     }
-
-    public Object getThisObject() {
-        return this.obj;
-    }
-
-    private boolean isPositive(final int value) {
-        if (value > 0) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
 }

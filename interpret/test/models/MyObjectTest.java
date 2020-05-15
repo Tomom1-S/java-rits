@@ -28,10 +28,11 @@ class MyObjectTest {
     private final MyObject intObj = new MyObject(intCls, DEFAULT_INT);
     private final MyObject testObj = new MyObject(testCls, new TestClass());
 
-    private static final int ORDER_GET_FIELD_FOR_INTEGER = 0;
-    private static final int ORDER_GET_FIELD_FOR_TEST = 1;
-    private static final int ORDER_CHANGE_FIELD_FOR_INTEGER = 2;
-    private static final int ORDER_CHANGE_FIELD_FOR_TEST = 3;
+    private static final int ORDER_CALL_METHOD_FOR_INTEGER = 0;
+    private static final int ORDER_GET_FIELD_FOR_INTEGER = 1;
+    private static final int ORDER_GET_FIELD_FOR_TEST = 2;
+    private static final int ORDER_CHANGE_FIELD_FOR_INTEGER = 3;
+    private static final int ORDER_CHANGE_FIELD_FOR_TEST = 4;
 
     private final String ARGS_NAME = "Foo Bar";
 
@@ -51,12 +52,27 @@ class MyObjectTest {
     }
 
     @Test
-    void callMethodForInteger() {
+    @Order(ORDER_CALL_METHOD_FOR_INTEGER)
+    void callMethodForInteger()
+            throws NoSuchMethodException, ClassNotFoundException, InstantiationException,
+            IllegalAccessException, InvocationTargetException {
+
+        Method method = intCls.getMethod("toString");
+        final String actualStr = (String) intObj.callMethod(method);
+        final String expectedStr = "42";
+        assertThat(actualStr, is(expectedStr));
+
+        // multiple args
+        method = intCls.getMethod("min", int.class, int.class);
+        final int actualMin = (int) intObj.callMethod(method, -100, 200);
+        final int expectedMin = -100;
+        assertThat(actualMin, is(expectedMin));
     }
 
     @Test
     void callMethodForTestClass()
-            throws NoSuchMethodException, NoSuchFieldException, IllegalAccessException, ClassNotFoundException {
+            throws NoSuchMethodException, NoSuchFieldException, IllegalAccessException,
+            ClassNotFoundException, InvocationTargetException, InstantiationException {
         Method method = testCls.getMethod("setName", strCls);
         testObj.callMethod(method, ARGS_NAME);
         final String actualName = (String) testObj.getField("name");
@@ -68,8 +84,6 @@ class MyObjectTest {
         final int actualSum = (int) testObj.callMethod(method, 1, 2);
         final int expectedSum = 3;
         assertThat(actualSum, is(expectedSum));
-
-        // private
     }
 
     @Test
@@ -82,11 +96,6 @@ class MyObjectTest {
         obj.changeField("value", 100);
         final int actualValue = (int) obj.getField("value");
         assertThat(actualValue, is(100));
-
-        // TODO: static の書き換え
-//        obj.changeField("MAX_VALUE", 100);
-//        final int actualPubInt = (int) obj.getField("MAX_VALUE");
-//        assertThat(actualPubInt, is(100));
     }
 
     @Test

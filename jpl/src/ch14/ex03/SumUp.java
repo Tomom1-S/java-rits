@@ -3,35 +3,32 @@ package ch14.ex03;
 public class SumUp implements Runnable {
     private int sum;
     private int addition;
-    private int delay;
 
-    public SumUp (int addition, int delay) {
+    public SumUp (int addition) {
         sum = 0;
         this.addition = addition;
-        this.delay = delay;
     }
 
     public synchronized void add() {
-        int oldSum = sum;
+        if (sum >= 100) {
+            return;
+        }
+
+        final int oldSum = sum;
         sum += addition;
         System.out.println(Thread.currentThread().getName() + ": " + oldSum + " + " + addition + " = " + sum);
     }
 
     @Override
     public void run() {
-        try {
-            for (;;) {
-                add();
-                Thread.sleep(delay);
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        while (sum < 100) {
+            add();
         }
 
     }
 
     public static void main(String[] args) {
-        Runnable sumUp = new SumUp(5, 1000);
+        final Runnable sumUp = new SumUp(5);
         new Thread(sumUp).start();
         new Thread(sumUp).start();
         new Thread(sumUp).start();

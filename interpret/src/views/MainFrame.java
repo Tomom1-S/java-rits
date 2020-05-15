@@ -1,6 +1,7 @@
 package views;
 
 import models.ClassSearch;
+import models.MyArray;
 import models.MyObject;
 
 import javax.swing.*;
@@ -18,6 +19,8 @@ public class MainFrame<E> extends JFrame implements ActionListener {
     List<Constructor> constructors = new ArrayList<>();
     List<E> values = new ArrayList<>();
     Constructor lastSelected;
+    List<ObjectFrame> objList = new ArrayList<>();
+    List<ArrayFrame> arrList = new ArrayList<>();
 
     private String resultMsg = "";
     private static final String LS = "\n";
@@ -28,6 +31,8 @@ public class MainFrame<E> extends JFrame implements ActionListener {
 
     private static class ComponentPosition {
         private static Point constructorName = new Point();
+        private static Point objectName = new Point();
+        private static Point arrayName = new Point();
         private static int btnGridX = 0;
 
         public static void updateBtnGridX(int x) {
@@ -35,18 +40,38 @@ public class MainFrame<E> extends JFrame implements ActionListener {
         }
     }
 
-    private JLabel typeLabel = new JLabel(FrameSetting.TextLabel.CLASS);
-    private JLabel constructorLabel = new JLabel(FrameSetting.TextLabel.CONSTRUCTOR);
+    private final JLabel typeLabel = new JLabel(FrameSetting.TextLabel.CLASS);
+    private final JLabel constructorLabel = new JLabel(FrameSetting.TextLabel.CONSTRUCTOR);
 
-    private JTextField typeText;
-    private JTextField constructorNameText;   // JComboBox 表示前の仮置き
-    private JTextArea resultText;
+    private final JLabel arrayLabel = new JLabel(FrameSetting.TextLabel.ARRAY);
+    private final JLabel arrayTypeLabel = new JLabel(FrameSetting.TextLabel.ARRAY_TYPE);
+    private final JLabel arraySizeLabel = new JLabel(FrameSetting.TextLabel.ARRAY_SIZE);
+
+    private final JLabel historyLabel = new JLabel(FrameSetting.TextLabel.HISTORY);
+    private final JLabel historyObjectLabel = new JLabel(FrameSetting.TextLabel.OBJECT_HISTORY);
+    private final JLabel historyArrayLabel = new JLabel(FrameSetting.TextLabel.ARRAY_HISTORY);
+
+    private final JTextField typeText = new JTextField(FrameSetting.TEXT_FIELD_LENGTH);
+    private final JTextField constructorNameText = new JTextField(FrameSetting.TEXT_FIELD_LENGTH);  // JComboBox 表示前の仮置き
+    private final JTextField arrayTypeText = new JTextField(FrameSetting.TEXT_FIELD_LENGTH);
+    private final JTextField arraySizeText = new JTextField(FrameSetting.TEXT_FIELD_LENGTH);
+    private final JTextField objectNameText = new JTextField(FrameSetting.TEXT_FIELD_LENGTH);   // JComboBox 表示前の仮置き
+    private final JTextField arrayNameText = new JTextField(FrameSetting.TEXT_FIELD_LENGTH);   // JComboBox 表示前の仮置き
+
+    private final JTextArea resultText = new JTextArea(FrameSetting.DEFAULT_RESULT,
+            FrameSetting.RESULT_FIELD_ROWS, FrameSetting.RESULT_FIELD_COLUMNS);
 
     private JComboBox constructorChoice;
+    private JComboBox objectChoice;
+    private JComboBox arrayChoice;
 
-    private JButton btnSearchClass;
-    private JButton btnConstructorParams;
-    private JButton btnCallConstructor;
+    private final JButton btnSearchClass = new JButton(FrameSetting.ButtonLabel.SEARCH_CLASS);
+    private final JButton btnConstructorParams = new JButton(FrameSetting.ButtonLabel.PARAMS);
+    private final JButton btnCallConstructor = new JButton(FrameSetting.ButtonLabel.CALL_CONSTRUCTOR);
+    private final JButton btnCreateArray = new JButton(FrameSetting.ButtonLabel.CREATE_ARRAY);
+    private final JButton btnOpenObjectFrame = new JButton(FrameSetting.ButtonLabel.OPEN_OBJECT_WINDOW);
+    private final JButton btnOpenArrayFrame = new JButton(FrameSetting.ButtonLabel.OPEN_ARRAY_WINDOW);
+    ;
 
     public static void main(String[] args) {
         MainFrame me = new MainFrame();
@@ -83,8 +108,8 @@ public class MainFrame<E> extends JFrame implements ActionListener {
      */
     private void initBounds() {
         Dimension d = Toolkit.getDefaultToolkit().getScreenSize(); //画面全体のサイズ
-        int nx = (int) (d.width * 0.8);
-        int ny = d.height / 2;
+        int nx = (int) (d.width * 0.6);
+        int ny = (int) (d.height * 0.6);
         int x = (d.width - nx) / 2;
         int y = (d.height - ny) / 2;
 
@@ -98,23 +123,37 @@ public class MainFrame<E> extends JFrame implements ActionListener {
     private void initButtons() {
         initGrid();
 
-        btnSearchClass = new JButton(FrameSetting.ButtonLabel.SEARCH_CLASS);
         btnSearchClass.addActionListener(this);
         putComponent(btnSearchClass,
                 ComponentPosition.btnGridX + 2, gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
 
-        btnConstructorParams = new JButton(FrameSetting.ButtonLabel.PARAMS);
         btnConstructorParams.addActionListener(this);
         btnConstructorParams.setForeground(FrameSetting.PARAMS_BTN_COLOR);
         putComponent(btnConstructorParams,
                 ComponentPosition.btnGridX + 1, ++gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
         btnConstructorParams.setVisible(false);
 
-        btnCallConstructor = new JButton(FrameSetting.ButtonLabel.CALL_CONSTRUCTOR);
         btnCallConstructor.addActionListener(this);
         putComponent(btnCallConstructor,
                 ComponentPosition.btnGridX + 2, gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
         btnCallConstructor.setVisible(false);
+
+        btnCreateArray.addActionListener(this);
+        gridY += 2;
+        putComponent(btnCreateArray,
+                ComponentPosition.btnGridX + 2, gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
+
+        btnOpenObjectFrame.addActionListener(this);
+        putComponent(btnOpenObjectFrame,
+                ComponentPosition.btnGridX + 2, ComponentPosition.objectName.y,
+                FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
+        btnOpenObjectFrame.setVisible(false);
+
+        btnOpenArrayFrame.addActionListener(this);
+        putComponent(btnOpenArrayFrame,
+                ComponentPosition.btnGridX + 2, ComponentPosition.arrayName.y,
+                FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
+        btnOpenArrayFrame.setVisible(false);
     }
 
     /**
@@ -141,28 +180,118 @@ public class MainFrame<E> extends JFrame implements ActionListener {
 
         // Search class
         putComponent(typeLabel, gridX, gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
-        typeText = new JTextField(FrameSetting.TEXT_FIELD_LENGTH);
         putComponent(typeText, ++gridX, gridY, FrameSetting.Grid.WIDTH * 2, FrameSetting.Grid.HEIGHT);
         ComponentPosition.updateBtnGridX(gridX);
 
         // Call constructors
         gridX = FrameSetting.Grid.X_DEFAULT;
         putComponent(constructorLabel, gridX, ++gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
-        constructorNameText = new JTextField(FrameSetting.TEXT_FIELD_LENGTH);
         putComponent(constructorNameText, ++gridX, gridY, FrameSetting.Grid.WIDTH * 2, FrameSetting.Grid.HEIGHT);
         ComponentPosition.constructorName = new Point(gridX, gridY);
         ComponentPosition.updateBtnGridX(gridX);
         constructorLabel.setVisible(false);
         constructorNameText.setVisible(false);
 
+        // Create array
+        gridX = FrameSetting.Grid.X_DEFAULT;
+        arrayLabel.setForeground(FrameSetting.ACCENT_COLOR);
+        putComponent(arrayLabel, gridX, ++gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
+        putComponent(arrayTypeLabel, gridX, ++gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
+        putComponent(arrayTypeText, ++gridX, gridY, FrameSetting.Grid.WIDTH * 2, FrameSetting.Grid.HEIGHT);
+        gridX = FrameSetting.Grid.X_DEFAULT;
+        putComponent(arraySizeLabel, gridX, ++gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
+        putComponent(arraySizeText, ++gridX, gridY, FrameSetting.Grid.WIDTH * 2, FrameSetting.Grid.HEIGHT);
+        ComponentPosition.updateBtnGridX(gridX);
+
         // Result
         gridX = FrameSetting.Grid.X_DEFAULT;
-        resultText = new JTextArea(FrameSetting.DEFAULT_RESULT,
-                FrameSetting.RESULT_FIELD_ROWS, FrameSetting.RESULT_FIELD_COLUMNS);
         resultText.setEditable(false);  // 結果表示用のフィールドなので編集不可
         JScrollPane jp = new JScrollPane(resultText, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
                 JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
         putComponent(jp, gridX, ++gridY, FrameSetting.Grid.WIDTH * 6, FrameSetting.Grid.HEIGHT);
+
+        // History
+        gridX = FrameSetting.Grid.X_DEFAULT;
+        historyLabel.setForeground(FrameSetting.ACCENT_COLOR);
+        putComponent(historyLabel, gridX, ++gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
+        historyLabel.setVisible(false);
+
+        // Open object's windows
+        gridX = FrameSetting.Grid.X_DEFAULT;
+        putComponent(historyObjectLabel, gridX, ++gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
+        putComponent(objectNameText, ++gridX, gridY, FrameSetting.Grid.WIDTH * 2, FrameSetting.Grid.HEIGHT);
+        ComponentPosition.objectName = new Point(gridX, gridY);
+        ComponentPosition.updateBtnGridX(gridX);
+        historyObjectLabel.setVisible(false);
+        objectNameText.setVisible(false);
+
+        // Open array's windows
+        gridX = FrameSetting.Grid.X_DEFAULT;
+        putComponent(historyArrayLabel, gridX, ++gridY, FrameSetting.Grid.WIDTH, FrameSetting.Grid.HEIGHT);
+        putComponent(arrayNameText, ++gridX, gridY, FrameSetting.Grid.WIDTH * 2, FrameSetting.Grid.HEIGHT);
+        ComponentPosition.arrayName = new Point(gridX, gridY);
+        ComponentPosition.updateBtnGridX(gridX);
+        historyArrayLabel.setVisible(false);
+        arrayNameText.setVisible(false);
+    }
+
+    /**
+     * オブジェクトウィンドウの表示機能を初期化
+     */
+    private void initOpenObjectWindowFunc() {
+        if (objList.isEmpty()) {
+            return;
+        }
+        if (!historyLabel.isVisible()) {
+            historyLabel.setVisible(true);
+        }
+        if (!historyObjectLabel.isVisible()) {
+            historyObjectLabel.setVisible(true);
+            replaceComponent(objectNameText, objectChoice);
+            btnOpenObjectFrame.setVisible(true);
+        }
+
+        objectChoice.removeAllItems();
+        putComboBoxItems(objectChoice, getObjectNameList());
+    }
+
+    List<String> getObjectNameList() {
+        List<String> objNames = new ArrayList<>();
+        for (ObjectFrame frame : objList) {
+            MyObject obj = frame.getMyObject();
+            objNames.add(obj.getCls().getName() + " #" + obj.getId());
+        }
+        return objNames;
+    }
+
+    /**
+     * 配列ウィンドウの表示機能を初期化
+     */
+    private void initOpenArrayWindowFunc() {
+        if (arrList.isEmpty()) {
+            return;
+        }
+        if (!historyLabel.isVisible()) {
+            historyLabel.setVisible(true);
+        }
+        setComboBoxesForArray();
+        if (!historyArrayLabel.isVisible()) {
+            historyArrayLabel.setVisible(true);
+            replaceComponent(arrayNameText, arrayChoice);
+            btnOpenArrayFrame.setVisible(true);
+        }
+
+        arrayChoice.removeAllItems();
+        putComboBoxItems(arrayChoice, getArrayNameList());
+    }
+
+    List<String> getArrayNameList() {
+        List<String> arrNames = new ArrayList<>();
+        for (ArrayFrame frame : arrList) {
+            MyArray arr = frame.getMyArray();
+            arrNames.add(arr.getCls().getName() + " #" + arr.getId());
+        }
+        return arrNames;
     }
 
     /**
@@ -192,13 +321,13 @@ public class MainFrame<E> extends JFrame implements ActionListener {
     /**
      * コンボボックスを設定
      */
-    private void setComboBoxes() {
+    private void setComboBoxesForObject() {
         // Constructors
         constructorChoice = new JComboBox();
         constructorChoice.setPreferredSize(
                 new Dimension(FrameSetting.COMBO_BOX_WIDTH, constructorChoice.getPreferredSize().height));
         constructors = cs.getConstructors(cls);
-        putComboBoxItems(constructorChoice, cs.getConstructors(cls));
+        putComboBoxItems(constructorChoice, constructors);
         putComponent(constructorChoice, ComponentPosition.constructorName,
                 FrameSetting.Grid.WIDTH * 2, FrameSetting.Grid.HEIGHT);
         constructorChoice.addActionListener(this);
@@ -206,6 +335,28 @@ public class MainFrame<E> extends JFrame implements ActionListener {
         if (!constructorChoice.isVisible()) {
             replaceComponent(constructorNameText, constructorChoice);
         }
+
+        // Objects
+        objectChoice = new JComboBox();
+        objectChoice.setPreferredSize(
+                new Dimension(FrameSetting.COMBO_BOX_WIDTH, objectChoice.getPreferredSize().height));
+        putComponent(objectChoice, ComponentPosition.objectName,
+                FrameSetting.Grid.WIDTH * 2, FrameSetting.Grid.HEIGHT);
+        objectChoice.addActionListener(this);
+        objectChoice.setFont(new Font("", Font.PLAIN, FrameSetting.COMBO_BOX_FONT_SIZE));
+        objectChoice.setVisible(false);
+    }
+
+    private void setComboBoxesForArray() {
+        // Arrays
+        arrayChoice = new JComboBox();
+        arrayChoice.setPreferredSize(
+                new Dimension(FrameSetting.COMBO_BOX_WIDTH, arrayChoice.getPreferredSize().height));
+        putComponent(arrayChoice, ComponentPosition.arrayName,
+                FrameSetting.Grid.WIDTH * 2, FrameSetting.Grid.HEIGHT);
+        arrayChoice.addActionListener(this);
+        arrayChoice.setFont(new Font("", Font.PLAIN, FrameSetting.COMBO_BOX_FONT_SIZE));
+        arrayChoice.setVisible(false);
     }
 
     /**
@@ -245,15 +396,22 @@ public class MainFrame<E> extends JFrame implements ActionListener {
                 resultText.setText(resultMsg);
                 return;
             }
-
             constructors.clear();
             searchClass();
             showCallConstructor();
         } else if (e.getSource() == btnConstructorParams) {
             showParamWindow();
+        } else if (e.getSource() == btnCreateArray) {
+            createArray();
+            initOpenArrayWindowFunc();
         } else if (e.getSource() == btnCallConstructor) {
-            Object obj = callConstructor();
-            showObjectWindow(obj);
+            callConstructor();
+            initOpenObjectWindowFunc();
+            updateObjectChoice();
+        } else if (e.getSource() == btnOpenObjectFrame) {
+            showClosedObjectWindow();
+        } else if (e.getSource() == btnOpenArrayFrame) {
+            showClosedArrayWindow();
         } else if (e.getSource() == constructorChoice) {
             values = new ArrayList<>();
         }
@@ -261,17 +419,14 @@ public class MainFrame<E> extends JFrame implements ActionListener {
 
     // クラスを検索
     private void searchClass() {
-        final String value = typeText.getText();
-        if (isStringNull(value)) {
-            resultMsg += FrameSetting.Message.ERROR_EMPTY_VALUE + LS;
-            resultText.setText(resultMsg);
+        if (isNullForTextField(typeText)) {
             return;
         }
 
-        resultMsg += FrameSetting.Message.SEARCH_CLASS + LS;
+        final String value = typeText.getText();
+        resultMsg += FrameSetting.Message.SEARCH_CLASS + ": " + value + LS;
         try {
             cls = cs.searchClass(value);
-            resultMsg += FrameSetting.Message.SUCCESS + LS;
         } catch (Exception e) {
             resultMsg += e + LS;
             resultText.setText(resultMsg);
@@ -282,18 +437,20 @@ public class MainFrame<E> extends JFrame implements ActionListener {
     }
 
     // コンストラクタ呼び出し
-    private Object callConstructor() {
+    private void callConstructor() {
         final Constructor c = constructors.get(constructorChoice.getSelectedIndex());
-        Object obj = new Object();
+        resultMsg += FrameSetting.Message.CALL_CONSTRUCTOR + ": " + c.getName() + LS;
+
+        Object obj;
         try {
             obj = cs.callConstructor(c, values.toArray());
-            resultMsg += FrameSetting.Message.SUCCESS + LS;
+            showNewObjectWindow(obj);
         } catch (Exception ex) {
             resultMsg += ex + LS;
             ex.printStackTrace();
         }
         resultText.setText(resultMsg);
-        return obj;
+        return;
     }
 
     // コンストラクタ呼び出しのフィールドを表示
@@ -302,22 +459,90 @@ public class MainFrame<E> extends JFrame implements ActionListener {
         btnConstructorParams.setVisible(true);
         btnCallConstructor.setVisible(true);
         if (constructorChoice == null) {
-            setComboBoxes();
+            setComboBoxesForObject();
             return;
         }
         if (constructors.isEmpty()) {
             constructors = cs.getConstructors(cls);
         }
         constructorChoice.removeAllItems();
-//        setComboBoxes();
         putComboBoxItems(constructorChoice, constructors);
     }
 
-    // コンストラクタのパラメータ設定を表示
-    private void showObjectWindow(Object obj) {
+    // ArrayFrame の JComboBox を更新
+    private void updateObjectChoice() {
+        for (ArrayFrame frame : arrList) {
+            frame.getObjectChoice().removeAllItems();
+            frame.setComboBoxes(frame.getObjectChoice(), getObjectNameList());
+        }
+    }
+
+    // 新しいオブジェクトウィンドウを表示
+    private void createArray() {
+        if (isNullForTextField(arrayTypeText) || isNullForTextField(arraySizeText)) {
+            return;
+        }
+
+        final String arrayType = arrayTypeText.getText();
+        Class arrayCls;
+        try {
+            arrayCls = cs.searchClass(arrayType);
+        } catch (Exception e) {
+            resultMsg += e + LS;
+            resultText.setText(resultMsg);
+            e.printStackTrace();
+            return;
+        }
+
+        final String arraySize = arraySizeText.getText();
+        MyArray myArray = new MyArray(arrayCls, Integer.parseInt(arraySize));
+        resultText.setText(resultMsg);
+
+        resultMsg += FrameSetting.Message.CREATE_ARRAY + ": " + myArray.getName() + " #" + myArray.getId() + LS;
+        resultText.setText(resultMsg);
+
+        ArrayFrame arrFrame = new ArrayFrame(this, myArray);
+        arrList.add(arrFrame);
+        arrFrame.setVisible(true);
+    }
+
+    // 新しいオブジェクトウィンドウを表示
+    private void showNewObjectWindow(Object obj) {
         MyObject myObject = new MyObject(cls, obj);
+        resultMsg += FrameSetting.Message.OPEN_WINDOW + ": " + myObject.getCls() + " #" + myObject.getId() + LS;
+        resultText.setText(resultMsg);
+
         ObjectFrame objFrame = new ObjectFrame(myObject);
+        objList.add(objFrame);
         objFrame.setVisible(true);
+    }
+
+    // 閉じたオブジェクトウィンドウを再度表示
+    private void showClosedObjectWindow() {
+        final ObjectFrame objFrame = objList.get(objectChoice.getSelectedIndex());
+        final MyObject myObject = objFrame.getMyObject();
+
+        if (objFrame.isVisible()) {
+            objFrame.toFront();
+        } else {
+            objFrame.setVisible(true);
+            resultMsg += FrameSetting.Message.OPEN_WINDOW + ": " + myObject.getCls() + " #" + myObject.getId() + LS;
+            resultText.setText(resultMsg);
+        }
+    }
+
+    // 閉じた配列ウィンドウを再度表示
+    private void showClosedArrayWindow() {
+        final ArrayFrame arrFrame = arrList.get(arrayChoice.getSelectedIndex());
+        final MyArray myArray = arrFrame.getMyArray();
+
+        if (arrFrame.isVisible()) {
+            arrFrame.toFront();
+        } else {
+            arrFrame.setVisible(true);
+            resultMsg += FrameSetting.Message.OPEN_WINDOW + ": " + myArray.getCls() + " #" + myArray.getId() + LS;
+            resultText.setText(resultMsg);
+        }
     }
 
     // コンストラクタのパラメータ設定を表示
@@ -333,5 +558,16 @@ public class MainFrame<E> extends JFrame implements ActionListener {
         final ConstructorParamFrame pFrame = new ConstructorParamFrame(this, c.getName(), c.getParameters(), values);
         pFrame.setVisible(true);
         lastSelected = c;
+    }
+
+    // JTextField の値が null ならメッセージを出す
+    private boolean isNullForTextField(final JTextField field) {
+        final String text = field.getText();
+        if (!isStringNull(text)) {
+            return false;
+        }
+        resultMsg += FrameSetting.Message.ERROR_EMPTY_VALUE + LS;
+        resultText.setText(resultMsg);
+        return true;
     }
 }

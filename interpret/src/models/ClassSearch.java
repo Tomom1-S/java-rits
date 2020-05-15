@@ -1,20 +1,24 @@
 package models;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Parameter;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ClassSearch {
-    public Object callConstructor(Constructor c, Object... args) throws ClassNotFoundException {
+    public Object callConstructor(Constructor c, Object... args)
+            throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException,
+            InvocationTargetException, InstantiationException {
         Parameter[] params = c.getParameters();
-        List<Object> values = new ArrayList<>() {};
+        List<Object> values = new ArrayList<>() {
+        };
         int i = 0;
         for (Parameter p : params) {
             Class<?> cls = ReflectionUtils.getType(p.getType().getName());
             Object obj = args[i++];
-            values.add(cls.cast(obj));
+            values.add(ReflectionUtils.castObject(cls, obj));
         }
 
         try {
