@@ -9,6 +9,9 @@ public final class Settings {
     }
 
     static final class Menu {
+        static final String BAR = "Menu";
+        static final Point MENU_POS = new Point(0, 0);
+
         static final String TITLE = "Setting";
         static final Dimension SIZE = new Dimension(500, 300);
 
@@ -46,6 +49,7 @@ public final class Settings {
             add(Color.WHITE);
             add(Color.YELLOW);
         }};
+        static final int N_COLORS = COLORS.size();
 
         public static String getColorName(Color color) {
             if (color.equals(Color.BLACK)) {

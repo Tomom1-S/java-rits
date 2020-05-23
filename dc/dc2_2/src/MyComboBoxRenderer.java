@@ -3,8 +3,6 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 class MyComboBoxRenderer extends JLabel implements ListCellRenderer {
-    private JLabel labelItem = new JLabel();
-
     public MyComboBoxRenderer() {
         setOpaque(true);
     }
@@ -29,7 +27,7 @@ class MyComboBoxRenderer extends JLabel implements ListCellRenderer {
                 BufferedImage.TYPE_INT_RGB
         );
         Graphics2D graphics = image.createGraphics();
-        graphics.setPaint(Settings.Menu.COLORS.get(index));
+        graphics.setPaint(Settings.Menu.COLORS.get(index % Settings.Menu.N_COLORS));
         graphics.fillRect(0, 0, image.getWidth(), image.getHeight());
         ImageIcon imageIcon = new ImageIcon(image);
         setIcon(imageIcon);

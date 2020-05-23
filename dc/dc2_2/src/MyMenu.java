@@ -189,6 +189,7 @@ public class MyMenu extends JDialog implements ActionListener {
      * コンボボックスの項目を設定
      */
     private <T> void putComboBoxItems(final JComboBox comboBox, final List<T> list) {
+        comboBox.removeAllItems();
         list.forEach(i -> {
             comboBox.addItem(i);
         });
