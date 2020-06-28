@@ -45,7 +45,8 @@ public class TypeDesc {
 
         // Object クラスだったら何もしない
         String clsName = cls.getCanonicalName();
-        if (clsName.equals("java.lang.Object")) {
+        // 柴田さん：Object 型に対するクラスオブジェクトの参照を使う
+        if (cls == Object.class) {
             return;
         }
 

@@ -83,6 +83,7 @@ public class MyPopupMouseListener implements MouseListener {
 
 
     private void addColorItems(JMenu menu) {
+        // 柴田さん：カラーチップも入れる
         for (String name : COLOR_NAMES) {
             final JMenuItem item = new JMenuItem(name);
             item.addActionListener(e -> {
