@@ -5,13 +5,22 @@ public final class Settings {
     static final class MainFrame {
         static final String TITLE = "What time is it?";
         static final Dimension SIZE = new Dimension(500, 500);
-        static Point location = new Point(100, 100);
+        static Point LOCATION = new Point(100, 100);
+    }
+
+    static final class PrefKey {
+        static final String LOC_X = "locX";
+        static final String LOC_Y = "locY";
+        static final String HEIGHT = "height";
+        static final String WIDTH = "width";
+
+        static final String FONT_NAME = "fontName";
+        static final String FONT_SIZE = "fontSize";
+        static final String FONT_COLOR = "fontColor";
+        static final String BG_COLOR = "bgColor";
     }
 
     static final class Menu {
-        static final String BAR = "Menu";
-        static final Point MENU_POS = new Point(0, 0);
-
         static final String TITLE = "Setting";
         static final Dimension SIZE = new Dimension(500, 300);
 
@@ -50,38 +59,6 @@ public final class Settings {
             add(Color.YELLOW);
         }};
         static final int N_COLORS = COLORS.size();
-
-        public static String getColorName(Color color) {
-            if (color.equals(Color.BLACK)) {
-                return "Black";
-            } else if (color.equals(Color.BLUE)) {
-                return "Blue";
-            } else if (color.equals(Color.CYAN)) {
-                return "Cyan";
-            } else if (color.equals(Color.DARK_GRAY)) {
-                return "Dark gray";
-            } else if (color.equals(Color.GRAY)) {
-                return "Gray";
-            } else if (color.equals(Color.GREEN)) {
-                return "Green";
-            } else if (color.equals(Color.LIGHT_GRAY)) {
-                return "Light gray";
-            } else if (color.equals(Color.MAGENTA)) {
-                return "Magenta";
-            } else if (color.equals(Color.ORANGE)) {
-                return "Orange";
-            } else if (color.equals(Color.PINK)) {
-                return "Pink";
-            } else if (color.equals(Color.RED)) {
-                return "Red";
-            } else if (color.equals(Color.WHITE)) {
-                return "White";
-            } else if (color.equals(Color.YELLOW)) {
-                return "Yellow";
-            }
-            return "Unknown Color";
-
-        }
     }
 
     static final int FONT_SIZE = 50;

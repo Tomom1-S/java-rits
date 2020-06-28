@@ -1,14 +1,22 @@
 import java.awt.*;
 
 public class MyClock {
-    public static void main(String args[]) {
-        MyFrame frame = new MyFrame();
-        MyPanel panel = new MyPanel(frame);  // 時刻
+    MyFrame frame;
+    MyPanel panel;
+    MyMenuBar bar;
 
-        MyMenuBar bar = new MyMenuBar(panel);
+    public MyClock() {
+        frame = new MyFrame();
+        panel = new MyPanel(frame);  // 時刻
+
+        bar = new MyMenuBar(panel);
         frame.setJMenuBar(bar);
 
         frame.getContentPane().add(panel, BorderLayout.CENTER);
         frame.setVisible(true);
+    }
+
+    public static void main(String args[]) {
+        new MyClock();
     }
 }

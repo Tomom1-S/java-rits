@@ -96,7 +96,7 @@ public class MyMenu extends JDialog implements ActionListener {
         initComboBoxRenderer(InputFields.bgColor);
         COLOR_NAMES.clear();
         Settings.Menu.COLORS.forEach(c -> {
-            COLOR_NAMES.add(Settings.Menu.getColorName(c));
+            COLOR_NAMES.add(Utils.colorToName(c));
         });
         putComboBoxItems(InputFields.fontColor, COLOR_NAMES);
         putComboBoxItems(InputFields.bgColor, COLOR_NAMES);
@@ -168,8 +168,8 @@ public class MyMenu extends JDialog implements ActionListener {
 
         InputFields.font.setSelectedItem(LastValue.FONT);
         InputFields.fontSize.setText(String.valueOf(LastValue.FONT_SIZE));
-        InputFields.fontColor.setSelectedItem(Settings.Menu.getColorName(LastValue.FONT_COLOR));
-        InputFields.bgColor.setSelectedItem(Settings.Menu.getColorName(LastValue.BG_COLOR));
+        InputFields.fontColor.setSelectedItem(Utils.colorToName(LastValue.FONT_COLOR));
+        InputFields.bgColor.setSelectedItem(Utils.colorToName(LastValue.BG_COLOR));
     }
 
     /**

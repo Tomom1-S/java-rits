@@ -19,7 +19,7 @@ class MyMenuBar extends JMenuBar {
             @Override
             public void menuSelected(MenuEvent e) {
                 menu.initLastValue();
-                menu.setLocation(panel.getLocation());
+                menu.setLocation(panel.getLocationOnScreen());
                 menu.setVisible(true);
                 menu.setAlwaysOnTop(true);
             }

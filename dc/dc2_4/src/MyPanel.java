@@ -1,25 +1,57 @@
 import javax.swing.*;
+import javax.swing.text.Position;
 import java.awt.*;
 import java.awt.event.*;
 import java.time.LocalTime;
+import java.util.prefs.Preferences;
 
-public class MyPanel extends JPanel implements ActionListener, ComponentListener, MouseListener {
+public class MyPanel extends JPanel implements ActionListener, ComponentListener {
     private MyFrame parent;
+    private Preferences prefs;
+    private final Settings.PrefKey keys = new Settings.PrefKey();
 
     private final Timer timer;
 
     private Font font = new Font("Serif", Font.PLAIN, Settings.FONT_SIZE);
     private Color fontColor = Color.BLACK;
     private Color bgColor = Color.WHITE;
-    MyMenu menu = new MyMenu(this);
 
     public MyPanel(final MyFrame parent) {
         this.parent = parent;
+        this.prefs = parent.getPreferences();
+
+        setLastSettings();
 
         timer = new Timer(Settings.INTERVAL, this);
         timer.start();
 
-        addMouseListener(this);
+        parent.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                saveCurrentSettings();
+                super.windowClosing(e);
+            }
+        });
+    }
+
+    private void setLastSettings() {
+        font = new Font(prefs.get(keys.FONT_NAME, "Selif"), Font.PLAIN, prefs.getInt(keys.FONT_SIZE, Settings.FONT_SIZE));
+        fontColor = Utils.nameToColor(prefs.get(keys.FONT_COLOR, "Black"));
+        bgColor = Utils.nameToColor(prefs.get(keys.BG_COLOR, "White"));
+    }
+
+    private void saveCurrentSettings() {
+        final Point loc = parent.getLocationOnScreen();
+        prefs.putInt(keys.LOC_X, loc.x);
+        prefs.putInt(keys.LOC_Y, loc.y);
+
+        prefs.putInt(keys.HEIGHT, getHeight());
+        prefs.putInt(keys.WIDTH, getWidth());
+
+        prefs.put(keys.FONT_NAME, font.getFontName());
+        prefs.putInt(keys.FONT_SIZE, font.getSize());
+        prefs.put(keys.FONT_COLOR, Utils.colorToName(fontColor));
+        prefs.put(keys.BG_COLOR, Utils.colorToName(bgColor));
     }
 
     public void paintComponent(final Graphics g) {
@@ -141,35 +173,6 @@ public class MyPanel extends JPanel implements ActionListener, ComponentListener
 
     @Override
     public void componentHidden(final ComponentEvent e) {
-    }
-
-    @Override
-    public void mouseClicked(final MouseEvent e) {
-        if (SwingUtilities.isRightMouseButton(e)) {
-            menu.initLastValue();
-            menu.setLocation(e.getPoint());
-            menu.setVisible(true);
-        }
-    }
-
-    @Override
-    public void mousePressed(final MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseReleased(final MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseEntered(final MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseExited(final MouseEvent e) {
-
     }
 }
 
