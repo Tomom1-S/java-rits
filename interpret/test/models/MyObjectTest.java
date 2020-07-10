@@ -165,18 +165,20 @@ class MyObjectTest {
 
         System.out.flush();
         final String actual = byteArrayOutputStream.toString();
-        final String expected = "public static final int java.lang.Integer.MIN_VALUE" + ls
-                + "public static final int java.lang.Integer.MAX_VALUE" + ls
-                + "public static final java.lang.Class java.lang.Integer.TYPE" + ls
-                + "static final char[] java.lang.Integer.digits" + ls
-                + "static final byte[] java.lang.Integer.DigitTens" + ls
-                + "static final byte[] java.lang.Integer.DigitOnes" + ls
-                + "static final int[] java.lang.Integer.sizeTable" + ls
-                + "private final int java.lang.Integer.value" + ls
-                + "public static final int java.lang.Integer.SIZE" + ls
-                + "public static final int java.lang.Integer.BYTES" + ls
-                + "private static final long java.lang.Integer.serialVersionUID" + ls;
-        assertThat(actual, is(expected));
+        final List<String> expectedList = new ArrayList<>() {{
+            add("public static final int java.lang.Integer.MIN_VALUE");
+            add("public static final int java.lang.Integer.MAX_VALUE");
+            add("public static final java.lang.Class java.lang.Integer.TYPE");
+            add("static final char[] java.lang.Integer.digits");
+            add("static final byte[] java.lang.Integer.DigitTens");
+            add("static final byte[] java.lang.Integer.DigitOnes");
+            add("static final int[] java.lang.Integer.sizeTable");
+            add("private final int java.lang.Integer.value");
+            add("public static final int java.lang.Integer.SIZE");
+            add("public static final int java.lang.Integer.BYTES");
+            add("private static final long java.lang.Integer.serialVersionUID");
+        }};
+        existsListElementInString(actual, expectedList);
     }
 
     @Test
@@ -188,12 +190,14 @@ class MyObjectTest {
 
         System.out.flush();
         final String actual = byteArrayOutputStream.toString();
-        final String expected = "public int myClasses.TestClass.id" + ls
-                + "public java.lang.String myClasses.TestClass.name" + ls
-                + "private static int myClasses.TestClass.nextId" + ls
-                + "public final int myClasses.TestClass.PUB_INT" + ls
-                + "private final int myClasses.TestClass.PVT_INT" + ls;
-        assertThat(actual, is(expected));
+        final List<String> expectedList = new ArrayList<>() {{
+            add("public int myClasses.TestClass.id");
+            add("public java.lang.String myClasses.TestClass.name");
+            add("private static int myClasses.TestClass.nextId");
+            add("public final int myClasses.TestClass.PUB_INT");
+            add("private final int myClasses.TestClass.PVT_INT");
+        }};
+        existsListElementInString(actual, expectedList);
     }
 
     @Test
@@ -239,64 +243,77 @@ class MyObjectTest {
 
         System.out.flush();
         final String actual = byteArrayOutputStream.toString();
-        final String expected = "public static int java.lang.Integer.numberOfLeadingZeros(int)" + ls
-                + "public static int java.lang.Integer.numberOfTrailingZeros(int)" + ls
-                + "public static int java.lang.Integer.bitCount(int)" + ls
-                + "public boolean java.lang.Integer.equals(java.lang.Object)" + ls
-                + "public static java.lang.String java.lang.Integer.toString(int)" + ls
-                + "public static java.lang.String java.lang.Integer.toString(int,int)" + ls
-                + "public java.lang.String java.lang.Integer.toString()" + ls
-                + "public static int java.lang.Integer.hashCode(int)" + ls
-                + "public int java.lang.Integer.hashCode()" + ls
-                + "public static int java.lang.Integer.min(int,int)" + ls
-                + "public static int java.lang.Integer.max(int,int)" + ls
-                + "public static int java.lang.Integer.reverseBytes(int)" + ls
-                + "static int java.lang.Integer.getChars(int,int,byte[])" + ls
-                + "public int java.lang.Integer.compareTo(java.lang.Object)" + ls
-                + "public int java.lang.Integer.compareTo(java.lang.Integer)" + ls
-                + "public byte java.lang.Integer.byteValue()" + ls
-                + "public short java.lang.Integer.shortValue()" + ls
-                + "public int java.lang.Integer.intValue()" + ls
-                + "public long java.lang.Integer.longValue()" + ls
-                + "public float java.lang.Integer.floatValue()" + ls
-                + "public double java.lang.Integer.doubleValue()" + ls
-                + "public static java.lang.Integer java.lang.Integer.valueOf(int)" + ls
-                + "public static java.lang.Integer java.lang.Integer.valueOf(java.lang.String,int) throws java.lang.NumberFormatException" + ls
-                + "public static java.lang.Integer java.lang.Integer.valueOf(java.lang.String) throws java.lang.NumberFormatException" + ls
-                + "public static java.lang.String java.lang.Integer.toHexString(int)" + ls
-                + "public static java.lang.Integer java.lang.Integer.decode(java.lang.String) throws java.lang.NumberFormatException" + ls
-                + "public static int java.lang.Integer.compare(int,int)" + ls
-                + "public static int java.lang.Integer.reverse(int)" + ls
-                + "static int java.lang.Integer.stringSize(int)" + ls
-                + "public static long java.lang.Integer.toUnsignedLong(int)" + ls
-                + "public static int java.lang.Integer.parseInt(java.lang.String) throws java.lang.NumberFormatException" + ls
-                + "public static int java.lang.Integer.parseInt(java.lang.String,int) throws java.lang.NumberFormatException" + ls
-                + "public static int java.lang.Integer.parseInt(java.lang.CharSequence,int,int,int) throws java.lang.NumberFormatException" + ls
-                + "public static int java.lang.Integer.sum(int,int)" + ls
-                + "public static int java.lang.Integer.compareUnsigned(int,int)" + ls
-                + "private static java.lang.String java.lang.Integer.toStringUTF16(int,int)" + ls
-                + "public static java.lang.String java.lang.Integer.toUnsignedString(int,int)" + ls
-                + "public static java.lang.String java.lang.Integer.toUnsignedString(int)" + ls
-                + "public static java.lang.String java.lang.Integer.toOctalString(int)" + ls
-                + "public static java.lang.String java.lang.Integer.toBinaryString(int)" + ls
-                + "private static java.lang.String java.lang.Integer.toUnsignedString0(int,int)" + ls
-                + "static void java.lang.Integer.formatUnsignedInt(int,int,char[],int,int)" + ls
-                + "static void java.lang.Integer.formatUnsignedInt(int,int,byte[],int,int)" + ls
-                + "private static void java.lang.Integer.formatUnsignedIntUTF16(int,int,byte[],int,int)" + ls
-                + "public static int java.lang.Integer.parseUnsignedInt(java.lang.String,int) throws java.lang.NumberFormatException" + ls
-                + "public static int java.lang.Integer.parseUnsignedInt(java.lang.CharSequence,int,int,int) throws java.lang.NumberFormatException" + ls
-                + "public static int java.lang.Integer.parseUnsignedInt(java.lang.String) throws java.lang.NumberFormatException" + ls
-                + "public static java.lang.Integer java.lang.Integer.getInteger(java.lang.String,java.lang.Integer)" + ls
-                + "public static java.lang.Integer java.lang.Integer.getInteger(java.lang.String,int)" + ls
-                + "public static java.lang.Integer java.lang.Integer.getInteger(java.lang.String)" + ls
-                + "public static int java.lang.Integer.divideUnsigned(int,int)" + ls
-                + "public static int java.lang.Integer.remainderUnsigned(int,int)" + ls
-                + "public static int java.lang.Integer.highestOneBit(int)" + ls
-                + "public static int java.lang.Integer.lowestOneBit(int)" + ls
-                + "public static int java.lang.Integer.rotateLeft(int,int)" + ls
-                + "public static int java.lang.Integer.rotateRight(int,int)" + ls
-                + "public static int java.lang.Integer.signum(int)" + ls;
-        assertThat(actual, is(expected));
+        final List<String> expectedList = new ArrayList<>() {{
+            add("public static long java.lang.Integer.toUnsignedLong(int)");
+            add("private static java.lang.String java.lang.Integer.toStringUTF16(int,int)");
+            add("public static int java.lang.Integer.divideUnsigned(int,int)");
+            add("public double java.lang.Integer.doubleValue()");
+            add("private static java.lang.String java.lang.Integer.toUnsignedString0(int,int)");
+            add("public static int java.lang.Integer.signum(int)");
+            add("public static java.lang.String java.lang.Integer.toBinaryString(int)");
+            add("public final native void java.lang.Object.notifyAll()");
+            add("public static int java.lang.Integer.compareUnsigned(int,int)");
+            add("public long java.lang.Integer.longValue()");
+            add("public static int java.lang.Integer.rotateLeft(int,int)");
+            add("public static int java.lang.Integer.sum(int,int)");
+            add("public static int java.lang.Integer.compare(int,int)");
+            add("public static int java.lang.Integer.parseUnsignedInt(java.lang.String,int) throws java.lang.NumberFormatException");
+            add("public static int java.lang.Integer.parseUnsignedInt(java.lang.CharSequence,int,int,int) "
+                    + "throws java.lang.NumberFormatException");
+            add("public static int java.lang.Integer.parseUnsignedInt(java.lang.String) throws java.lang.NumberFormatException");
+            add("public static int java.lang.Integer.min(int,int)");
+            add("public static int java.lang.Integer.remainderUnsigned(int,int)");
+            add("public static int java.lang.Integer.reverse(int)");
+            add("public static int java.lang.Integer.max(int,int)");
+            add("public static java.lang.String java.lang.Integer.toHexString(int)");
+            add("static int java.lang.Integer.getChars(int,int,byte[])");
+            add("private static void java.lang.Integer.formatUnsignedIntUTF16(int,int,byte[],int,int)");
+            add("public byte java.lang.Integer.byteValue()");
+            add("public static int java.lang.Integer.bitCount(int)");
+            add("public static java.lang.String java.lang.Integer.toString(int)");
+            add("public static java.lang.String java.lang.Integer.toString(int,int)");
+            add("public java.lang.String java.lang.Integer.toString()");
+            add("public static java.lang.String java.lang.Integer.toUnsignedString(int,int)");
+            add("public static java.lang.String java.lang.Integer.toUnsignedString(int)");
+            add("public boolean java.lang.Integer.equals(java.lang.Object)");
+            add("public final native java.lang.Class java.lang.Object.getClass()");
+            add("public static java.lang.Integer java.lang.Integer.decode(java.lang.String) throws java.lang.NumberFormatException");
+            add("static int java.lang.Integer.stringSize(int)");
+            add("public int java.lang.Integer.compareTo(java.lang.Object)");
+            add("public int java.lang.Integer.compareTo(java.lang.Integer)");
+            add("public static java.lang.Integer java.lang.Integer.getInteger(java.lang.String,java.lang.Integer)");
+            add("public static java.lang.Integer java.lang.Integer.getInteger(java.lang.String,int)");
+            add("public static java.lang.Integer java.lang.Integer.getInteger(java.lang.String)");
+            add("public short java.lang.Integer.shortValue()");
+            add("public static int java.lang.Integer.numberOfLeadingZeros(int)");
+            add("public float java.lang.Integer.floatValue()");
+            add("static void java.lang.Integer.formatUnsignedInt(int,int,char[],int,int)");
+            add("static void java.lang.Integer.formatUnsignedInt(int,int,byte[],int,int)");
+            add("public static int java.lang.Integer.reverseBytes(int)");
+            add("public final native void java.lang.Object.notify()");
+            add("public final native void java.lang.Object.wait(long) throws java.lang.InterruptedException");
+            add("public final void java.lang.Object.wait(long,int) throws java.lang.InterruptedException");
+            add("public final void java.lang.Object.wait() throws java.lang.InterruptedException");
+            add("public static java.lang.String java.lang.Integer.toOctalString(int)");
+            add("public static int java.lang.Integer.lowestOneBit(int)");
+            add("public static int java.lang.Integer.hashCode(int)");
+            add("public int java.lang.Integer.hashCode()");
+            add("public static int java.lang.Integer.rotateRight(int,int)");
+            add("public int java.lang.Integer.intValue()");
+            add("public static java.lang.Integer java.lang.Integer.valueOf(int)");
+            add("public static java.lang.Integer java.lang.Integer.valueOf(java.lang.String,int) "
+                    + "throws java.lang.NumberFormatException");
+            add("public static java.lang.Integer java.lang.Integer.valueOf(java.lang.String) "
+                    + "throws java.lang.NumberFormatException");
+            add("public static int java.lang.Integer.highestOneBit(int)");
+            add("public static int java.lang.Integer.numberOfTrailingZeros(int)");
+            add("public static int java.lang.Integer.parseInt(java.lang.String) "
+                    + "throws java.lang.NumberFormatException");
+            add("public static int java.lang.Integer.parseInt(java.lang.String,int) throws java.lang.NumberFormatException");
+            add("public static int java.lang.Integer.parseInt(java.lang.CharSequence,int,int,int) "
+                    + "throws java.lang.NumberFormatException");
+        }};
+        existsListElementInString(actual, expectedList);
     }
 
     @Test
@@ -320,8 +337,12 @@ class MyObjectTest {
             add("private int myClasses.TestClass.multiplyNumbers(int,int)");
             add("private int myClasses.TestClass.multiplyNumbers(java.lang.Integer,java.lang.Integer)");
         }};
-        for (String expected : expectedList) {
-            assertThat(actual, containsString(expected));
+        existsListElementInString(actual, expectedList);
+    }
+
+    private void existsListElementInString(String str, List<String> list) {
+        for (final String element : list) {
+            assertThat(str, containsString(element));
         }
     }
 

@@ -47,12 +47,10 @@ public class ClassSearch {
     }
 
     public List<Constructor> getConstructors(Class cls) {
-        Constructor[] constructors = cls.getDeclaredConstructors();
-        List<Constructor> constructorList = new ArrayList<>();
-        for (Constructor constructor : constructors) {
-            constructorList.add(constructor);
-        }
-        return constructorList;
+        final List<Constructor> list =  ReflectionUtils.combineArrayWithoutDuplicates(
+                cls.getConstructors(), cls.getDeclaredConstructors()
+        );
+        return ReflectionUtils.sortByMemberName(list);
     }
 
     public Class searchClass(String name) throws ClassNotFoundException {

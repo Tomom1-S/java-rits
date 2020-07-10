@@ -1,8 +1,10 @@
 package models;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
-import java.util.Map;
+import java.lang.reflect.Member;
+import java.util.*;
+
+import org.apache.commons.lang3.ArrayUtils;
 
 public class ReflectionUtils {
     private static final Map<String, Class<?>> PRIMITIVE_TYPE_MAP = new HashMap<>();
@@ -43,12 +45,38 @@ public class ReflectionUtils {
      * @param object キャストしたいオブジェクト
      * @return キャストした結果
      */
-    public static <T> T castObject(Class<T> cls, Object object)
+    static <T> T castObject(Class<T> cls, Object object)
             throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
         if (cls.isInstance(object)) {
             return cls.cast(object);
         } else {
             return cls.getConstructor(object.getClass()).newInstance(object);
         }
+    }
+
+    /**
+     * 重複を排除して Member の配列を連結
+     *
+     * @param arr1 連結する配列
+     * @param arr2 連結する配列
+     * @return 連結した結果
+     */
+    static <T extends Member> List<T> combineArrayWithoutDuplicates(T[] arr1, T[] arr2) {
+        final T[] array = ArrayUtils.addAll(arr1, arr2);
+        final Set<T> set = new HashSet<>(Arrays.asList(array));
+        final List<T> list = new ArrayList<>();
+        list.addAll(set);
+        return list;
+    }
+
+    /**
+     * Member のリストを名前順に並び替え
+     *
+     * @param list リスト
+     * @return 並び替えた結果
+     */
+    static <T extends Member> List<T> sortByMemberName(List<T> list) {
+        list.sort(Comparator.comparing(T::getName, String.CASE_INSENSITIVE_ORDER));
+        return list;
     }
 }

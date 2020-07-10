@@ -71,7 +71,6 @@ public class MainFrame<E> extends JFrame implements ActionListener {
     private final JButton btnCreateArray = new JButton(FrameSetting.ButtonLabel.CREATE_ARRAY);
     private final JButton btnOpenObjectFrame = new JButton(FrameSetting.ButtonLabel.OPEN_OBJECT_WINDOW);
     private final JButton btnOpenArrayFrame = new JButton(FrameSetting.ButtonLabel.OPEN_ARRAY_WINDOW);
-    ;
 
     public static void main(String[] args) {
         MainFrame me = new MainFrame();
