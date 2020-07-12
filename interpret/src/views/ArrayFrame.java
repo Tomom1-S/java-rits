@@ -211,7 +211,7 @@ public class ArrayFrame<T> extends JFrame implements ActionListener {
         }
 
         if (object == null) {
-            resultMsg += FrameSetting.Message.EMPTY_ELEMENT  + ": index " + index +  LS;
+            resultMsg += FrameSetting.Message.EMPTY_ELEMENT + ": index " + index + LS;
             resultText.setText(resultMsg);
             return;
         }

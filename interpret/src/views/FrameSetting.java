@@ -86,5 +86,6 @@ public final class FrameSetting {
         static final String EMPTY_ELEMENT = "配列の要素が設定されていません";
 
         static final String ERROR_EMPTY_VALUE = "値を入れてください";
+        static final String INVALID_VALUE = "不正な値が入っています";
     }
 }
