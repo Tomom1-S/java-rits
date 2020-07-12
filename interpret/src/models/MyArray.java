@@ -3,7 +3,7 @@ package models;
 import java.lang.reflect.Array;
 
 public class MyArray<T> {
-    T[] array;
+    private T[] array;
     private final Class cls;
     private final String name;
     private final int id;
@@ -14,6 +14,10 @@ public class MyArray<T> {
         this.cls = type;
         this.name = cls.getName();
         array = (T[]) Array.newInstance(type, size);
+    }
+
+    public T[] getArray() {
+        return array;
     }
 
     public T getElement(int index) {
