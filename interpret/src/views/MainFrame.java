@@ -286,9 +286,9 @@ public class MainFrame<E> extends JFrame implements ActionListener {
 
     List<String> getArrayNameList() {
         List<String> arrNames = new ArrayList<>();
-        for (ArrayFrame frame : arrList) {
-            MyArray arr = frame.getMyArray();
-            arrNames.add(arr.getCls().getName() + " #" + arr.getId());
+        for (final ArrayFrame frame : arrList) {
+            final MyArray arr = frame.getMyArray();
+            arrNames.add(arr.getCls().getName() + " Array #" + arr.getId());
         }
         return arrNames;
     }
@@ -406,7 +406,6 @@ public class MainFrame<E> extends JFrame implements ActionListener {
         } else if (e.getSource() == btnCallConstructor) {
             callConstructor();
             initOpenObjectWindowFunc();
-            updateObjectChoice();
         } else if (e.getSource() == btnOpenObjectFrame) {
             showClosedObjectWindow();
         } else if (e.getSource() == btnOpenArrayFrame) {
@@ -493,8 +492,7 @@ public class MainFrame<E> extends JFrame implements ActionListener {
             return;
         }
 
-        final String arraySize = arraySizeText.getText();
-        MyArray myArray = new MyArray(arrayCls, Integer.parseInt(arraySize));
+        MyArray myArray = new MyArray(arrayCls, Integer.parseInt(arraySizeText.getText()));
         resultText.setText(resultMsg);
 
         resultMsg += FrameSetting.Message.CREATE_ARRAY + ": " + myArray.getName() + " #" + myArray.getId() + LS;
@@ -507,11 +505,11 @@ public class MainFrame<E> extends JFrame implements ActionListener {
 
     // 新しいオブジェクトウィンドウを表示
     private void showNewObjectWindow(Object obj) {
-        MyObject myObject = new MyObject(cls, obj);
+        final MyObject myObject = new MyObject(cls, obj);
         resultMsg += FrameSetting.Message.OPEN_WINDOW + ": " + myObject.getCls() + " #" + myObject.getId() + LS;
         resultText.setText(resultMsg);
 
-        ObjectFrame objFrame = new ObjectFrame(myObject);
+        final ObjectFrame objFrame = new ObjectFrame(this, myObject);
         objList.add(objFrame);
         objFrame.setVisible(true);
     }
