@@ -1,7 +1,5 @@
 package ch17.ex02;
 
-import com.oracle.tools.packager.IOUtils;
-
 import java.io.File;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -12,11 +10,11 @@ public class DataHandler {
     private WeakReference<byte[]> lastData; // （おそらく）最後のデータ
 
     byte[] readFile(File file) throws IOException {
-        byte[] data;
-
         // データを記憶しているか調べる
-        if (file.equals(lastFile)) {
-            data = lastData.get();
+        // 柴田さん：file と lastData の型が異なるので、ここはいつも false になる
+//        if (file.equals(lastFile)) {
+        byte[] data = lastData.get();
+        if (file.equals(data)) {
             if (data != null) {
                 return data;
             }
@@ -29,7 +27,7 @@ public class DataHandler {
         return data;
     }
 
-    private byte[] readBytesFromFile(File file) throws IOException {
-        return Files.readAllBytes(file.toPath());
+    private byte[] readBytesFromFile(File file) {
+        throw new AssertionError("Not yet implemented");
     }
 }
