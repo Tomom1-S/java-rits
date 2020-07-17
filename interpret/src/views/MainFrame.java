@@ -270,10 +270,13 @@ public class MainFrame<E> extends JFrame implements ActionListener {
         if (arrList.isEmpty()) {
             return;
         }
+
+        if (arrayChoice == null) {
+            setComboBoxesForArray();
+        }
         if (!historyLabel.isVisible()) {
             historyLabel.setVisible(true);
         }
-        setComboBoxesForArray();
         if (!historyArrayLabel.isVisible()) {
             historyArrayLabel.setVisible(true);
             replaceComponent(arrayNameText, arrayChoice);
@@ -356,6 +359,9 @@ public class MainFrame<E> extends JFrame implements ActionListener {
         arrayChoice.addActionListener(this);
         arrayChoice.setFont(new Font("", Font.PLAIN, FrameSetting.COMBO_BOX_FONT_SIZE));
         arrayChoice.setVisible(false);
+        if (!arrayChoice.isVisible()) {
+            replaceComponent(arrayNameText, arrayChoice);
+        }
     }
 
     /**
@@ -389,8 +395,7 @@ public class MainFrame<E> extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnSearchClass) {
-            final String value = typeText.getText();
-            if (isStringNull(value)) {
+            if (isStringNull(typeText.getText())) {
                 resultMsg += FrameSetting.Message.ERROR_EMPTY_VALUE + LS;
                 resultText.setText(resultMsg);
                 return;
@@ -467,14 +472,6 @@ public class MainFrame<E> extends JFrame implements ActionListener {
         putComboBoxItems(constructorChoice, constructors);
     }
 
-    // ArrayFrame の JComboBox を更新
-    private void updateObjectChoice() {
-        for (ArrayFrame frame : arrList) {
-            frame.getObjectChoice().removeAllItems();
-            frame.setComboBoxes(frame.getObjectChoice(), getObjectNameList());
-        }
-    }
-
     // 新しいオブジェクトウィンドウを表示
     private void createArray() {
         if (isNullForTextField(arrayTypeText) || isNullForTextField(arraySizeText)) {
@@ -492,13 +489,11 @@ public class MainFrame<E> extends JFrame implements ActionListener {
             return;
         }
 
-        MyArray myArray = new MyArray(arrayCls, Integer.parseInt(arraySizeText.getText()));
-        resultText.setText(resultMsg);
-
+        final MyArray myArray = new MyArray(arrayCls, Integer.parseInt(arraySizeText.getText()));
         resultMsg += FrameSetting.Message.CREATE_ARRAY + ": " + myArray.getName() + " #" + myArray.getId() + LS;
         resultText.setText(resultMsg);
 
-        ArrayFrame arrFrame = new ArrayFrame(this, myArray);
+        final ArrayFrame arrFrame = new ArrayFrame(this, myArray);
         arrList.add(arrFrame);
         arrFrame.setVisible(true);
     }
