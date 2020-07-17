@@ -7,7 +7,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.lang.reflect.Parameter;
-import java.util.ArrayList;
 import java.util.List;
 
 public class ObjectParamFrame<E> extends JFrame implements ActionListener {
@@ -22,7 +21,6 @@ public class ObjectParamFrame<E> extends JFrame implements ActionListener {
 
     private DefaultTableModel tableModel;
     private JTable table;
-    private List<JComboBox> cBoxes = new ArrayList<>();
     private final JComboBox cBox = new JComboBox();
 
     private JButton btnOk;
@@ -78,7 +76,7 @@ public class ObjectParamFrame<E> extends JFrame implements ActionListener {
      */
     private int findMatchedStringFromList(final String tgt, final List<String> list) {
         int i = 0;
-        for (String str: list) {
+        for (final String str: list) {
             if (tgt.equals(str)) {
                 return i;
             }
