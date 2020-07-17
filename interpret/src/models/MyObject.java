@@ -71,14 +71,10 @@ public class MyObject<T> {
     }
 
     public List<Field> getFields() {
-        List<Field> fieldList = new ArrayList<>();
-
-        Field[] fields = cls.getDeclaredFields();
-        for (Field field : fields) {
-            fieldList.add(field);
-        }
-
-        return fieldList;
+        final List<Field> list = ReflectionUtils.combineArrayWithoutDuplicates(
+                cls.getFields(), cls.getDeclaredFields()
+        );
+        return ReflectionUtils.sortByMemberName(list);
     }
 
     public int getId() {
@@ -101,14 +97,10 @@ public class MyObject<T> {
     }
 
     public List<Method> getMethods() {
-        List<Method> methodList = new ArrayList<>();
-
-        Method[] methods = cls.getDeclaredMethods();
-        for (Method method : methods) {
-            methodList.add(method);
-        }
-
-        return methodList;
+        final List<Method> list = ReflectionUtils.combineArrayWithoutDuplicates(
+                cls.getMethods(), cls.getDeclaredMethods()
+        );
+        return ReflectionUtils.sortByMemberName(list);
     }
 
     public T getObj() {

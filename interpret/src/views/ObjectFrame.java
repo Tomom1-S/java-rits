@@ -13,11 +13,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ObjectFrame<T, Eparam, Efield> extends JFrame implements ActionListener {
-    private MyObject<T> obj;
+    private final MainFrame mainFrame;
+
+    private final MyObject<T> obj;
     private final String name;
 
     private List<Field> fields;
-    private Field lastSelectedField;
     private List<Method> methods;
     private Method lastSelectedMethod;
     private List<Efield> fieldValues = new ArrayList<>();
@@ -52,7 +53,8 @@ public class ObjectFrame<T, Eparam, Efield> extends JFrame implements ActionList
     private final JButton btnMethodParams = new JButton(FrameSetting.ButtonLabel.PARAMS);
     private final JButton btnCallMethod = new JButton(FrameSetting.ButtonLabel.CALL_METHOD);
 
-    public ObjectFrame(MyObject obj) {
+    public ObjectFrame(MainFrame mainFrame, MyObject obj) {
+        this.mainFrame = mainFrame;
         this.obj = obj;
         this.name = obj.getName();
         fields = obj.getFields();
@@ -184,6 +186,13 @@ public class ObjectFrame<T, Eparam, Efield> extends JFrame implements ActionList
     }
 
     /**
+     * MainFrame
+     */
+    MainFrame getMainFrame() {
+        return mainFrame;
+    }
+
+    /**
      * FieldFrame で設定したフィールドの値
      */
     List<Eparam> getMethodValues() {
@@ -266,14 +275,12 @@ public class ObjectFrame<T, Eparam, Efield> extends JFrame implements ActionList
     // メソッドのパラメータ設定を表示
     private void showFieldWindow() throws NoSuchFieldException, IllegalAccessException {
         final Field f = fields.get(fieldChoice.getSelectedIndex());
-        lastSelectedField = f;
 
         ObjectFieldFrame pFrame;
         setFieldValue((Efield) obj.getField(f.getName()));
         try {
             pFrame = new ObjectFieldFrame(this, f.getName(), f, this.fieldValue);
             pFrame.setVisible(true);
-            lastSelectedField = f;
         } catch (Exception ex) {
             resultMsg += ex + LS;
             resultText.setText(resultMsg);

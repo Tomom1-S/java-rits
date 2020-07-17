@@ -71,7 +71,6 @@ public class MainFrame<E> extends JFrame implements ActionListener {
     private final JButton btnCreateArray = new JButton(FrameSetting.ButtonLabel.CREATE_ARRAY);
     private final JButton btnOpenObjectFrame = new JButton(FrameSetting.ButtonLabel.OPEN_OBJECT_WINDOW);
     private final JButton btnOpenArrayFrame = new JButton(FrameSetting.ButtonLabel.OPEN_ARRAY_WINDOW);
-    ;
 
     public static void main(String[] args) {
         MainFrame me = new MainFrame();
@@ -271,10 +270,13 @@ public class MainFrame<E> extends JFrame implements ActionListener {
         if (arrList.isEmpty()) {
             return;
         }
+
+        if (arrayChoice == null) {
+            setComboBoxesForArray();
+        }
         if (!historyLabel.isVisible()) {
             historyLabel.setVisible(true);
         }
-        setComboBoxesForArray();
         if (!historyArrayLabel.isVisible()) {
             historyArrayLabel.setVisible(true);
             replaceComponent(arrayNameText, arrayChoice);
@@ -287,9 +289,9 @@ public class MainFrame<E> extends JFrame implements ActionListener {
 
     List<String> getArrayNameList() {
         List<String> arrNames = new ArrayList<>();
-        for (ArrayFrame frame : arrList) {
-            MyArray arr = frame.getMyArray();
-            arrNames.add(arr.getCls().getName() + " #" + arr.getId());
+        for (final ArrayFrame frame : arrList) {
+            final MyArray arr = frame.getMyArray();
+            arrNames.add(arr.getCls().getName() + " Array #" + arr.getId());
         }
         return arrNames;
     }
@@ -357,6 +359,9 @@ public class MainFrame<E> extends JFrame implements ActionListener {
         arrayChoice.addActionListener(this);
         arrayChoice.setFont(new Font("", Font.PLAIN, FrameSetting.COMBO_BOX_FONT_SIZE));
         arrayChoice.setVisible(false);
+        if (!arrayChoice.isVisible()) {
+            replaceComponent(arrayNameText, arrayChoice);
+        }
     }
 
     /**
@@ -390,8 +395,7 @@ public class MainFrame<E> extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnSearchClass) {
-            final String value = typeText.getText();
-            if (isStringNull(value)) {
+            if (isStringNull(typeText.getText())) {
                 resultMsg += FrameSetting.Message.ERROR_EMPTY_VALUE + LS;
                 resultText.setText(resultMsg);
                 return;
@@ -407,7 +411,6 @@ public class MainFrame<E> extends JFrame implements ActionListener {
         } else if (e.getSource() == btnCallConstructor) {
             callConstructor();
             initOpenObjectWindowFunc();
-            updateObjectChoice();
         } else if (e.getSource() == btnOpenObjectFrame) {
             showClosedObjectWindow();
         } else if (e.getSource() == btnOpenArrayFrame) {
@@ -469,14 +472,6 @@ public class MainFrame<E> extends JFrame implements ActionListener {
         putComboBoxItems(constructorChoice, constructors);
     }
 
-    // ArrayFrame の JComboBox を更新
-    private void updateObjectChoice() {
-        for (ArrayFrame frame : arrList) {
-            frame.getObjectChoice().removeAllItems();
-            frame.setComboBoxes(frame.getObjectChoice(), getObjectNameList());
-        }
-    }
-
     // 新しいオブジェクトウィンドウを表示
     private void createArray() {
         if (isNullForTextField(arrayTypeText) || isNullForTextField(arraySizeText)) {
@@ -494,25 +489,22 @@ public class MainFrame<E> extends JFrame implements ActionListener {
             return;
         }
 
-        final String arraySize = arraySizeText.getText();
-        MyArray myArray = new MyArray(arrayCls, Integer.parseInt(arraySize));
-        resultText.setText(resultMsg);
-
+        final MyArray myArray = new MyArray(arrayCls, Integer.parseInt(arraySizeText.getText()));
         resultMsg += FrameSetting.Message.CREATE_ARRAY + ": " + myArray.getName() + " #" + myArray.getId() + LS;
         resultText.setText(resultMsg);
 
-        ArrayFrame arrFrame = new ArrayFrame(this, myArray);
+        final ArrayFrame arrFrame = new ArrayFrame(this, myArray);
         arrList.add(arrFrame);
         arrFrame.setVisible(true);
     }
 
     // 新しいオブジェクトウィンドウを表示
     private void showNewObjectWindow(Object obj) {
-        MyObject myObject = new MyObject(cls, obj);
+        final MyObject myObject = new MyObject(cls, obj);
         resultMsg += FrameSetting.Message.OPEN_WINDOW + ": " + myObject.getCls() + " #" + myObject.getId() + LS;
         resultText.setText(resultMsg);
 
-        ObjectFrame objFrame = new ObjectFrame(myObject);
+        final ObjectFrame objFrame = new ObjectFrame(this, myObject);
         objList.add(objFrame);
         objFrame.setVisible(true);
     }

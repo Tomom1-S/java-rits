@@ -2,6 +2,7 @@ package views;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -19,6 +20,8 @@ public class ConstructorParamFrame<E> extends JFrame implements ActionListener {
     private BorderLayout layout = new BorderLayout();
 
     private DefaultTableModel tableModel;
+    private JTable table;
+    private final JComboBox cBox = new JComboBox();
 
     private JButton btnOk;
     private JButton btnClear;
@@ -45,11 +48,40 @@ public class ConstructorParamFrame<E> extends JFrame implements ActionListener {
             dispose();
         } else if (e.getSource() == btnOk) {
             for (int i = 0; i < paramNum; i++) {
-                values.set(i, (E) tableModel.getValueAt(i, FrameSetting.ParamTable.VALUE_COLUMN));
+                final String val = (String) tableModel.getValueAt(i, FrameSetting.ParamTable.VALUE_COLUMN);
+
+                int idx = findMatchedStringFromList(val, parent.getObjectNameList());
+                if (idx >= 0) {
+                    final ObjectFrame oFrame = (ObjectFrame) parent.objList.get(idx);
+                    values.set(i, (E) oFrame.getMyObject().getObj());
+                    continue;
+                }
+                idx = findMatchedStringFromList(val, parent.getArrayNameList());
+                if (idx >= 0) {
+                    final ArrayFrame aFrame = (ArrayFrame) parent.arrList.get(idx);
+                    values.set(i, (E) aFrame.getMyArray().getArray());
+                    continue;
+                }
+
+                values.set(i, (E) val);
             }
             parent.setValues(values);
             dispose();
         }
+    }
+
+    /**
+     * tgt が list に入っているか
+     */
+    private int findMatchedStringFromList(final String tgt, final List<String> list) {
+        int i = 0;
+        for (final String str: list) {
+            if (tgt.equals(str)) {
+                return i;
+            }
+            i++;
+        }
+        return -1;
     }
 
     void init() {
@@ -107,6 +139,26 @@ public class ConstructorParamFrame<E> extends JFrame implements ActionListener {
     }
 
     /**
+     * Value コラムを初期化
+     */
+    private void initValueColumn(final JTable table) {
+        cBox.removeAllItems();
+
+        setJComboboxItems(cBox, parent.getObjectNameList());
+        setJComboboxItems(cBox, parent.getArrayNameList());
+
+        final TableColumn column = table.getColumnModel().getColumn(2);
+        column.setCellEditor(new DefaultCellEditor(cBox));
+        cBox.setEditable(true); // 生成済オブジェクト・配列以外も設定可能にする
+    }
+
+    private void setJComboboxItems(final JComboBox comboBox, final List<String> list) {
+        for (final String str : list) {
+            comboBox.addItem(str);
+        }
+    }
+
+    /**
      * セルの中身を設定
      */
     private Object[][] initData() {
@@ -142,7 +194,9 @@ public class ConstructorParamFrame<E> extends JFrame implements ActionListener {
             }
         };
 
-        JTable table = new JTable(tableModel);
+        table = new JTable(tableModel);
+        initValueColumn(table);
+
         JScrollPane scroll = new JScrollPane(table);
         add(scroll, BorderLayout.CENTER);
     }
