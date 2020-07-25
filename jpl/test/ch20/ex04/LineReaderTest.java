@@ -30,10 +30,10 @@ public class LineReaderTest {
 
     @Test
     public void readLineメソッドで1行ずつ読み込む() throws IOException {
-        StringReader src = new StringReader("foo\nbar\nbaz");
+        StringReader src = new StringReader("foo" + ls + "bar" + ls + "baz");
         LineReader reader = new LineReader(src);
 
-        final String[] expected = new String[] {"foo", "bar", "baz"};
+        final String[] expected = new String[]{"foo", "bar", "baz"};
         for (String ex : expected) {
             final String actual = reader.readLine();
             assertThat(actual, is(ex));
@@ -42,10 +42,10 @@ public class LineReaderTest {
 
     @Test
     public void 空行が含まれる文字列をreadLineメソッドで1行ずつ読み込む() throws IOException {
-        StringReader src = new StringReader("foo\nbar\n\nbaz");
+        StringReader src = new StringReader("foo" + ls + "bar" + ls + ls + "baz");
         LineReader reader = new LineReader(src);
 
-        final String[] expected = new String[] {"foo", "bar", "", "baz"};
+        final String[] expected = new String[]{"foo", "bar", "", "baz"};
         for (String ex : expected) {
             final String actual = reader.readLine();
             assertThat(actual, is(ex));
