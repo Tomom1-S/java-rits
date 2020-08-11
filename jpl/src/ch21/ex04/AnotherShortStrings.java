@@ -3,7 +3,7 @@ package ch21.ex04;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
 
-public class AnotherShortStrings implements ListIterator<String> {
+public class AnotherShortStrings extends ShortStrings implements ListIterator<String> {
     private ListIterator<String> strings;   // 元の文字列
     private String nextShort;   // 次が不明ならば null
     private String prevShort;   // 前が不明ならば null
@@ -11,6 +11,7 @@ public class AnotherShortStrings implements ListIterator<String> {
     private boolean removed;    // remove が呼ばれたか
 
     public AnotherShortStrings(ListIterator<String> strings, int maxLen) {
+        super(strings, maxLen);
         this.strings = strings;
         this.maxLen = maxLen;
         nextShort = null;
@@ -20,27 +21,13 @@ public class AnotherShortStrings implements ListIterator<String> {
 
     @Override
     public boolean hasNext() {
-        if (nextShort != null) {    // すでに見つけている
-            return true;
-        }
-        while (strings.hasNext()) {
-            nextShort = strings.next();
-            if (nextShort.length() <= maxLen) {
-                return true;
-            }
-        }
-        nextShort = null;   // 見つけられなかった
-        return false;
+        return super.hasNext();
     }
 
     @Override
     public String next() {
-        if (nextShort == null && !hasNext()) {
-            throw new NoSuchElementException();
-        }
+        final String n = super.next();
         removed = false;
-        final String n = nextShort;   // nextShort を記録する
-        nextShort = null;
         return n;
     }
 
