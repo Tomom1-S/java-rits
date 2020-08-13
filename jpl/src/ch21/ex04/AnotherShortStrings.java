@@ -4,8 +4,7 @@ import java.util.ListIterator;
 import java.util.NoSuchElementException;
 
 public class AnotherShortStrings extends ShortStrings implements ListIterator<String> {
-    private ListIterator<String> strings;   // 元の文字列
-    private String nextShort;   // 次が不明ならば null
+    private ListIterator<String> strings;   // 元の文字列ｘ
     private String prevShort;   // 前が不明ならば null
     final int maxLen;   // この長さ以下の文字列だけを返す
     private boolean removed;    // remove が呼ばれたか
