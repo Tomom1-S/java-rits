@@ -1,6 +1,5 @@
 package ch21.ex06;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
