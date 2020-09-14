@@ -24,7 +24,7 @@ public class GaussianSimulator {
             final double value = rand.nextGaussian();
 
             for (double j = -1 * absMax; j < absMax; j += interval) {
-                if (value < j || value >= j + interval) {
+                if (value < j - interval / 2 || value >= j + interval / 2) {
                     continue;
                 }
 
