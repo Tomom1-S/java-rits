@@ -1,6 +1,5 @@
 package ch20.ex05;
 
-import ch20.ex04.LineReader;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
