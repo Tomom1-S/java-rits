@@ -49,12 +49,9 @@ public class WordCounter {
     public int threadCount(final List<String> words) {
         AtomicInteger count = new AtomicInteger(0);
         for (String word : words) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    if (word.length() > 12) {
-                        count.getAndIncrement();
-                    }
+            new Thread(() -> {
+                if (word.length() > 12) {
+                    count.getAndIncrement();
                 }
             }).start();
         }
