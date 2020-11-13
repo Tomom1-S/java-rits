@@ -15,7 +15,7 @@ public class LineReader extends FilterReader {
 
     public int read() throws IOException {
         int c = super.read();
-        return (c == '\n' ? -2 : c);
+        return (c == '\n' ? -1 : c);
     }
 
     public String readLine() throws IOException {
