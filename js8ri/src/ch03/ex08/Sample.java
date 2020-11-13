@@ -11,7 +11,6 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.io.File;
-import java.util.function.UnaryOperator;
 
 public class Sample extends Application {
     public static void main(final String[] args) {

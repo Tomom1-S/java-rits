@@ -4,6 +4,8 @@ import java.lang.reflect.Field;
 import java.util.Comparator;
 
 public class Sample {
+    // 柴田さん
+    // T ではなくて Object でもよい
     public static <T> Comparator<T> lexicographicComparator(final String... fieldNames) {
         return (o1, o2) -> {
             for (final String fieldName : fieldNames) {
@@ -19,6 +21,8 @@ public class Sample {
     }
 
     static Object getFieldValue(final Object obj, final String fieldName) {
+        // 柴田さん
+        // ここでメソッド呼び出しの度にクラスを取得するのは少し無駄が多い
         Class<?> cls = obj.getClass();
         while (cls != null) {
             try {

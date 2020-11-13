@@ -40,6 +40,7 @@ public class LockHandlerTest {
         assertThat(outContent.toString(), is(expected));
     }
 
+    // TODO このテストが通らない
     @Test
     public void withLock() {
         final ReentrantLock lock = new ReentrantLock();
