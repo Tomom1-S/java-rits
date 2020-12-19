@@ -35,4 +35,6 @@ public class ImprovedDelimitedStringTest {
         assertThat(actual, equalTo(new String[0]));
     }
 
+    // 柴田さん：終了文字だけが見つからないときのテスト
+
 }

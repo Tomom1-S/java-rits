@@ -23,3 +23,8 @@ http://www.gutenberg.org/ebooks/2600
   * 全文(566,316 words)
     * streamCount's Time: 2069705 msec
     * parallelCount's Time: 2541624 msec
+
+### 柴田さんコメント
+
+- 標準出力は排他処理なので、並列処理の中で標準出力をすると処理時間を正確に計測できない
+- 一般的に、`parallelStream` の方が早くなるのは、コード数×要素数(単語数) が10万以上のときである

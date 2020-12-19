@@ -16,6 +16,7 @@ public class PassengerVehicle extends Vehicle implements Cloneable {
 
     public PassengerVehicle clone() {
         PassengerVehicle obj = new PassengerVehicle();
+        // 柴田さん：乗っている人数は複製しなくてもよさそう
         obj = (PassengerVehicle) super.clone();
         return obj;
     }

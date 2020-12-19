@@ -24,7 +24,7 @@ public class Sample {
                 o2 = o2.toLowerCase();
             }
 
-            // 空白を埋める/除外する
+            // 空白を含める/除外する
             if (excludeSpace) {
                 o1 = o1.replaceAll("\\s+", "");
                 o2 = o2.replaceAll("\\s+", "");

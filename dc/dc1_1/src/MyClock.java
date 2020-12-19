@@ -23,10 +23,14 @@ public class MyClock extends Frame implements Runnable {
      * 描画を行うのはここ
      */
     public void paint(Graphics graphics) {
+        // 柴田さん：日付を取得する場合、現在は Calendar は推奨されない。
+        // 別のパッケージが提供されているのでそちらを利用する。
         LocalTime now = LocalTime.now();
         graphics.drawString(
                 String.format("%02d:%02d:%02d", now.getHour(), now.getMinute(), now.getSecond()),
                 100, 130);
+        // 柴田さん：表示される文字の大きさを適切に
+        // ウィンドウサイズを変えたときに文字の大きさも変える、中央に表示するようにするなど
     }
 
     @Override
@@ -47,3 +51,5 @@ class MyWindowAdaptor extends WindowAdapter {
         System.exit(0);
     }
 }
+
+// 柴田さん：CPU 使用量は大丈夫？

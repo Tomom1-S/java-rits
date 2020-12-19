@@ -36,6 +36,7 @@ public class ImprovedClassContents extends ClassContents {
     }
 
     private static void printAnnotations(Annotation[] anns) {
+        // 柴田さん：アノテーションが一つもない場合に正しく動く？
         for (Annotation a : anns) {
             System.out.print("  ");
             System.out.println(a.toString());
@@ -45,6 +46,6 @@ public class ImprovedClassContents extends ClassContents {
     protected static Annotation[] deduplicate(Annotation[] anns1, Annotation[] anns2) {
         Annotation[] array = ArrayUtils.addAll(anns1, anns2);
 
-        return new HashSet<Annotation>(Arrays.asList(array)).toArray(new Annotation[0]);
+        return new HashSet<>(Arrays.asList(array)).toArray(new Annotation[0]);
     }
 }

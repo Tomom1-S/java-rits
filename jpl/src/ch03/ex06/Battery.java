@@ -22,9 +22,7 @@ public class Battery extends EnergySource {
 
     @Override
     boolean empty() {
-        if (remainingAmount <= 0) {
-            return true;
-        }
-        return false;
+        // 柴田さん
+        return (remainingAmount <= 0);
     }
 }

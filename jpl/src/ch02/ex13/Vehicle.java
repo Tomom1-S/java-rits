@@ -1,6 +1,7 @@
 package ch02.ex13;
 
 public class Vehicle {
+	// id は final にすべき
 	private long id;
 	private double speed;
 	private double direction;

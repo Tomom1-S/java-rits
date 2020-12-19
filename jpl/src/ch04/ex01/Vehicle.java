@@ -12,6 +12,8 @@ public class Vehicle {
 
     private static long nextId = 0;
 
+    // 柴田さん
+    // private final EnergySource energySource;
     public Battery battery = new Battery();
     public GasTank gasTank = new GasTank();
 
@@ -33,6 +35,7 @@ public class Vehicle {
     }
 
     public void start() throws Exception {
+        // battery / gasTank のいずれか一方（= EnergySource）だけ見ればOK
     	if (battery.getRemainingAmount() > 0 && gasTank.getRemainingAmount() > 0) {
     		return;
 		}

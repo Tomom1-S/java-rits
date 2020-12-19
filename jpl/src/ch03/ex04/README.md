@@ -10,3 +10,7 @@
 
 *  `PassengerVehicle`
     * `getX`, `setX` のメソッドすべて
+
+### 柴田さんコメント
+* 乗車人数以外は final でよい
+

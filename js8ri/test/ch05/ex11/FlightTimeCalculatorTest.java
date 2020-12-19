@@ -1,6 +1,5 @@
 package ch05.ex11;
 
-import ch05.ex10.ArrivalTimeCalculator;
 import org.junit.Test;
 
 import java.time.*;

@@ -6,6 +6,11 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Sample {
+    // 柴田さん
+    // ストリームの片方が無限ストリームだったときに正しく動かないため NG
+    // 必要な分だけストリームの要素を取り出すようにすればよい
+    // 両方が無限ストリームである場合、無限ストリームが返るようにすべき
+    // Spliterator を実装して、tryAdvance をオーバーライドする
     public static <T> Stream<T> zip(Stream<T> first, Stream<T> second) {
         final List<T> firstList = first.collect(Collectors.toList());
         final List<T> secondList = second.collect(Collectors.toList());

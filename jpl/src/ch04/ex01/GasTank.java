@@ -22,9 +22,6 @@ public class GasTank implements EnergySource {
 
     @Override
     public boolean empty() {
-        if (remainingAmount <= 0) {
-            return true;
-        }
-        return false;
+        return (remainingAmount <= 0);
     }
 }

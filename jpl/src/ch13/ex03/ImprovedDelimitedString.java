@@ -24,6 +24,7 @@ public class ImprovedDelimitedString {
                 }
                 break;
             }
+            // 柴田さん：開始文字・終了文字を含めた文字列を返す
             list.add(from.substring(startPos, endPos));
         }
 

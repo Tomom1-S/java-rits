@@ -1,6 +1,5 @@
 package ch05.ex12;
 
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.Comparator;
 import java.util.Optional;
@@ -10,6 +9,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 public class MyScheduler {
     final private Set<Appointment> appointments = new TreeSet<>(Comparator.naturalOrder());
@@ -25,13 +25,20 @@ public class MyScheduler {
     }
 
     public Set<Appointment> getAppointments() {
-        return appointments;
+        // 柴田さん：
+        // appointment が private なので、そのまま返すと private なフィールドを変更できてしまう
+        // コピーを返すようにすべき
+        return appointments.stream().collect(Collectors.toSet());
     }
 
     public void startNotification() {
         service = Executors.newSingleThreadScheduledExecutor();
         scheduledFuture = service.scheduleAtFixedRate(() -> {
-            final Optional<Appointment> nextApp = appointments.stream().findFirst();
+            final Optional<Appointment> nextApp;
+            // 柴田さん：appointment をスレッドセーフにする
+            synchronized (appointments) {
+                nextApp = appointments.stream().findFirst();
+            }
             if (!nextApp.isPresent()) {
                 return;
             }
@@ -42,7 +49,10 @@ public class MyScheduler {
             }
 
             System.out.println(appointment);
-            appointments.remove(appointment);
+            // 柴田さん：appointment をスレッドセーフにする
+            synchronized (appointments) {
+                appointments.remove(appointment);
+            }
         }, 0, 5, TimeUnit.MINUTES);
     }
 

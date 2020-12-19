@@ -33,10 +33,10 @@ public class Vehicle {
     }
 
     public void start() throws Exception {
-    	if (battery.getRemainingAmount() > 0 && gasTank.getRemainingAmount() > 0) {
-    		return;
-		}
-    	throw new Exception("Some energy sources are empty!");
+        // empty で判定すればよい
+        if (!battery.empty() || !gasTank.empty()) {
+            throw new Exception("Some energy sources are empty!");
+        }
 	}
 
     public void stop() {

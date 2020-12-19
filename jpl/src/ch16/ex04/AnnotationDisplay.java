@@ -14,6 +14,7 @@ public class AnnotationDisplay {
     }
 
     private static void printAnnotations(Annotation[] anns) {
+        // 柴田さん：アノテーションが一つもない場合に正しく動く？
         for (Annotation a : anns) {
             System.out.print(" ");
             System.out.println(a.toString());

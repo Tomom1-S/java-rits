@@ -6,4 +6,8 @@ public class MyClock {
 
         frame.setVisible(true);
     }
+
+    // 柴田さん：ポップアップから終了できるように
+    // ドラッグアンドドロップの挙動（スクリーン上の位置 - フレーム上の位置？）
+    // 色増やす（cyan, yellowなど）
 }

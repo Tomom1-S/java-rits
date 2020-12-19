@@ -30,6 +30,9 @@ public class Sample {
                 return f.apply(t);
             } catch (Exception e) {
                 throw new RuntimeException(e);
+            } catch (Throwable throwable) {
+                // 柴田さん：Throwable も扱う
+                throw throwable;
             }
         };
     }

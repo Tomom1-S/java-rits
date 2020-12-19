@@ -73,6 +73,8 @@ public class Vehicle {
 	}
 
 	public static void main(String[] args) {
+		// 引数が渡されなかったときには即座に return する
+
 		Vehicle vehicle = new Vehicle(args[0]);
 
 		System.out.println(vehicle.toString());

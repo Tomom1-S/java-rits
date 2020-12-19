@@ -3,6 +3,7 @@ package ch16.ex01;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
+import java.util.Objects;
 
 public class TypeDesc {
     public static void main(String[] args) {
@@ -45,7 +46,8 @@ public class TypeDesc {
 
         // Object クラスだったら何もしない
         String clsName = cls.getCanonicalName();
-        if (clsName.equals("java.lang.Object")) {
+        // 柴田さん：Object 型に対するクラスオブジェクトの参照を使う
+        if (cls == Object.class) {
             return;
         }
 
