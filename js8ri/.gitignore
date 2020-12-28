@@ -1,4 +1,6 @@
 .gradle
 .idea
 
+out
+
 js8ri.iml
