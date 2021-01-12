@@ -1,0 +1,6 @@
+These are files.
+
+This is not a folder.
+
+That is not a file.
+This is a file.
