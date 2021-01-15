@@ -1,0 +1,8 @@
+Date: January 4, 2020
+Size: 0.1 kB
+
+This is a file.
+That is not a file.
+
+There are 4 files in this folder.
+The size is 0.19 kB.

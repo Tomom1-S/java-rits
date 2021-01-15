@@ -16,7 +16,7 @@ public class SampleTest {
     @Test
     public void lexicographicComparatorの正常系() {
         Comparator<B> comparator = Sample.lexicographicComparator(
-                new String[] {"bPub", "cPub"}
+                new String[]{"bPub", "cPub"}
         );
 
         final A a = new A();
