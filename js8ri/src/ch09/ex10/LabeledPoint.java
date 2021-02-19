@@ -13,6 +13,8 @@ public class LabeledPoint {
         this.y = y;
     }
 
+    // 柴田さん：compareTo と equals の整合が取れていることが理想 (Effective Java p.69)
+    // equals が true のときに compareTo は 0
     public int compareTo(final LabeledPoint other) {
         Objects.requireNonNull(other);
 

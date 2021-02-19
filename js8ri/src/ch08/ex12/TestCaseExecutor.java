@@ -6,11 +6,13 @@ public class TestCaseExecutor {
     public static void test(final String className) throws ClassNotFoundException {
         final Class<?> target = Class.forName(className);
         for (final Method method : target.getMethods()) {
-            final TestCases testCases = method.getAnnotation(TestCases.class);
+            // 柴田さん：ここで getAnnotations で TestCases しか見ていないと、
+            // TestCase をひとつだけ付けたときはテストが実行されない
+            final TestCase[] testCases = method.getAnnotationsByType(TestCase.class);
             if (testCases == null) {
                 continue;
             }
-            for (final TestCase testCase : testCases.value()) {
+            for (final TestCase testCase : testCases) {
                 final int params = testCase.params();
                 final int expected = testCase.expected();
                 final String msg = String.format(

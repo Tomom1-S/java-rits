@@ -15,6 +15,12 @@ public class EuclideanAlgorithm {
             r = a % b;
         }
         return Math.abs(b);
+
+        // 柴田さん：再起を使って書ける
+//        if (y == 0) {
+//            return Math.abs(x + y);
+//        }
+//        return useMod(x, x % y);
     }
 
     public static int useFloorMod(final int x, final int y) {

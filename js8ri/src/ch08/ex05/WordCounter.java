@@ -7,6 +7,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class WordCounter {
     public static void main(final String[] args) {
@@ -34,9 +35,14 @@ public class WordCounter {
 
         System.out.println("ラムダ式の場合-----");
         start = System.nanoTime();
-        lambdaWords.removeIf(s -> s.length() <= 12);
-        final int lambdaCount = lambdaWords.size();
+        // 柴田さん：元のリストを改善しているので性能比較としては不適切
+        final AtomicLong lambdaCount = new AtomicLong();
+        lambdaWords.forEach(s -> {
+            if (s.length() > 12) {  // Predicate を使うともっとすっきり書けるかも
+                lambdaCount.getAndIncrement();
+            }
+        });
         System.out.println("処理時間: " + ((System.nanoTime() - start) / (10 ^ 6)) + " ms");
-        System.out.println("結果: " + lambdaCount + " words");
+        System.out.println("結果: " + lambdaCount.get() + " words");
     }
 }

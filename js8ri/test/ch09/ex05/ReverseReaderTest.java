@@ -15,6 +15,7 @@ public class ReverseReaderTest {
 
     @Test
     public void mainの正常系() {
+        // 柴田さん：日本語を含むファイルでもテストをするとよい
         final String path = "test/ch09/ex05";
         final String outPath = path + "/out.txt";
         ReverseReader.main(new String[]{path + "/in.txt", outPath});
@@ -24,8 +25,8 @@ public class ReverseReaderTest {
             bytes = Files.readAllBytes(Paths.get(outPath));
             final String actual = new String(bytes, StandardCharsets.UTF_8);
 
-            final String expected = ".elif a ton si tahT"+ls
-                    +".elif a si sihT";
+            final String expected = ".elif a ton si tahT" + ls
+                    + ".elif a si sihT";
             assertThat(actual, is(expected));
         } catch (IOException e) {
             e.printStackTrace();

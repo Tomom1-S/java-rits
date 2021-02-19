@@ -9,9 +9,9 @@ import java.util.Base64;
 import java.util.Scanner;
 
 public class WebBrowser {
-    public static void readWithAuthorization(final String url , final String username, final String password)
+    public static void readWithAuthorization(final String url, final String username, final String password)
             throws Exception {
-        InputStream inputStream = null;
+        final InputStream inputStream;
         try {
             inputStream = authorize(new URL(url), username, password);
         } catch (final Exception e) {
@@ -25,10 +25,11 @@ public class WebBrowser {
     }
 
     private static InputStream authorize(final URL url, final String username, final String password) throws IOException {
-        final URLConnection connection = url.openConnection();
         final Base64.Encoder encoder = Base64.getEncoder();
         final String original = username + ":" + password;
         final String authInfo = encoder.encodeToString(original.getBytes(StandardCharsets.UTF_8));
+
+        final URLConnection connection = url.openConnection();
         connection.setRequestProperty("Authorization", "Basic " + authInfo);
         connection.connect();
         return connection.getInputStream();
