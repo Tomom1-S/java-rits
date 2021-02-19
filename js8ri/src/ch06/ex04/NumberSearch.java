@@ -44,6 +44,10 @@ public class NumberSearch {
     }
 
     public static long findMin(final long[] values) {
+        // 柴田さん: values をリストに変換してストリームにする。
+        // forEach で accumulator.accumulate を呼び出せば同じことができる。
+        // また、スレッドプールを閉じる処理も省けるので、コードがシンプルになる。
+
         final LongAccumulator accumulator = new LongAccumulator(Math::min, Long.MAX_VALUE);
         final CountDownLatch latch = new CountDownLatch(THREAD_NUM);
 
