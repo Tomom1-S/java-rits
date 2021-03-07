@@ -19,25 +19,22 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 public class MyClock extends Application {
-    private final static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+    private final static DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm:ss");
     private Stage stage;
     private final Pane pane = new StackPane();
     private Canvas canvas;
     private GraphicsContext gc;
 
-    final Appearance appearance = new Appearance();
+    Appearance appearance = new Appearance();
 
-    private final MyMenuBar menuBar = new MyMenuBar(this);
+    private final MyMenuBar menuBar;
 
     private static class textPos {
         static double x;
         static double y;
     }
 
-    @Override
-    public void start(final Stage stage) {
-        this.stage = stage;
-
+    public MyClock() {
         final double width = Settings.FontSize.DEFAULT_SIZE * Settings.Window.ratioX;
         final double height = Settings.FontSize.DEFAULT_SIZE * Settings.Window.ratioY;
         canvas = new Canvas(width, height);
@@ -45,18 +42,29 @@ public class MyClock extends Application {
         gc.setTextAlign(TextAlignment.CENTER);
         gc.setTextBaseline(VPos.CENTER);
         gc.setFill(appearance.fontColor);
-        final Font font = new Font(appearance.font.getFamily(), appearance.fontSize);
+
+        pane.getChildren().add(canvas);
+        pane.setPrefSize(width, height);
+
+        menuBar = new MyMenuBar(this);
+    }
+
+    @Override
+    public void start(final Stage stage) {
+        this.stage = stage;
+
+        final Font font = new Font(appearance.font, appearance.fontSize);
         gc.setFont(font);
         resizeWindowWithFont(font);
 
-        draw(LocalTime.now().format(formatter));
+        draw(LocalTime.now().format(TIME_FORMATTER));
 
         // 1秒ごとに行う処理
         final Timeline timer = new Timeline(
                 new KeyFrame(
                         Duration.seconds(1),
                         event -> {
-                            final String now = LocalTime.now().format(formatter);
+                            final String now = LocalTime.now().format(TIME_FORMATTER);
                             gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
                             draw(now);
                         }
@@ -64,9 +72,6 @@ public class MyClock extends Application {
         );
         timer.setCycleCount(Timeline.INDEFINITE);
         timer.play();
-
-        pane.getChildren().add(canvas);
-        pane.setPrefSize(width, height);
 
         this.stage.setScene(new Scene(new VBox(menuBar.bar, pane)));
         this.stage.setTitle("What time is it?");
@@ -118,6 +123,8 @@ public class MyClock extends Application {
         final Font font = new Font(family, gc.getFont().getSize());
         gc.setFont(font);
         resizeWindowWithFont(font);
+
+        appearance.font = family;
     }
 
     /**
@@ -129,6 +136,8 @@ public class MyClock extends Application {
         final Font font = new Font(gc.getFont().getFamily(), size);
         gc.setFont(font);
         resizeWindowWithFont(font);
+
+        appearance.fontSize = size;
     }
 
     /**
@@ -138,6 +147,8 @@ public class MyClock extends Application {
      */
     void changeFontColor(final Color color) {
         gc.setFill(color);
+
+        appearance.fontColor = color;
     }
 
     /**
@@ -147,5 +158,7 @@ public class MyClock extends Application {
      */
     void changeBgColor(final String colorName) {
         pane.setStyle("-fx-background-color: " + colorName.toLowerCase() + ";");
+
+        appearance.bgColor = Settings.COLOR_MAP.get(colorName);
     }
 }
