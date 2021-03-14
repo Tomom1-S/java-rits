@@ -94,7 +94,6 @@ public class MyClock extends Application {
         canvas.setWidth(width);
         canvas.setHeight(height);
         updateTextPos(width / 2, height / 2);
-        pane.setPrefSize(width, height);
         this.stage.setScene(new Scene(new VBox(menuBar.bar, pane)));
     }
 

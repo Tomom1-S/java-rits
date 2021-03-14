@@ -12,6 +12,18 @@ public final class Settings {
         final static double ratioY = 1.2;
     }
 
+    static final class PrefKey {
+        static final String LOC_X = "locX";
+        static final String LOC_Y = "locY";
+        static final String HEIGHT = "height";
+        static final String WIDTH = "width";
+
+        static final String FONT_NAME = "fontName";
+        static final String FONT_SIZE = "fontSize";
+        static final String FONT_COLOR = "fontColor";
+        static final String BG_COLOR = "bgColor";
+    }
+
     final static class Menus {
         final static String APPEARANCE = "Appearance";
         final static String THEME = "Theme";

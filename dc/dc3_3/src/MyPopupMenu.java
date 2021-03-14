@@ -21,19 +21,7 @@ public class MyPopupMenu {
 
         contextMenu = new ContextMenu();
         initItems();
-        initMenus();
-    }
 
-    private void initMenus() {
-//        System.out.println("initMenu");
-
-//        MenuItem menuItem1 = new MenuItem("foo");
-//        menuItem1.setOnAction(event -> System.out.println("foo"));
-//
-//        MenuItem menuItem2 = new MenuItem("bar");
-//        menuItem2.setOnAction(event -> System.out.println("bar"));
-
-//        contextMenu.getItems().addAll(menuItem1, menuItem2);
         contextMenu.getItems().addAll(itemMap.values());
     }
 
