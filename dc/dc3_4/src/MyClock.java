@@ -45,9 +45,9 @@ public class MyClock extends Application {
                 prefs.get(Settings.PrefKey.FONT_NAME, Font.getDefault().getFamily()),
                 prefs.getInt(Settings.PrefKey.FONT_SIZE, Settings.FontSize.DEFAULT_SIZE),
                 Settings.COLOR_MAP.get(prefs.get(Settings.PrefKey.FONT_COLOR,
-                        MyUtils.getKey(Settings.COLOR_MAP, Color.BLACK).findFirst().get())),
+                        MyUtils.getKey(Settings.COLOR_MAP, Color.BLACK).get(0))),
                 Settings.COLOR_MAP.get(prefs.get(Settings.PrefKey.BG_COLOR,
-                        MyUtils.getKey(Settings.COLOR_MAP, Color.WHITE).findFirst().get()))
+                        MyUtils.getKey(Settings.COLOR_MAP, Color.WHITE).get(0)))
         );
 
         final double width = appearance.fontSize * Settings.Window.ratioX;
@@ -57,7 +57,7 @@ public class MyClock extends Application {
         gc.setTextAlign(TextAlignment.CENTER);
         gc.setTextBaseline(VPos.CENTER);
         gc.setFill(appearance.fontColor);
-        changeBgColor(MyUtils.getKey(Settings.COLOR_MAP, appearance.bgColor).findFirst().get());
+        changeBgColor(MyUtils.getKey(Settings.COLOR_MAP, appearance.bgColor).get(0));
 
         pane.getChildren().add(canvas);
         pane.setPrefSize(width, height);
@@ -111,9 +111,9 @@ public class MyClock extends Application {
         prefs.put(Settings.PrefKey.FONT_NAME, appearance.font);
         prefs.putInt(Settings.PrefKey.FONT_SIZE, appearance.fontSize);
         prefs.put(Settings.PrefKey.FONT_COLOR,
-                MyUtils.getKey(Settings.COLOR_MAP, appearance.fontColor).findFirst().get());
+                MyUtils.getKey(Settings.COLOR_MAP, appearance.fontColor).get(0));
         prefs.put(Settings.PrefKey.BG_COLOR,
-                MyUtils.getKey(Settings.COLOR_MAP, appearance.bgColor).findFirst().get());
+                MyUtils.getKey(Settings.COLOR_MAP, appearance.bgColor).get(0));
     }
 
     private void updateTextPos(final double x, final double y) {

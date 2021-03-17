@@ -69,14 +69,12 @@ public class AppearanceDialog<T> extends Dialog<T> {
                 setDefaultValueOnComboBox(
                         cmbMap.get(Settings.MenuItems.FONT_COLOR),
                         colorList,
-                        MyUtils.getKey(Settings.COLOR_MAP, parent.appearance.fontColor)
-                                .findFirst().get()
+                        MyUtils.getKey(Settings.COLOR_MAP, parent.appearance.fontColor).get(0)
                 );
                 setDefaultValueOnComboBox(
                         cmbMap.get(Settings.MenuItems.BG_COLOR),
                         colorList,
-                        MyUtils.getKey(Settings.COLOR_MAP, parent.appearance.bgColor)
-                                .findFirst().get()
+                        MyUtils.getKey(Settings.COLOR_MAP, parent.appearance.bgColor).get(0)
                 );
             }
         };
@@ -92,12 +90,10 @@ public class AppearanceDialog<T> extends Dialog<T> {
                 createComboBox(Settings.FontSize.VALUES, parent.appearance.fontSize));
         cmbMap.put(Settings.MenuItems.FONT_COLOR,
                 createComboBox(colorList,
-                        MyUtils.getKey(Settings.COLOR_MAP, parent.appearance.fontColor)
-                                .findFirst().get()));
+                        MyUtils.getKey(Settings.COLOR_MAP, parent.appearance.fontColor).get(0)));
         cmbMap.put(Settings.MenuItems.BG_COLOR,
                 createComboBox(colorList,
-                        MyUtils.getKey(Settings.COLOR_MAP, parent.appearance.bgColor)
-                                .findFirst().get()));
+                        MyUtils.getKey(Settings.COLOR_MAP, parent.appearance.bgColor).get(0)));
 
         cmbMap.get(Settings.MenuItems.FONT_COLOR).setCellFactory(createCallbackForColortip());
         cmbMap.get(Settings.MenuItems.BG_COLOR).setCellFactory(createCallbackForColortip());
