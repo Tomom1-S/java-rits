@@ -20,7 +20,6 @@ public class MyPopupMenu {
         this.parent = parent;
 
         contextMenu = new ContextMenu();
-        initItems();
         initMenus();
     }
 
