@@ -11,8 +11,6 @@
         <Insets top="10" right="25" bottom="10" left="25"/>
     </padding>
     <children>
-        <Canvas>
-
-        </Canvas>
+        <Canvas/>
     </children>
 </GridPane>

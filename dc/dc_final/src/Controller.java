@@ -4,6 +4,7 @@ import javafx.fxml.Initializable;
 import javafx.geometry.VPos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
@@ -13,9 +14,13 @@ import java.util.ResourceBundle;
 
 public class Controller implements Initializable {
     private Timer timer;
+    ViewController view;
 
     @FXML
     private Text actiontarget;
+
+    @FXML
+    private Pane pane;
 
     @FXML
     private Canvas canvas;
@@ -24,6 +29,7 @@ public class Controller implements Initializable {
     public void initialize(final URL location, final ResourceBundle resources) {
         final GraphicsContext gc = canvas.getGraphicsContext2D();
         timer = new Timer(gc);
+        view = new ViewController(canvas, pane);
 
         gc.setTextAlign(TextAlignment.CENTER);
         gc.setTextBaseline(VPos.CENTER);
@@ -36,5 +42,13 @@ public class Controller implements Initializable {
 
     public void runTimer() {
         timer.run();
+    }
+
+    public double getCanvasWidth() {
+        return canvas.getWidth();
+    }
+
+    public double getCanvasHeight() {
+        return canvas.getHeight();
     }
 }
