@@ -9,7 +9,7 @@ import javafx.stage.Stage;
 public class MyClock extends Application {
     @Override
     public void start(final Stage stage) throws Exception {
-        final FXMLLoader loader = new FXMLLoader(getClass().getResource("resources/sample.fxml"));
+        final FXMLLoader loader = new FXMLLoader(getClass().getResource("resources/my_clock.fxml"));
         final Parent root = loader.load();
         final Controller controller = loader.getController();
         loader.setController(controller);
@@ -22,8 +22,9 @@ public class MyClock extends Application {
 
         controller.runTimer();
 
-        final Scene scene = new Scene(root,
-                controller.getCanvasWidth(), controller.getCanvasHeight());
+        final Scene scene = new Scene(root);
+//        scene.getStylesheets().add(getClass().getResource("resources/MyClock.css").toExternalForm());
+
         stage.setTitle("What Time Is It Now?");
         stage.setScene(scene);
         stage.show();

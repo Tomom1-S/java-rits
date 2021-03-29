@@ -36,19 +36,11 @@ public class Controller implements Initializable {
         gc.setFill(Color.PINK);
     }
 
-    public void handleSubmitButtonAction(final ActionEvent actionEvent) {
-        actiontarget.setText("Sign in button pressed");
-    }
-
     public void runTimer() {
         timer.run();
     }
 
-    public double getCanvasWidth() {
-        return canvas.getWidth();
-    }
-
-    public double getCanvasHeight() {
-        return canvas.getHeight();
+    public void handleExitAction(final ActionEvent _actionEvent) {
+        System.exit(0);
     }
 }
