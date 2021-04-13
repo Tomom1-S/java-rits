@@ -14,7 +14,7 @@ public class ViewController {
         static double y;
     }
 
-    public ViewController(Canvas canvas, Pane pane) {
+    public ViewController(final Canvas canvas, final Pane pane) {
         this.canvas = canvas;
         this.pane = pane;
     }
@@ -50,6 +50,15 @@ public class ViewController {
     /**
      * GraphicsContext のフォントカラーを変更
      *
+     * @param colorName フォントカラー名
+     */
+    void changeFontColor(final String colorName) {
+        changeFontColor(Color.web(nameToColor(colorName)));
+    }
+
+    /**
+     * GraphicsContext のフォントカラーを変更
+     *
      * @param color フォントカラー
      */
     void changeFontColor(final Color color) {
@@ -65,9 +74,13 @@ public class ViewController {
      * @param colorName カラー名
      */
     void changeBgColor(final String colorName) {
-        pane.setStyle("-fx-background-color: " + colorName.toLowerCase() + ";");
+        pane.setStyle("-fx-background-color: " + nameToColor(colorName) + ";");
 
 //        appearance.bgColor = Settings.COLOR_MAP.get(colorName);
+    }
+
+    private String nameToColor(final String colorName) {
+        return colorName.toLowerCase().replaceAll("\\s+", "");
     }
 
     /**
