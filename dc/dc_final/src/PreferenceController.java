@@ -1,12 +1,10 @@
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
+import javafx.scene.control.*;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -30,6 +28,23 @@ public class PreferenceController implements Initializable {
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
         fontComboBox.getItems().addAll(Font.getFamilies());
+        fontComboBox.setCellFactory(new Callback<>() {
+            @Override
+            public ListCell<String> call(final ListView<String> param) {
+                return new ListCell<>() {
+                    @Override
+                    public void updateItem(final String item, final boolean empty) {
+                        super.updateItem(item, empty);
+                        if (item == null) {
+                            setText(null);
+                            return;
+                        }
+                        setFont(Font.font(item));
+                        setText(item);
+                    }
+                };
+            }
+        });
 
         fontColorComboBox.setButtonCell(new ListCell<>() {
             @Override
