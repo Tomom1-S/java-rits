@@ -4,8 +4,10 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 public class ViewController {
+    private Stage stage;
     private final Canvas canvas;
     private final Pane pane;
 
@@ -17,6 +19,10 @@ public class ViewController {
     public ViewController(final Canvas canvas, final Pane pane) {
         this.canvas = canvas;
         this.pane = pane;
+    }
+
+    public void setStage(final Stage stage) {
+        this.stage = stage;
     }
 
     /**
@@ -97,8 +103,9 @@ public class ViewController {
         final double height = textHeight(font, text) * 1.5;
         canvas.setWidth(width);
         canvas.setHeight(height);
+        pane.setPrefWidth(width);
         updateTextPos(width / 2, height / 2);
-//        this.stage.setScene(new Scene(new VBox(menuBar.bar, pane)));
+        stage.sizeToScene();
     }
 
     private void updateTextPos(final double x, final double y) {

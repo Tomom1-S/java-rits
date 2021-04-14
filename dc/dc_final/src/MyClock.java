@@ -15,18 +15,21 @@ public class MyClock extends Application {
         loader.setController(controller);
 
         // Initialize preferences
+        controller.view.setStage(stage);
         controller.view.changeFontFamily(Font.getDefault().getFamily());
-        controller.view.changeFontSize(50);
+        controller.view.changeFontSize(60);
         controller.view.changeFontColor(Color.DARKSEAGREEN);
         controller.view.changeBgColor("pink");
 
         controller.runTimer();
 
         final Scene scene = new Scene(root);
-//        scene.getStylesheets().add(getClass().getResource("resources/MyClock.css").toExternalForm());
+        controller.bindMenuBar(stage);
 
         stage.setTitle("What Time Is It Now?");
+        stage.setResizable(false);
         stage.setScene(scene);
+        stage.sizeToScene();
         stage.show();
     }
 }

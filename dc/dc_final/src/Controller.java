@@ -1,14 +1,21 @@
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.VPos;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.MenuBar;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -17,11 +24,9 @@ public class Controller implements Initializable {
     ViewController view;
 
     @FXML
-    private Text actiontarget;
-
+    private MenuBar menuBar;
     @FXML
     private Pane pane;
-
     @FXML
     private Canvas canvas;
 
@@ -40,7 +45,26 @@ public class Controller implements Initializable {
         timer.run();
     }
 
+    public void bindMenuBar(final Stage stage) {
+        menuBar.prefWidthProperty().bind(stage.widthProperty());
+    }
+
+    @FXML
     public void handleExitAction(final ActionEvent _actionEvent) {
         System.exit(0);
+    }
+
+    @FXML
+    public void handlePreferenceAction(final ActionEvent _actionEvent) throws IOException {
+        final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("resources/preference_dialog.fxml"));
+        final Parent parent = fxmlLoader.load();
+        final PreferenceController dialogController = fxmlLoader.getController();
+        dialogController.setViewController(view);
+
+        final Scene scene = new Scene(parent, 300, 200);
+        final Stage stage = new Stage(StageStyle.UNDECORATED);
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.setScene(scene);
+        stage.showAndWait();
     }
 }
