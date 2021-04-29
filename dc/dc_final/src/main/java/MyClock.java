@@ -9,7 +9,7 @@ import javafx.stage.Stage;
 public class MyClock extends Application {
     @Override
     public void start(final Stage stage) throws Exception {
-        final FXMLLoader loader = new FXMLLoader(getClass().getResource("resources/my_clock.fxml"));
+        final FXMLLoader loader = new FXMLLoader(getClass().getResource("my_clock.fxml"));
         final Parent root = loader.load();
         final Controller controller = loader.getController();
         loader.setController(controller);

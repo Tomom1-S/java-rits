@@ -56,7 +56,7 @@ public class Controller implements Initializable {
 
     @FXML
     public void handlePreferenceAction(final ActionEvent _actionEvent) throws IOException {
-        final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("resources/preference_dialog.fxml"));
+        final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("preference_dialog.fxml"));
         final Parent parent = fxmlLoader.load();
         final PreferenceController dialogController = fxmlLoader.getController();
         dialogController.setViewController(view);
