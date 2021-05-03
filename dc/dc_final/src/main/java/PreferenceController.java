@@ -5,12 +5,19 @@ import javafx.scene.control.*;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.net.URL;
+import java.util.List;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class PreferenceController implements Initializable {
+    @Setter
     private ViewController viewController;
+    @Getter
+    private Appearance appearance;
 
     @FXML
     private ComboBox<String> fontComboBox;
@@ -60,21 +67,29 @@ public class PreferenceController implements Initializable {
                 setText(item == null ? "" : item.getText());
             }
         });
-
-        // TODO 前に選んでいたものを選ぶ
-        fontComboBox.getSelectionModel().selectFirst();
-        fontSizeComboBox.getSelectionModel().selectFirst();
-        fontColorComboBox.getSelectionModel().selectFirst();
-        bgColorComboBox.getSelectionModel().selectFirst();
     }
 
-    public void setViewController(final ViewController viewController) {
-        this.viewController = viewController;
+    public void setupComboBoxes(final Appearance appearance) {
+        this.appearance = appearance;
+
+        fontComboBox.getSelectionModel().select(appearance.getFont());
+        fontSizeComboBox.getSelectionModel().select(String.valueOf(appearance.getFontSize()));
+        fontColorComboBox.getSelectionModel().select(
+                findLabelByText(fontColorComboBox.getItems(), appearance.getFontColor())
+        );
+        bgColorComboBox.getSelectionModel().select(
+                findLabelByText(bgColorComboBox.getItems(), appearance.getBgColor())
+        );
+    }
+
+    private Label findLabelByText(final List<Label> list, final String text) {
+        return list.stream()
+                .filter(label -> Objects.equals(label.getText(), text))
+                .findFirst()
+                .get();
     }
 
     public void handlePreferenceCancelAction(final ActionEvent _actionEvent) {
-        // TODO コンボボックスのデフォルト値を元に戻す
-
         closeDialog(cancelButton);
     }
 

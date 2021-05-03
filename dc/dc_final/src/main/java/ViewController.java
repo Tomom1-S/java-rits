@@ -5,9 +5,14 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public class ViewController {
     private Stage stage;
+    private Appearance appearance;
     private final Canvas canvas;
     private final Pane pane;
 
@@ -21,8 +26,11 @@ public class ViewController {
         this.pane = pane;
     }
 
-    public void setStage(final Stage stage) {
-        this.stage = stage;
+    public void applyAppearance() {
+        changeFontFamily(appearance.getFont());
+        changeFontColor(appearance.getFontColor());
+        changeFontSize(appearance.getFontSize());
+        changeBgColor(appearance.getBgColor());
     }
 
     /**
@@ -32,11 +40,11 @@ public class ViewController {
      */
     void changeFontFamily(final String family) {
         final GraphicsContext gc = canvas.getGraphicsContext2D();
-        final Font font = new Font(family, gc.getFont().getSize());
+        final Font font = new Font(Font.font(family).getName(), gc.getFont().getSize());
         gc.setFont(font);
         resizeWindowWithFont(font);
 
-//        appearance.font = family;
+        appearance.setFont(family);
     }
 
     /**
@@ -50,7 +58,7 @@ public class ViewController {
         gc.setFont(font);
         resizeWindowWithFont(font);
 
-//        appearance.fontSize = size;
+        appearance.setFontSize(size);
     }
 
     /**
@@ -59,19 +67,10 @@ public class ViewController {
      * @param colorName フォントカラー名
      */
     void changeFontColor(final String colorName) {
-        changeFontColor(Color.web(nameToColor(colorName)));
-    }
-
-    /**
-     * GraphicsContext のフォントカラーを変更
-     *
-     * @param color フォントカラー
-     */
-    void changeFontColor(final Color color) {
         final GraphicsContext gc = canvas.getGraphicsContext2D();
-        gc.setFill(color);
+        gc.setFill(Color.web(nameToColor(colorName)));
 
-//        appearance.fontColor = color;
+        appearance.setFontColor(colorName);
     }
 
     /**
@@ -82,7 +81,7 @@ public class ViewController {
     void changeBgColor(final String colorName) {
         pane.setStyle("-fx-background-color: " + nameToColor(colorName) + ";");
 
-//        appearance.bgColor = Settings.COLOR_MAP.get(colorName);
+        appearance.setBgColor(colorName);
     }
 
     private String nameToColor(final String colorName) {
@@ -96,11 +95,9 @@ public class ViewController {
      */
     private void resizeWindowWithFont(final Font font) {
         final String text = "00:00:00";
-//        final double width = textWidth(font, text) * Settings.Window.ratioX;
-//        final double height = textHeight(font, text) * Settings.Window.ratioY;
 
-        final double width = textWidth(font, text) * 1.5;
-        final double height = textHeight(font, text) * 1.5;
+        final double width = textWidth(font, text) * AppearanceSetting.Default.WINDOW_RATIO;
+        final double height = textHeight(font, text) * AppearanceSetting.Default.WINDOW_RATIO;
         canvas.setWidth(width);
         canvas.setHeight(height);
         pane.setPrefWidth(width);
