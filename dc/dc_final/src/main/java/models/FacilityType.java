@@ -7,9 +7,9 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum FacilityType {
     ATTRACTION_STANDBY("realtime", "realtime-attr"),
-    ATTRACTION_FASTPASS("fastpass", "realtime-hoge"),
-    GREETING("greeting_realtime", "realtime-hoge"),
-    RESTAURANT("restwait", "realtime-hoge");
+    ATTRACTION_FASTPASS("fastpass", "realtime-attr"),
+    GREETING("greeting_realtime", "realtime-attr"),
+    RESTAURANT("restwait", "realtime-attr");
 
     private final String value;
     private final String htmlClass;
