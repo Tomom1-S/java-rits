@@ -7,6 +7,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import lombok.Getter;
 import lombok.Setter;
+import utils.ColorHelper;
 
 @Getter
 @Setter
@@ -68,7 +69,7 @@ public class ViewController {
      */
     void changeFontColor(final String colorName) {
         final GraphicsContext gc = canvas.getGraphicsContext2D();
-        gc.setFill(Color.web(nameToColor(colorName)));
+        gc.setFill(Color.web(ColorHelper.nameToColor(colorName)));
 
         appearance.setFontColor(colorName);
     }
@@ -79,13 +80,9 @@ public class ViewController {
      * @param colorName カラー名
      */
     void changeBgColor(final String colorName) {
-        pane.setStyle("-fx-background-color: " + nameToColor(colorName) + ";");
+        pane.setStyle("-fx-background-color: " + ColorHelper.nameToColor(colorName) + ";");
 
         appearance.setBgColor(colorName);
-    }
-
-    private String nameToColor(final String colorName) {
-        return colorName.toLowerCase().replaceAll("\\s+", "");
     }
 
     /**
