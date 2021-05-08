@@ -2,6 +2,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.layout.Region;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -9,6 +10,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.net.URL;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
@@ -19,6 +21,14 @@ public class PreferenceController implements Initializable {
     @Getter
     private Appearance appearance;
 
+    @FXML
+    private Label fontLabel;
+    @FXML
+    private Label fontSizeLabel;
+    @FXML
+    private Label fontColorLabel;
+    @FXML
+    private Label bgColorLabel;
     @FXML
     private ComboBox<String> fontComboBox;
     @FXML
@@ -34,6 +44,9 @@ public class PreferenceController implements Initializable {
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
+        Arrays.asList(fontLabel, fontSizeLabel, fontColorLabel, bgColorLabel)
+                .forEach(l -> setMinWidthForPrefSize(l));
+
         fontComboBox.getItems().addAll(Font.getFamilies());
         fontComboBox.setCellFactory(new Callback<>() {
             @Override
@@ -67,6 +80,10 @@ public class PreferenceController implements Initializable {
                 setText(item == null ? "" : item.getText());
             }
         });
+    }
+
+    private void setMinWidthForPrefSize(final Label label) {
+        label.setMinWidth(Region.USE_PREF_SIZE);
     }
 
     public void setupComboBoxes(final Appearance appearance) {

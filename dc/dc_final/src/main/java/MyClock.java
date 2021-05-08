@@ -54,15 +54,9 @@ public class MyClock extends Application {
             Platform.exit();
         });
         stage.xProperty().addListener((_observable, _oldValue, newValue)
-                -> {
-            System.out.println(String.format("[X] newValue: %f, getX: %f", newValue.doubleValue(), stage.getX()));
-            appearance.setLocX(stage.getX());
-        });
+                -> appearance.setLocX(stage.getX()));
         stage.yProperty().addListener((_observable, _oldValue, newValue)
-                -> {
-            System.out.println(String.format("[Y] newValue: %f, getY: %f", newValue.doubleValue(), stage.getY()));
-            appearance.setLocY(stage.getY());
-        });
+                -> appearance.setLocY(stage.getY()));
     }
 
     public Point2D calculateDefaultWindowPos() {
