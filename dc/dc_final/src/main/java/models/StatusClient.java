@@ -26,12 +26,16 @@ public class StatusClient {
     }
 
     public StatusClient(final Park park) {
-        if (park == Park.USJ) {
-            endpoint = USJ_ENDPOINT;
-        } else if (park == Park.TDL || park == Park.TDS) {
-            endpoint = TDR_ENDPOINT;
-        } else {
-            throw new IllegalArgumentException("Select correct park.");
+        switch (park) {
+            case TDL:
+            case TDS:
+                endpoint = TDR_ENDPOINT;
+                break;
+            case USJ:
+                endpoint = USJ_ENDPOINT;
+                break;
+            default:
+                throw new IllegalArgumentException("Select correct park.");
         }
     }
 
@@ -41,8 +45,6 @@ public class StatusClient {
         try {
             doc = Jsoup.connect(url).get();
         } catch (final IOException e) {
-            // TODO Handle exception
-            e.printStackTrace();
             throw new RuntimeException(e);
         }
 
@@ -99,11 +101,18 @@ public class StatusClient {
     }
 
     private String createUrl(final Park park, final FacilityType facilityType) {
-        if (park == Park.TDL || park == Park.TDS) {
-            return String.format("%s%s.php?park=%s&order=area", endpoint, facilityType.getValue(), park.getValue());
+        if (Objects.isNull(park)) {
+            return endpoint;
+        }
+
+        switch (park) {
+            case TDL:
+            case TDS:
+                return String.format("%s%s.php?park=%s&order=area", endpoint, facilityType.getQueryValue(), park.getQueryValue());
             // e.g.
             // TDL: https://tokyodisneyresort.info/realtime.php?park=land&order=area
+            default:
+                return endpoint;
         }
-        return endpoint;
     }
 }
