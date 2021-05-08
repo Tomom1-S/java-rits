@@ -77,6 +77,14 @@ public class Controller implements Initializable {
         stage.showAndWait();
     }
 
+    @FXML
+    public void handleParkInfoAction(final ActionEvent _actionEvent) {
+        ParkNowController.openWindow(
+                appearance.getLocX() + menuBar.getWidth(),
+                appearance.getLocY(),
+                appearance.getBgColor());
+    }
+
     private void updatePrefs() {
         prefs.putDouble(AppearanceSetting.PrefKey.LOC_X, appearance.getLocX());
         prefs.putDouble(AppearanceSetting.PrefKey.LOC_Y, appearance.getLocY());

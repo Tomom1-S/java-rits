@@ -7,25 +7,31 @@
 <?import java.lang.*?>
 <?import javafx.scene.shape.Rectangle?>
 <GridPane fx:controller="PreferenceController"
-          alignment="center" hgap="10"
-          vgap="10" xmlns:fx="http://javafx.com/fxml">
+          xmlns:fx="http://javafx.com/fxml"
+          alignment="center"
+          hgap="10"
+          vgap="10">
     <padding>
         <Insets top="10" right="25" bottom="10" left="25"/>
     </padding>
     <children>
-        <Label text="Font:"
+        <Label id="fontLabel" fx:id="fontLabel"
+               text="Font:"
                GridPane.columnIndex="0"
                GridPane.rowIndex="0"
                GridPane.halignment="RIGHT"/>
-        <Label text="Font Size:"
+        <Label id="fontSizeLabel" fx:id="fontSizeLabel"
+               text="Font Size:"
                GridPane.columnIndex="0"
                GridPane.rowIndex="1"
                GridPane.halignment="RIGHT"/>
-        <Label text="Font Color:"
+        <Label id="fontColorLabel" fx:id="fontColorLabel"
+               text="Font Color:"
                GridPane.columnIndex="0"
                GridPane.rowIndex="2"
                GridPane.halignment="RIGHT"/>
-        <Label text="Background Color:"
+        <Label id="bgColorLabel" fx:id="bgColorLabel"
+               text="Background Color:"
                GridPane.columnIndex="0"
                GridPane.rowIndex="3"
                GridPane.halignment="RIGHT"/>
@@ -319,9 +325,9 @@
               GridPane.columnSpan="2"
               alignment="CENTER_RIGHT" spacing="10">
             <children>
-                <Button fx:id="cancelButton"
-                        text="OK" onAction="#handlePreferenceOkAction"/>
                 <Button fx:id="okButton"
+                        text="OK" onAction="#handlePreferenceOkAction"/>
+                <Button fx:id="cancelButton"
                         text="Cancel" onAction="#handlePreferenceCancelAction"/>
             </children>
         </HBox>

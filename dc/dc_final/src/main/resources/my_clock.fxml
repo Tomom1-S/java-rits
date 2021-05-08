@@ -9,24 +9,25 @@
           xmlns:fx="http://javafx.com/fxml"
           styleClass="root">
     <VBox>
-        <children>
-            <MenuBar fx:id="menuBar">
-                <menus>
-                    <Menu text="File">
-                        <MenuItem text="Exit"
-                                  fx:id="exit"
-                                  onAction="#handleExitAction"/>
-                    </Menu>
-                    <Menu text="Settings">
-                        <MenuItem text="Preference"
-                                  fx:id="preference"
-                                  onAction="#handlePreferenceAction"/>
-                    </Menu>
-                </menus>
-            </MenuBar>
-        </children>
-        <children>
-            <Canvas fx:id="canvas"/>
-        </children>
+        <MenuBar fx:id="menuBar">
+            <menus>
+                <Menu text="File">
+                    <MenuItem text="Exit"
+                              fx:id="exit"
+                              onAction="#handleExitAction"/>
+                </Menu>
+                <Menu text="Setting">
+                    <MenuItem text="Preference"
+                              fx:id="preference"
+                              onAction="#handlePreferenceAction"/>
+                </Menu>
+                <Menu text="Window">
+                    <MenuItem text="Park information"
+                              fx:id="parkInfo"
+                              onAction="#handleParkInfoAction"/>
+                </Menu>
+            </menus>
+        </MenuBar>
+        <Canvas fx:id="canvas"/>
     </VBox>
 </GridPane>
