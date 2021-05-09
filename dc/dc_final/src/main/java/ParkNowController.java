@@ -14,7 +14,7 @@ import javafx.stage.Stage;
 import models.Facility;
 import models.FacilityType;
 import models.Park;
-import models.StatusClient;
+import controller.StatusClient;
 import utils.ColorHelper;
 
 import java.io.IOException;
