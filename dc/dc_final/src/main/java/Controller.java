@@ -13,7 +13,11 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import lombok.Getter;
 import lombok.Setter;
+import views.Appearance;
+import views.AppearanceSetting;
+import views.Timer;
 
 import java.io.IOException;
 import java.net.URL;
@@ -22,7 +26,8 @@ import java.util.prefs.Preferences;
 
 public class Controller implements Initializable {
     private Timer timer;
-    ViewController view;
+    @Getter
+    private ViewController view;
     @Setter
     private Preferences prefs;
     private Appearance appearance;

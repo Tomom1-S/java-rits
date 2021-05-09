@@ -8,6 +8,7 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 import lombok.Getter;
 import lombok.Setter;
+import views.Appearance;
 
 import java.net.URL;
 import java.util.Arrays;

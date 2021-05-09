@@ -8,6 +8,8 @@ import javafx.scene.Scene;
 import javafx.scene.text.Font;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import views.Appearance;
+import views.AppearanceSetting;
 
 import java.util.prefs.Preferences;
 
@@ -33,8 +35,8 @@ public class MyClock extends Application {
         loader.setController(controller);
 
         // Initialize preferences
-        controller.view.setStage(stage);
-        controller.view.applyAppearance();
+        controller.getView().setStage(stage);
+        controller.getView().applyAppearance();
 
         controller.runTimer();
 

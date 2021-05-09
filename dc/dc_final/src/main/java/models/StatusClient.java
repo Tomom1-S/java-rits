@@ -2,6 +2,7 @@ package models;
 
 import javafx.scene.paint.Color;
 import lombok.Value;
+import models.*;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Attribute;
 import org.jsoup.nodes.Document;

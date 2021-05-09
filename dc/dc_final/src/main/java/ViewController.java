@@ -8,6 +8,8 @@ import javafx.stage.Stage;
 import lombok.Getter;
 import lombok.Setter;
 import utils.ColorHelper;
+import views.Appearance;
+import views.AppearanceSetting;
 
 @Getter
 @Setter
