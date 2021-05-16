@@ -3,31 +3,90 @@
 <?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.HBox?>
 <GridPane fx:controller="Controller"
           fx:id="pane"
           xmlns:fx="http://javafx.com/fxml"
           styleClass="root">
-    <VBox>
-        <MenuBar fx:id="menuBar">
-            <menus>
-                <Menu text="File">
-                    <MenuItem text="Exit"
-                              fx:id="exit"
-                              onAction="#handleExitAction"/>
-                </Menu>
-                <Menu text="Setting">
-                    <MenuItem text="Preference"
-                              fx:id="preference"
-                              onAction="#handlePreferenceAction"/>
-                </Menu>
-                <Menu text="Window">
-                    <MenuItem text="Park information"
-                              fx:id="parkInfo"
-                              onAction="#handleParkInfoAction"/>
-                </Menu>
-            </menus>
-        </MenuBar>
-        <Canvas fx:id="canvas"/>
-    </VBox>
+    <MenuBar fx:id="menuBar"
+             GridPane.rowIndex="0"
+             GridPane.columnIndex="0">
+        <menus>
+            <Menu text="File">
+                <MenuItem fx:id="exit"
+                          text="Exit"
+                          onAction="#handleExitAction"/>
+            </Menu>
+            <Menu text="Setting">
+                <MenuItem fx:id="preference"
+                          text="Preference"
+                          onAction="#handlePreferenceAction"/>
+            </Menu>
+            <Menu text="Window">
+                <MenuItem fx:id="parkInfo"
+                          text="Park information"
+                          onAction="#handleParkInfoAction"/>
+            </Menu>
+        </menus>
+    </MenuBar>
+    <Canvas fx:id="clockCanvas"
+            GridPane.rowIndex="1"
+            GridPane.columnIndex="0"
+            GridPane.halignment="CENTER"/>
+    <GridPane GridPane.rowIndex="2"
+              GridPane.columnIndex="0"
+              GridPane.halignment="CENTER">
+        <padding>
+            <Insets bottom="10" left="25" right="25"/>
+        </padding>
+        <ImageView fx:id="notesImg"
+                   GridPane.rowIndex="0"
+                   GridPane.columnIndex="0"
+                   GridPane.rowSpan="3"
+                   fitHeight="100.0"
+                   fitWidth="100.0">
+            <image>
+                <Image url="@/img/music_notes.png"/>
+            </image>
+        </ImageView>
+        <HBox GridPane.rowIndex="0"
+              GridPane.columnIndex="1"
+              GridPane.halignment="CENTER">
+            <TextField fx:id="musicFilename"
+                       maxWidth="1.7976931348623157E308"
+                       text="Show file name here"
+                       editable="false"/>
+            <Button fx:id="musicSelectButton"
+                    maxWidth="1.7976931348623157E308"
+                    text="Select file"
+                    onAction="#handleMusicSelectAction"/>
+        </HBox>
+        <Slider fx:id="musicSlider"
+                GridPane.rowIndex="1"
+                GridPane.columnIndex="1"
+                GridPane.halignment="CENTER"
+                min="0"
+                max="1"
+                value="0"/>
+        <ButtonBar GridPane.rowIndex="2"
+                   GridPane.columnIndex="1"
+                   GridPane.halignment="CENTER">
+            <buttons>
+                <Button fx:id="musicBackButton"
+                        text="Back"
+                        ButtonBar.buttonData="LEFT"
+                        onAction="#handleMusicBackAction"/>
+                <Button fx:id="musicPlayButton"
+                        text="Pause"
+                        onAction="#handleMusicPlayAction"/>
+                <Button fx:id="musicForwardButton"
+                        text="Forward"
+                        ButtonBar.buttonData="RIGHT"
+                        onAction="#handleMusicForwardAction"/>
+            </buttons>
+        </ButtonBar>
+    </GridPane>
 </GridPane>
