@@ -7,6 +7,7 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.shape.Circle?>
 <GridPane fx:controller="Controller"
           fx:id="pane"
           xmlns:fx="http://javafx.com/fxml"
@@ -38,31 +39,43 @@
             GridPane.halignment="CENTER"/>
     <GridPane GridPane.rowIndex="2"
               GridPane.columnIndex="0"
-              GridPane.halignment="CENTER">
+              alignment="CENTER">
         <padding>
-            <Insets bottom="10" left="25" right="25"/>
+            <Insets bottom="25" left="10" right="10"/>
         </padding>
         <ImageView fx:id="notesImg"
                    GridPane.rowIndex="0"
                    GridPane.columnIndex="0"
                    GridPane.rowSpan="3"
-                   fitHeight="100.0"
-                   fitWidth="100.0">
+                   fitHeight="80.0"
+                   fitWidth="80.0">
             <image>
                 <Image url="@/img/music_notes.png"/>
             </image>
         </ImageView>
         <HBox GridPane.rowIndex="0"
               GridPane.columnIndex="1"
-              GridPane.halignment="CENTER">
-            <TextField fx:id="musicFilename"
-                       maxWidth="1.7976931348623157E308"
-                       text="Show file name here"
-                       editable="false"/>
+              alignment="CENTER"
+              spacing="5">
+            <Label fx:id="musicFilename"
+                   maxWidth="1.7976931348623157E308"
+                   maxHeight="30"
+                   text="Show file name here"/>
             <Button fx:id="musicSelectButton"
-                    maxWidth="1.7976931348623157E308"
-                    text="Select file"
-                    onAction="#handleMusicSelectAction"/>
+                    maxWidth="30"
+                    maxHeight="30"
+                    minWidth="30"
+                    minHeight="30"
+                    onAction="#handleMusicSelectAction">
+                <graphic>
+                    <ImageView fitHeight="30"
+                               fitWidth="30">
+                        <image>
+                            <Image url="@/img/folder_open.png"/>
+                        </image>
+                    </ImageView>
+                </graphic>
+            </Button>
         </HBox>
         <Slider fx:id="musicSlider"
                 GridPane.rowIndex="1"
@@ -71,22 +84,66 @@
                 min="0"
                 max="1"
                 value="0"/>
-        <ButtonBar GridPane.rowIndex="2"
-                   GridPane.columnIndex="1"
-                   GridPane.halignment="CENTER">
-            <buttons>
+        <HBox GridPane.rowIndex="2"
+              GridPane.columnIndex="1"
+              alignment="CENTER"
+              spacing="10">
+            <children>
                 <Button fx:id="musicBackButton"
-                        text="Back"
-                        ButtonBar.buttonData="LEFT"
-                        onAction="#handleMusicBackAction"/>
+                        maxWidth="30"
+                        maxHeight="30"
+                        minWidth="30"
+                        minHeight="30"
+                        onAction="#handleMusicBackAction">
+                    <shape>
+                        <Circle radius="15"/>
+                    </shape>
+                    <graphic>
+                        <ImageView fitHeight="30"
+                                   fitWidth="30">
+                            <image>
+                                <Image url="@/img/back_button.png"/>
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
                 <Button fx:id="musicPlayButton"
-                        text="Pause"
-                        onAction="#handleMusicPlayAction"/>
+                        maxWidth="30"
+                        maxHeight="30"
+                        minWidth="30"
+                        minHeight="30"
+                        onAction="#handleMusicPlayAction">
+                    <shape>
+                        <Circle radius="15"/>
+                    </shape>
+                    <graphic>
+                        <ImageView fitHeight="30"
+                                   fitWidth="30">
+                            <image>
+                                <Image url="@/img/pause_button.png"/>
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
                 <Button fx:id="musicForwardButton"
-                        text="Forward"
-                        ButtonBar.buttonData="RIGHT"
-                        onAction="#handleMusicForwardAction"/>
-            </buttons>
-        </ButtonBar>
+                        maxWidth="30"
+                        maxHeight="30"
+                        minWidth="30"
+                        minHeight="30"
+                        onAction="#handleMusicForwardAction">
+                    <shape>
+                        <Circle radius="15"/>
+                    </shape>
+                    <graphic>
+                        <ImageView fitHeight="30"
+                                   fitWidth="30">
+                            <image>
+                                <Image url="@/img/forward_button.png"/>
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+            </children>
+        </HBox>
     </GridPane>
 </GridPane>

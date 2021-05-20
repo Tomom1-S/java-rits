@@ -12,18 +12,25 @@ public class SoundPlayer {
     private Clip clip;
     private AudioInputStream audioStream;
     @Getter
-    private PlayerStatus status = PlayerStatus.PLAYING;
+    private PlayerStatus status = PlayerStatus.STOPPED;
     @Getter
     private Long currentFrame = 0L;
     private File file;
 
     public void loadFile(final File file) throws IOException,
             UnsupportedAudioFileException, LineUnavailableException {
+        if (status != PlayerStatus.STOPPED) {
+            clip.stop();
+            clip.close();
+            currentFrame = 0L;
+        }
+
         this.file = file;
         audioStream = AudioSystem.getAudioInputStream(file);
         clip = AudioSystem.getClip();
         clip.open(audioStream);
         clip.loop(Clip.LOOP_CONTINUOUSLY);
+        status = PlayerStatus.PLAYING;
     }
 
     public void playOrPause() throws UnsupportedAudioFileException,
@@ -40,6 +47,7 @@ public class SoundPlayer {
                 currentFrame = clip.getMicrosecondPosition();
                 clip.stop();
                 status = PlayerStatus.PAUSE;
+                return;
             default:
                 return;
         }

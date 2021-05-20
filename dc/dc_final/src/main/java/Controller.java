@@ -1,9 +1,6 @@
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -12,11 +9,9 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Button;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.Slider;
-import javafx.scene.control.TextField;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.FileChooser;
@@ -35,14 +30,11 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.time.LocalTime;
-import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
 public class Controller implements Initializable {
-    private static final String LABEL_PLAY = "Play";
-    private static final String LABEL_PAUSE = "Pause";
+    private static final int BUTTON_IMG_SIZE = 30;
     private static final FileChooser.ExtensionFilter EXT_FILTER =
             new FileChooser.ExtensionFilter(
                     "WAVE or Au only", "*.wav", "*.au", "*.snd");
@@ -50,6 +42,8 @@ public class Controller implements Initializable {
 
     private Timer timer;
     private final SoundPlayer player;
+    private final ImageView playBtnView = new ImageView();
+    private final ImageView pauseBtnView = new ImageView();
     private final FileChooser fileChooser;
     @Getter
     private ViewController view;
@@ -64,7 +58,7 @@ public class Controller implements Initializable {
     @FXML
     private Canvas clockCanvas;
     @FXML
-    private TextField musicFilename;
+    private Label musicFilename;
     @FXML
     private Slider musicSlider;
 
@@ -73,6 +67,13 @@ public class Controller implements Initializable {
         this.fileChooser = new FileChooser();
         fileChooser.setTitle("Open File");
         fileChooser.getExtensionFilters().add(EXT_FILTER);
+
+        playBtnView.setImage(new Image(getClass().getResource("/img/play_button.png").toExternalForm()));
+        playBtnView.setFitWidth(BUTTON_IMG_SIZE);
+        playBtnView.setFitHeight(BUTTON_IMG_SIZE);
+        pauseBtnView.setImage(new Image(getClass().getResource("img/pause_button.png").toExternalForm()));
+        pauseBtnView.setFitWidth(BUTTON_IMG_SIZE);
+        pauseBtnView.setFitHeight(BUTTON_IMG_SIZE);
     }
 
     @Override
@@ -155,10 +156,7 @@ public class Controller implements Initializable {
 
         final Timeline timer = new Timeline(new KeyFrame(
                 Duration.seconds(1),
-                event -> {
-                    System.out.println(player.calculatePositionRate());
-                    musicSlider.setValue(player.calculatePositionRate());
-                }
+                event -> musicSlider.setValue(player.calculatePositionRate())
         ));
         timer.setCycleCount(Timeline.INDEFINITE);
         timer.play();
@@ -186,19 +184,24 @@ public class Controller implements Initializable {
     }
 
     public void handleMusicPlayAction(final ActionEvent actionEvent) {
-        final Button button = (Button) actionEvent.getSource();
-        final String text = button.getText();
-        if (Objects.equals(text, LABEL_PLAY)) {
-            button.setText(LABEL_PAUSE);
-        } else if (Objects.equals(text, LABEL_PAUSE)) {
-            button.setText(LABEL_PLAY);
-        }
-
         try {
             player.playOrPause();
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
             e.printStackTrace();
             return;
+        }
+
+        final Button button = (Button) actionEvent.getSource();
+        switch (player.getStatus()) {
+            case STOPPED:
+            case PAUSE:
+                button.setGraphic(playBtnView);
+                break;
+            case PLAYING:
+                button.setGraphic(pauseBtnView);
+                break;
+            default:
+                break;
         }
     }
 
