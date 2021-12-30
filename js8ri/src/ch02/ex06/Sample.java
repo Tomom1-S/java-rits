@@ -15,6 +15,6 @@ public class Sample {
     }
 
     public static Stream<Character> improvedCharacterStream(final String s) {
-        return IntStream.range(0, s.length()).mapToObj(i -> s.charAt(i));
+        return IntStream.range(0, s.length()).mapToObj(s::charAt);
     }
 }

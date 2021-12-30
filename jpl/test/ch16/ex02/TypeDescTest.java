@@ -36,6 +36,17 @@ public class TypeDescTest {
         assertThat(outContent.toString(), is(expected));
     }
 
+    // 柴田さん：Java 標準のクラスでテストする例
+    @Test
+    public void testMapEntry() {
+        TypeDesc.main(new String[] {"java.util.Map$Entry"});
+
+        final String expected = "interface java.util.Map.Entry<K, V, \b\b>" + ls
+                + " is nested in java.util.Map" + ls;
+
+        assertThat(outContent.toString(), is(expected));
+    }
+
     @Test
     public void testHashMap() {
         TypeDesc.main(new String[] {"java.util.HashMap"});

@@ -24,6 +24,9 @@ public class delimitedStringNumberTest {
         assertThat(dsn.addComma(string), is("123"));
     }
 
+    // 柴田さん：境界値のテストが必要（少なくとも3桁のときと4桁のときは必要）
+    // 柴田さん：空文字列の扱いがどうなるか
+
     @Test
     public void 数字以外が含まれたら例外を投げる() {
         String string = "123abc456";

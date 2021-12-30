@@ -19,10 +19,23 @@ public class SumUp implements Runnable {
         System.out.println(Thread.currentThread().getName() + ": " + oldSum + " + " + addition + " = " + sum);
     }
 
+    public synchronized int getSum() {
+        return sum;
+    }
+
     @Override
     public void run() {
-        while (sum < 100) {
+        // 柴田さん
+        // 値を取り出すときも同期しないと、最新の値を使って判断できない
+        while (getSum() < 100) {
             add();
+
+            // sleep しないと正しく複数スレッドで処理できているか確認できない
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
 
     }

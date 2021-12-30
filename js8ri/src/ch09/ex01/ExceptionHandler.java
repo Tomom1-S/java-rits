@@ -7,6 +7,8 @@ import java.nio.file.Paths;
 import java.util.Scanner;
 
 public class ExceptionHandler {
+    // 柴田さん：発生しうる全ての Exception を catch すること
+    // IllegalStateException, NoSuchElementException など
     public static void withoutTryWithResources() {
         Scanner in = null;
         PrintWriter out = null;
@@ -21,12 +23,21 @@ public class ExceptionHandler {
             } catch (final FileNotFoundException e) {
                 e.printStackTrace();
             } finally {
-                out.close();
+                try {
+                    out.close();
+                } catch (final IllegalStateException e) {
+                    e.printStackTrace();
+                }
+
             }
         } catch (final IOException e) {
             e.printStackTrace();
         } finally {
-            in.close();
+            try {
+                in.close();
+            } catch (final IllegalStateException e) {
+                e.printStackTrace();
+            }
         }
     }
 

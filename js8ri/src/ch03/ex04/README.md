@@ -17,3 +17,7 @@
 `Predicate<T>` よりも付加価値があるのは以下。
 * `FilenameFilter`: 引数を2つ取れる
 * `DirectoryStream.Filter`: 例外をスローできる
+
+### 柴田さんコメント
+
+`Predicate<T>` で置き換えられるものはあまり付加価値がないと言える。

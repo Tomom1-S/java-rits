@@ -2,7 +2,9 @@ package ch05.ex05;
 
 import org.junit.Test;
 
+import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
@@ -15,7 +17,10 @@ public class PassedDaysTest {
     @Test
     public void countDaysで会社の設立日からの日数を数える() {
         final long actual = PassedDays.countDays(from);
-        assertThat(actual, is(30967L));
+        final Duration duration = Duration.between(
+                from.atTime(0, 0, 0),
+                LocalDateTime.now());
+        assertThat(actual, is(duration.toDays()));
     }
 
     @Test

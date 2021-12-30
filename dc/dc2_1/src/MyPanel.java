@@ -6,13 +6,14 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.time.LocalTime;
 
-public class MyPanel extends JPanel implements ActionListener, ComponentListener {
+public class MyPanel extends JPanel implements ComponentListener {
     final Timer timer;
     Font font = new Font("Serif", Font.PLAIN, Settings.fontSize);
 
     public MyPanel() {
         setPreferredSize(Settings.size);
-        timer = new Timer(Settings.interval, this);
+        // 柴田さん：Timer に直接 ActionListener を渡せば、ActionListener の実装が不要になる
+        timer = new Timer(Settings.interval, e -> this.repaint());
         timer.start();
     }
 
@@ -52,13 +53,6 @@ public class MyPanel extends JPanel implements ActionListener, ComponentListener
             return (int) (getWidth() * Settings.fontOccupancy / textRatio);
         } else {
             return (int) (getHeight() * Settings.fontOccupancy);
-        }
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == timer) {
-            repaint();
         }
     }
 

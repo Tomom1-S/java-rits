@@ -43,3 +43,8 @@ public void process() throws IOException {
     }
 }
 ```
+
+### 柴田さんコメント
+
+個々の例外を宣言すると親切だが、実装の詳細を見せることになる。
+`IOException` の方が使用者に余計なことを考えさせなくてよい。

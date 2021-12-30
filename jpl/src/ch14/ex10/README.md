@@ -10,3 +10,9 @@ https://github.com/YoshikiShibata/jpltest/tree/master/jpl/ch14/ex10
 練習問題の内容は以下の通りです。
 * `ThreadPoolTest.java` は完成したテストコードであり修正しない
 * `ThreadPoolTest.java` 内のテストがすべて合格するように `ThreadPool.java` を完成させる
+
+### メモ
+* queue (List<Runnable>) の同期を取っているか？(add, pull, isEmpty() など)
+* private final Runnable END を用意 (run() の中は空っぽ)
+* stop の実装がポイント
+* run に終了条件を書く (r = END になったら return)

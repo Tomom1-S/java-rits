@@ -13,6 +13,8 @@ public class SortExecutor {
         for (int i = 0; i < orgArray.length; i++) {
             orgArray[i] = random.nextDouble();
         }
+        // 柴田さん: 複数の手法の処理時間を比べる場合、同じ値のオブジェクトを使うべき
+        // 今回の例であれば、Arrays.copyOf で orgArray をコピーするのが正解
 
         final int iterate = 10; // 何回分の平均を取るか
         for (int i = 0; i < times; i++) {

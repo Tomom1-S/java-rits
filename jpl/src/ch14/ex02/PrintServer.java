@@ -22,6 +22,8 @@ public class PrintServer implements Runnable {
     @Override
     public void run() {
         if (thread != Thread.currentThread()) {
+            // 柴田さん：run が RunTimeException をスローする
+            // テストするときは別のスレッドを立ち上げて直接 run を呼ぶ
             throw new java.lang.RuntimeException("This thread cannot execute run()");
         }
 

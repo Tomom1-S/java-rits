@@ -94,6 +94,9 @@ public class LinkedList<E> implements Cloneable {
 
     public Node find(E data) throws ObjectNotFoundException {
         Node node = head;
+        // 柴田さん
+        // == を使って比較すると参照一致、equals なら値の一致を見る
+        // 一般的に、find では equals が使われる
         while (!data.equals(node.data)) {
             node = node.next;
             if (node.next == null) {

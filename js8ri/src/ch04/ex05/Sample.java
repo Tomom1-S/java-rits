@@ -34,14 +34,12 @@ public class Sample extends Application {
         smaller.setOnAction(event -> gauge.setWidth(gauge.getWidth() - diff));
         larger.setOnAction(event -> gauge.setWidth(gauge.getWidth() + diff));
         smaller.disableProperty().bind(
-//          Bindings.lessThanOrEqual(gauge.widthProperty(), 0)
                 observe(
                         number -> number.doubleValue() <= 0,
                         gauge.widthProperty()
                 )
         );
         larger.disableProperty().bind(
-//                Bindings.greaterThanOrEqual(gauge.widthProperty(), maxWidth)
                 observe(
                         number -> number.doubleValue() >= maxWidth,
                         gauge.widthProperty()

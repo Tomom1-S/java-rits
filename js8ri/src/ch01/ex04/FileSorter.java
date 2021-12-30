@@ -25,13 +25,12 @@ public class FileSorter {
     public File[] sortFilesWithLambda(final File[] files) {
         File[] result = files;
         Arrays.sort(result, (o1, o2) -> {
-            if (o1.isDirectory() && o2.isFile()) {
-                return -1;
-            } else if (o1.isFile() && o2.isDirectory()) {
-                return 1;
-            } else {
+            // 柴田さんコメント
+            // o1 と o2 が同じ種類だったら
+            if (o1.isDirectory() == o2.isDirectory()) {
                 return o1.getAbsolutePath().compareToIgnoreCase(o2.getAbsolutePath());
             }
+            return o1.isDirectory() ? -1 : 1;
         });
         return result;
     }

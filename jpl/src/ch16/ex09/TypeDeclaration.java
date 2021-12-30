@@ -29,6 +29,7 @@ public class TypeDeclaration {
         final String modifiers = String.join(" ", removeEmptyAndNull(getModifiersString(cls.getModifiers())));
         final String classType = getClassType(cls);
 
+        // 柴田さん：型パラメータも表示するようにする
         System.out.printf("%s %s %s {\n", modifiers, classType, cls.getSimpleName());
 
         printFieldsDeclaration(cls);
@@ -37,9 +38,14 @@ public class TypeDeclaration {
         printConstructorsDeclaration(cls);
         System.out.println();
 
+        // 柴田さん：ジェネリックメソッドならメソッドの定義にも型パラメータの情報も表示
         printMethodsDeclaration(cls);
 
+        // 柴田さん；アノテーションも表示
+
         System.out.println("}");
+
+        // 柴田さん：ソースコードをそのまま表示するようなイメージでできると完璧
     }
 
     private void printFieldsDeclaration(final Class<?> cls) {

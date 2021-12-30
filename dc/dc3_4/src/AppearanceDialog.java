@@ -29,11 +29,11 @@ public class AppearanceDialog<T> extends Dialog<T> {
 
         setTitle(Settings.Menus.APPEARANCE);
         initStyle(StageStyle.UNDECORATED);
-        // TODO ドラッグ&ドロップでダイアログを動かす
 
         setHeaderText("Select your preferences.");
         getDialogPane().setGraphic(new ImageView(
-                new Image("file:dc3_4/resources/palette.png", 70, 70, false, false)));
+                new Image(String.valueOf(getClass().getResource("/palette.png")),
+                        70, 70, false, false)));
 
         initComboBoxes();
         putElements();

@@ -26,6 +26,9 @@ public class Counters {
         final CountDownLatch latch = new CountDownLatch(THREAD_NUM);
 
         final ExecutorService pool = Executors.newCachedThreadPool();
+        // 柴田さん: 現在の時刻を取得するときは System.currentTimeMillis() を使ってはいけない
+        // このメソッドで取れる時刻は、プログラム内でいくらでも書き換えることができてしまう
+        // 時間を計りたいときは System.nanoTime() を使うこと
         final long start = System.nanoTime();
         for (int i = 0; i < THREAD_NUM; i++) {
             pool.submit(() -> {

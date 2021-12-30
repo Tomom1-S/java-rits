@@ -30,4 +30,5 @@ public class LinkedList {
 		}
 		return str.toString();
 	}
+	// 柴田さん：これの計算量はどうなる？
 }

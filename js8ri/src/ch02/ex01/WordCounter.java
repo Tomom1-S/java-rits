@@ -46,6 +46,8 @@ public class WordCounter {
         return count;
     }
 
+    // 柴田さんコメント
+    // セグメントのサイズを受け取り、そのサイズで分割した List をそれぞれのスレッドで処理できるようにする
     public int threadCount(final List<String> words) {
         AtomicInteger count = new AtomicInteger(0);
         for (String word : words) {

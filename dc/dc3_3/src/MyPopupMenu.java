@@ -20,8 +20,10 @@ public class MyPopupMenu {
         this.parent = parent;
 
         contextMenu = new ContextMenu();
-        initItems();
+        initMenus();
+    }
 
+    private void initMenus() {
         contextMenu.getItems().addAll(itemMap.values());
     }
 
@@ -33,6 +35,7 @@ public class MyPopupMenu {
         itemMap.put(Settings.MenuItems.FONT_SIZE, new Menu(Settings.MenuItems.FONT_SIZE));
         itemMap.put(Settings.MenuItems.FONT_COLOR, new Menu(Settings.MenuItems.FONT_COLOR));
         itemMap.put(Settings.MenuItems.BG_COLOR, new Menu(Settings.MenuItems.BG_COLOR));
+        // 柴田さん：Quit のメニューにはサブアイテムの矢印は出さない
         itemMap.put(Settings.MenuItems.QUIT, new Menu(Settings.MenuItems.QUIT));
 
         // itemMap のサブアイテムをセット

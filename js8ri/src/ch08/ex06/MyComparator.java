@@ -14,6 +14,7 @@ public class MyComparator {
     }
 
     public static Comparator<Rectangle2D> getRectangle2DComparator() {
+        // 柴田さん：Point2D の比較を流用できないか？
         return Comparator.comparingDouble((ToDoubleFunction<Rectangle2D>) r -> r.getMinX())
                 .thenComparingDouble(r -> r.getMinY())
                 .thenComparingDouble(r -> r.getMaxX())

@@ -21,18 +21,19 @@ public class LabeledPoint {
         if (otherObj == null) {
             return false;
         }
-        if (getClass() != otherObj.getClass()) {
+        // 柴田さん：getClass よりも instanceof を使う方がよい
+        if (otherObj instanceof LabeledPoint) {
             return false;
         }
 
         final LabeledPoint other = (LabeledPoint) otherObj;
         return Objects.equals(label, other.label) &&
-                Objects.equals(x, other.x) &&
-                Objects.equals(y, other.y);
+                x == other.x &&
+                y == other.y;
     }
 
     @Override
-    public int hashCode(){
+    public int hashCode() {
         return Objects.hash(label, x, y);
     }
 }

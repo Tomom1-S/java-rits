@@ -18,6 +18,8 @@ public class ActionRepeater {
                     final String userName = in.nextLine();
 
                     System.out.print("Password: ");
+                    // 柴田さん: io の readPassword() を使うと、
+                    // 入力されたパスワードをコンソールに出さずに受け取ることができる
                     final String password = in.nextLine();
                     return new PasswordAuthentication(userName, password.toCharArray());
                 },

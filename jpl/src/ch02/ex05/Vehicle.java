@@ -30,6 +30,8 @@ public class Vehicle {
 		ferrari.direction = 60;
 		ferrari.owner = "Fred";
 
+		// 柴田さん：toString() メソッドを用意して、String.format を使って文字列を生成する方が良い
+		// 文字列結合（"hoge" + id）を使う必要はない、コンパイラが string builder を作り直してしまうため、効率が悪い。
 		System.out.println(ToStringBuilder.reflectionToString(toyota, ToStringStyle.SHORT_PREFIX_STYLE));
 		System.out.println(ToStringBuilder.reflectionToString(benz, ToStringStyle.SHORT_PREFIX_STYLE));
 		System.out.println(ToStringBuilder.reflectionToString(ferrari, ToStringStyle.SHORT_PREFIX_STYLE));
